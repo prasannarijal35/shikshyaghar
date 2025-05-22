@@ -1,3 +1,3 @@
 export default function Home() {
-  return <div>hello this is sanjeev(sano sano)</div>;
+  return <div>hello this is Prasanna gay and i have small</div>;
 }
