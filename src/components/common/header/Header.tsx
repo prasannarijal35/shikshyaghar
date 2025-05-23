@@ -1,9 +1,10 @@
-import { TopHeader } from "@/components/common/header";
+import { Navbar, TopHeader } from "@/components/common/header";
 
 export default function Header() {
   return (
     <>
       <TopHeader />
+      <Navbar />
     </>
   );
 }
