@@ -1,7 +1,3 @@
 export default function Home() {
-  return (
-    <div className="bg-amber-400">
-      hello this is Prasanna gay and i have small
-    </div>
-  );
+  return <div className="bg-primary">Prasanna hagdai xa</div>;
 }
