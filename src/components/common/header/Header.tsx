@@ -1,4 +1,4 @@
-import { TopHeader } from "@/components/common/header";
+import { TopHeader } from ".";
 
 export default function Header() {
   return (
