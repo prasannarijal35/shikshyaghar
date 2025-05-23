@@ -1,7 +1,5 @@
-export default function Home() {
-  return (
-    <div className="bg-amber-400">
-      hello this is Prasanna gay and i have small
-    </div>
-  );
+import { Home } from "@/components/home";
+
+export default function page() {
+  return <Home />;
 }
