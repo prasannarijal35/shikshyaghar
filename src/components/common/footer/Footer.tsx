@@ -12,6 +12,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
+
     <footer className="bg-primary text-white pt-12 pb-6">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 px-6">
         {/* Logo and About */}
@@ -155,5 +156,6 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+
   );
 }
