@@ -1,10 +1,9 @@
-/* src/app/globals.css or wherever your global styles are */
 @tailwind utilities;
 
 @theme {
   --color-background: #ffffff;
   --color-foreground: #000000;
-  --color-primary: #008000;
+  --color-primary: #08ade6;
   --color-secondary: #c72b32;
 
   --breakpoint-sm: 640px;
@@ -20,4 +19,42 @@
   --container-padding-2xl: 6rem;
 
   --font-display: "Satoshi", sans-serif;
+}
+
+/* 👇 This is REQUIRED to make `.container` work */
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--container-padding-default);
+  padding-right: var(--container-padding-default);
+  width: 100%;
+  max-width: var(--breakpoint-2xl);
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: var(--container-padding-sm);
+    padding-right: var(--container-padding-sm);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: var(--container-padding-lg);
+    padding-right: var(--container-padding-lg);
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    padding-left: var(--container-padding-xl);
+    padding-right: var(--container-padding-xl);
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    padding-left: var(--container-padding-2xl);
+    padding-right: var(--container-padding-2xl);
+  }
 }
