@@ -1,1 +1,23 @@
-@import "tailwindcss";
+/* src/app/globals.css or wherever your global styles are */
+@tailwind utilities;
+
+@theme {
+  --color-background: #ffffff;
+  --color-foreground: #000000;
+  --color-primary: #008000;
+  --color-secondary: #c72b32;
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  --container-padding-default: 1em;
+  --container-padding-sm: 1rem;
+  --container-padding-lg: 2rem;
+  --container-padding-xl: 3rem;
+  --container-padding-2xl: 6rem;
+
+  --font-display: "Satoshi", sans-serif;
+}
