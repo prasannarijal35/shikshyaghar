@@ -13,14 +13,14 @@ export default function Profile({ toggleNavBar }: Props) {
         <div className="flex gap-2">
           <Link
             href="/login"
-            className="flex justify-center items-center  px-5 py-1 border border-primary text-primary font-medium  hover:bg-primary rounded-l-2xl rounded-r-2xl transition duration-300"
+            className="flex justify-center items-center  px-5 py-1 border border-primary text-primary font-medium  hover:bg-primary hover:text-white rounded-l-2xl rounded-r-2xl transition duration-300"
           >
             <span>Login</span>
           </Link>
 
           <Link
             href="/register"
-            className="flex justify-center items-center  px-5 py-1 border border-primary text-white bg-primary font-medium hover:text-primary rounded-l-2xl rounded-r-2xl transition duration-300"
+            className="flex justify-center items-center  px-5 py-1 border border-primary text-white bg-primary font-medium  hover:text-primary hover:bg-white rounded-l-2xl rounded-r-2xl transition duration-300"
           >
             <span className="font-medium ">Register</span>
           </Link>
