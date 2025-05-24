@@ -1,3 +1,12 @@
+
+import { Blogs } from "../blogs";
+
+export default function Home() {
+  return (
+    <div className="flex   container  mb-20">
+      <Blogs />
+    </div>
+
 import { HeroSection } from "@/components/home";
 import { Header } from "../common/header";
 import banner1 from "@/assets/bannerimages/banner1.jpg"; // Adjust the path as needed
@@ -17,5 +26,6 @@ export default function Home() {
       </section>
       <MainPage />
     </>
+
   );
 }
