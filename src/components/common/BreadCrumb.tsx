@@ -18,7 +18,7 @@ export default function Breadcrumb({
   description,
 }: Props) {
   return (
-    <section className="relative w-full  py-16 bg-gray-900 mx-auto flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-8">
+    <section className="relative w-full z-50 py-16 bg-gray-900 mx-auto flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-8">
       <div className="absolute inset-0 z-0">
         <Image
           src={book}
