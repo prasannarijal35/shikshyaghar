@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import logo from "@/assets/Sg_logo.png";
 import { NavProfile, NavMenu } from ".";
+import logo from "@/assets/logo/Sg_logo.png";
 
 export default function Navbar() {
   const [navbaropen, setNavbaropen] = useState<boolean>(false);
