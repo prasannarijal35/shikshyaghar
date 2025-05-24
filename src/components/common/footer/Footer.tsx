@@ -13,8 +13,8 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className=" relative pt-12  ">
-      <div className="px-6 container absolute top-[-60px]  z-10">
+    <footer className="relative pt-12">
+      <div className="px-6 container absolute top-[-60px] z-0">
         <div className="bg-[#06034D] w-full rounded-lg text-white py-10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8 px-6">
             {/* Text Content */}
