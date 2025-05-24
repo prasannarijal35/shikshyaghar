@@ -1,8 +1,9 @@
+import { Blogs } from "../blogs";
+
 export default function Home() {
   return (
-    <div className="flex  justify-between items-center container h-[400px]">
-      <div>prasanna le</div>
-      <div>abhinav lai pelyo</div>
+    <div className="flex   container  mb-20">
+      <Blogs />
     </div>
   );
 }
