@@ -1,2 +1,2 @@
 export { default as Home } from "./Home";
-export { default as MainPage } from "./MainPage";
+export { default as HeroSection } from "./HeroSection";
