@@ -4,8 +4,7 @@ import { blogs } from "@/data/blog";
 
 const BlogPreviewPage = () => {
   return (
-    <section className="max-w-6xl mx-auto py-20 container ">
-    <div className=" container  max-w-6xl mx-auto  py-20 pb-36  ">
+    <section className="container max-w-6xl mx-auto py-20 pb-36  ">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Latest Blogs</h1>
         <Link
@@ -20,7 +19,7 @@ const BlogPreviewPage = () => {
           <BlogCard key={blog.id} blog={blog} />
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 
