@@ -13,12 +13,12 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative pt-12">
-      <div className="px-6 container absolute top-[-60px] z-0">
+    <footer className="relative">
+      <div className="absolute top-[-60px] z-0 container">
         <div className="bg-[#06034D] w-full rounded-lg text-white py-10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8 px-6">
             {/* Text Content */}
-            <div className="flex-1 ">
+            <div className="flex-1">
               <h2 className="text-4xl font-semibold mb-16">
                 Need to talk with our Experts?
               </h2>
@@ -45,7 +45,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="container bg-indigo-200 pt-[200px]">
-        <div className="mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 px-6">
+        <div className="mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Logo and About */}
           <div className="space-y-4">
             <div className="flex items-center gap-3 ">
@@ -65,12 +65,12 @@ export default function Footer() {
               <p>+977-1-000000000 / 40000</p>
 
               <p>
-                <a
+                <Link
                   href="mailto:info@neemaacademy.com"
                   className=" hover:text-[#06034D]"
                 >
                   info@shikshyaghar.com
-                </a>
+                </Link>
               </p>
             </div>
           </div>
@@ -146,9 +146,9 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-[#06034D]">
               <li className="flex items-center gap-2">
                 <MdOutlineMailOutline />{" "}
-                <a href="mailto:support@shikshyaghar.com">
+                <Link href="mailto:support@shikshyaghar.com">
                   support@shikshyaghar.com
-                </a>
+                </Link>
               </li>
               <li className="flex items-center gap-2">
                 <LuPhone /> <a href="tel:+9779800001234">+977-9800001234</a>
@@ -165,18 +165,18 @@ export default function Footer() {
             {/* Left Side Links & Copyright */}
             <div className="space-y-4">
               <div className="flex gap-6 flex-wrap">
-                <a href="#" className="hover:underline">
+                <Link href="#" className="hover:underline">
                   Home
-                </a>
-                <a href="#" className="hover:underline">
+                </Link>
+                <Link href="#" className="hover:underline">
                   About
-                </a>
-                <a href="#" className="hover:underline">
+                </Link>
+                <Link href="#" className="hover:underline">
                   Contact Us
-                </a>
-                <a href="#" className="hover:underline">
+                </Link>
+                <Link href="#" className="hover:underline">
                   Terms of Use
-                </a>
+                </Link>
               </div>
               <div className="flex items-center gap-1">
                 <BsCCircle />
