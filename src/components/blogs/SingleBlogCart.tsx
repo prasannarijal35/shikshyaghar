@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Blog } from "@/types/blogs";
+import Link from "next/link";
 
 type Props = {
   blog: Blog;
@@ -19,9 +20,11 @@ const BlogCard = ({ blog }: Props) => {
       <p className="text-sky-500 font-semibold p-4 text-sm mb-1">
         {blog.category}
       </p>
-      <h2 className="text-lg font-semibold text-gray-800 px-4 pb-4 hover:text-primary">
-        {blog.title}
-      </h2>
+      <Link href={`/blogsdetails/${blog.slug}`}>
+        <h2 className="text-lg font-semibold text-gray-800 px-4 pb-4 hover:text-primary transition-colors duration-200 cursor-pointer">
+          {blog.title}
+        </h2>
+      </Link>
     </div>
   );
 };
