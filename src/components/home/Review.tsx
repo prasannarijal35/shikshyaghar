@@ -15,7 +15,7 @@ interface Props {
 
 export default function ReviewSlider({ reviews }: Props) {
   return (
-    <section className="py-16 bg-[#f0f8ff]">
+    <section className="py-15 bg-[#f0f8ff]">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">
           What Our Teachers Say
@@ -45,40 +45,31 @@ export default function ReviewSlider({ reviews }: Props) {
           }}
         >
           {reviews.map((review) => (
-            <SwiperSlide
-              key={review.id}
-              className="transition-transform duration-300"
-            >
-              {({ isActive }) => (
-                <div
-                  className={`review-card bg-white p-6 rounded-2xl shadow-2xl hover:shadow-lg transition-transform duration-300 ${
-                    isActive ? "scale-105 shadow-lg" : ""
-                  }`}
-                >
-                  <div className="flex flex-col items-center">
-                    <Image
-                      src={review.avatar}
-                      alt={review.name}
-                      width={80}
-                      height={80}
-                      className="rounded-full mb-4"
-                    />
-                    <h4 className="text-lg font-semibold text-blue-500 text-center">
-                      {review.name}
-                    </h4>
-                    <p className="text-sm text-gray-500 mb-3 text-center">
-                      {review.occupation}
-                    </p>
-                  </div>
-                  <p className="text-gray-700 text-sm italic text-center">
-                    “{review.comment}”
+            <SwiperSlide key={review.id} className="h-full flex">
+              <div className="review-card flex flex-col justify-between w-full h-full bg-white p-6 rounded-2xl shadow-md">
+                <div className="flex flex-col items-center">
+                  <Image
+                    src={review.avatar}
+                    alt={review.name}
+                    width={80}
+                    height={80}
+                    className="rounded-full mb-4"
+                  />
+                  <h4 className="text-lg font-semibold text-blue-500 text-center">
+                    {review.name}
+                  </h4>
+                  <p className="text-sm text-gray-500 mb-3 text-center">
+                    {review.occupation}
                   </p>
                 </div>
-              )}
+                <p className="text-gray-700 text-sm italic text-center mt-4">
+                  “{review.comment}”
+                </p>
+              </div>
             </SwiperSlide>
           ))}
         </Swiper>
-        <div className="custom-pagination flex justify-center mt-8" />
+        {/* <div className="custom-pagination flex justify-center mt-8" /> */}
       </div>
     </section>
   );

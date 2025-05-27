@@ -32,7 +32,7 @@ export default function Footer() {
             </div>
 
             {/* Image */}
-            <div className="hidden md:block absolute md:right-10 lg:right-36 bottom-5 md:bottom-10">
+            <div className="hidden md:block absolute md:right-10 lg:right-36 bottom-0 md:bottom-0">
               <Image
                 src={photo}
                 alt="Expert consultation"
