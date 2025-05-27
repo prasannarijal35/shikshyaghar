@@ -1,5 +1,5 @@
 import { HeroSection } from "@/components/home";
-import banner1 from "@/assets/bannerimages/banner1.jpg";
+import banner3 from "@/assets/bannerimages/banner1.jpg";
 import MainPage from "./MainPage";
 
 export default function Home() {
@@ -7,7 +7,7 @@ export default function Home() {
     <>
       <section
         className="h-screen w-full bg-cover bg-center relative"
-        style={{ backgroundImage: `url(${banner1.src})` }}
+        style={{ backgroundImage: `url(${banner3.src})` }}
       >
         <div className="pt-16">
           <HeroSection />
