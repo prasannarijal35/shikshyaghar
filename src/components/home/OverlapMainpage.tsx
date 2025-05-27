@@ -1,9 +1,9 @@
 "use client";
-
 import React from "react";
 import Image from "next/image";
 import { MotionDiv } from "@/components/MotionDiv";
 import teamImage from "@/assets/bannerimages/banner2.png";
+import Link from "next/link";
 
 export default function OverlapMainpage() {
   return (
@@ -17,24 +17,31 @@ export default function OverlapMainpage() {
           viewport={{ once: false, amount: 0.4 }}
         >
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-[1.2]">
-            You Need the <br /> Best Advice
+            Empowering Education,
+            <br />
+            Anywhere
           </h2>
           <h2 className="text-xl font-normal text-gray-500">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem ullam
-            consectetur asperiores at consequatur porro nesciunt quo vitae
-            adipisci reiciendis. consectetur asperiores at consequatur porro
-            nesciunt quo vitae adipisci reiciendis.
+            Shikshyaghar is an innovative online platform designed to bridge the
+            gap between teachers and students. It offers a seamless virtual
+            space for learning, sharing knowledge, and delivering quality
+            education—just like a real coaching center, but accessible from
+            anywhere.
           </h2>
-          <button className="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-md transition duration-300">
-            Read More
-          </button>
+          <Link
+            href={"./login"}
+            className="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-md transition duration-300"
+          >
+            Get Started
+          </Link>
         </MotionDiv>
+
         <MotionDiv
-          className="relative w-full h-96 md:h-[450px]"
+          className="relative w-full h-96 md:h-[450px] hidden md:block"
           initial={{ opacity: 0, x: 60 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-          viewport={{ once: false, amount: 0.4 }} // 👈 repeatable animation
+          viewport={{ once: false, amount: 0.4 }}
         >
           <Image
             src={teamImage}
