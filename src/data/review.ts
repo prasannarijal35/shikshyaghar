@@ -6,7 +6,7 @@ export const dummyReviews: Review[] = [
     id: "1",
     name: "Samantha Lee",
     comment:
-      "Amazing product quality and very fast delivery! I ordered multiple items and everything arrived in perfect condition, neatly packed and ahead of schedule. Highly recommend this platform!",
+      "Amazing product quality and very fast delivery! I ordered multiple items and everything arrived in perfect condition, neatly packed and ahead of schedule!",
     occupation: "Software Engineer",
     avatar: Review1.src,
   },
