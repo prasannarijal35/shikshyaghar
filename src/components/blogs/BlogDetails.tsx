@@ -20,11 +20,11 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
   }, []);
 
   return (
-    <div className="bg-white p-20">
+    <div className="bg-white px-4 py-20 sm:p-10 lg:p-20">
       <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <header className="mb-8">
-          <h1 className="text-3xl font-bold border-b-1 border-gray-200  text-gray-900 pb-4 mb-5">
+          <h1 className="text-3xl font-bold border-b-1 border-gray-200 text-gray-900 pb-4 mb-5">
             {blog.title}
           </h1>
 
@@ -76,7 +76,7 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
         </header>
 
         {/* Image */}
-        <div className="relative w-full h-96 rounded-xl overflow-hidden shadow-md mb-6">
+        <div className="relative w-full h-64 sm:h-80 md:h-96 rounded-xl overflow-hidden shadow-md mb-6">
           <Image
             src={blog.image}
             alt={blog.title}

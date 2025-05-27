@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Blog } from "@/types/blogs";
 import Link from "next/link";
+import { MotionDiv } from "../MotionDiv";
 
 type Props = {
   blog: Blog;
@@ -8,7 +9,14 @@ type Props = {
 
 const BlogCard = ({ blog }: Props) => {
   return (
-    <div className="bg-white rounded-2xl shadow-md  w-full max-w-sm hover:shadow-lg transition-shadow duration-200">
+    <MotionDiv
+      className="bg-white rounded-2xl shadow-md w-full max-w-sm hover:shadow-lg transition-shadow duration-200"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+    >
       <Image
         src={blog.image}
         alt={blog.title}
@@ -25,7 +33,7 @@ const BlogCard = ({ blog }: Props) => {
           {blog.title}
         </h2>
       </Link>
-    </div>
+    </MotionDiv>
   );
 };
 
