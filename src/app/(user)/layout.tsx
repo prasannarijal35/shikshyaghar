@@ -1,5 +1,5 @@
 // app/layout.tsx (this stays a server component)
-import "./globals.css";
+import "@/styles/globals.css";
 import { Poppins } from "next/font/google";
 import ClientLayout from "./ClientLayout";
 
