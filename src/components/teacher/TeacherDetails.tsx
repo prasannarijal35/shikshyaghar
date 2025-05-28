@@ -27,7 +27,7 @@ export default function TeacherDetailsCard({ teacher }: Props) {
   return (
     <div className="relative w-full min-h-screen pb-20 bg-gray-100">
       {/* Top Gradient Background */}
-      <div className="h-64 bg-orange-600 w-full"></div>
+      <div className="h-64 bg-gray-300 w-full"></div>
 
       {/* Bottom White Section */}
       <div className="mt-[-4rem] bg-white rounded-3xl pt-24 pb-14 px-4 sm:px-6 md:px-8 shadow-lg max-w-3xl mx-auto relative">
