@@ -27,13 +27,10 @@ export default function TeacherDetailsCard({ teacher }: Props) {
   return (
     <div className="relative w-full min-h-screen pb-20 bg-gray-100">
       {/* Top Gradient Background */}
-      <div
-        className="h-64 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600
- w-full"
-      ></div>
+      <div className="h-64 bg-orange-600 w-full"></div>
 
       {/* Bottom White Section */}
-      <div className="mt-[-4rem] bg-white rounded-t-3xl pt-24 pb-24 px-4 sm:px-6 md:px-8 shadow-lg max-w-3xl mx-auto relative">
+      <div className="mt-[-4rem] bg-white rounded-3xl pt-24 pb-14 px-4 sm:px-6 md:px-8 shadow-lg max-w-3xl mx-auto relative">
         {/* Profile Image - Overlapping */}
         <div className="absolute top-[-72px] left-1/2 transform -translate-x-1/2">
           <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-full overflow-hidden shadow-lg ">
@@ -49,7 +46,7 @@ export default function TeacherDetailsCard({ teacher }: Props) {
         </div>
 
         {/* Content */}
-        <div className="flex flex-col gap-6 items-center text-center px-2 sm:px-4">
+        <div className="flex flex-col gap-2 items-center text-center px-2 sm:px-4">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
             {teacher.name}
           </h2>
@@ -78,7 +75,7 @@ export default function TeacherDetailsCard({ teacher }: Props) {
           )}
 
           {/* Info Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700 text-left w-full max-w-xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-md text-gray-700 text-left w-full max-w-xl mx-auto">
             <p>
               <strong>Gender:</strong> {teacher.gender}
             </p>

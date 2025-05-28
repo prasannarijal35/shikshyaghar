@@ -1,4 +1,12 @@
+
+import TeacherFilterPage from "@/components/teacher/teachers";
 import React from "react";
+
+export default function page() {
+  return (
+    <>
+      <TeacherFilterPage />
+
 
 import BreadCrumb from "@/components/common/BreadCrumb";
 import SingleTeacherProfile from "@/components/teacher/SingleTeacherCard";
@@ -23,6 +31,7 @@ export default function page() {
           </div>
         </div>
       </div>
+
     </>
   );
 }
