@@ -13,4 +13,5 @@ export interface Teacher {
   slug: string;
   photo: string;
   about: string;
+  gradeRange: string;
 }
