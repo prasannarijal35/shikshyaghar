@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 import StudentHeader from "@/components/studentPannel/studentlayout/StudentHeader";
 import StudentSidebar from "@/components/studentPannel/studentlayout/StudentAside";
 import StudentFooter from "@/components/studentPannel/studentlayout/StudentFooter";
@@ -10,19 +10,22 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
-    <div className="w-screen flex">
-      <StudentSidebar
-        isSidebarOpen={isSidebarOpen}
-        toggleSidebar={toggleSidebar}
-      />
-      <main className="flex-1 bg-gray-100 h-screen flex flex-col">
+    <div className="min-h-screen bg-gray-100 flex">
+      <StudentSidebar isOpen={isSidebarOpen} />
+
+      <div
+        className={`flex-1 transition-all duration-300 ${
+          isSidebarOpen ? "sm:ml-64" : "ml-0"
+        }`}
+      >
         <StudentHeader
-          isSidebarOpen={isSidebarOpen}
           toggleSidebar={toggleSidebar}
+          isSidebarOpen={isSidebarOpen}
         />
-        <div className="flex-1 overflow-y-auto p-4">{children}</div>
+
+        <main className="pt-16 p-4">{children}</main>
         <StudentFooter />
-      </main>
+      </div>
     </div>
   );
 }

@@ -1,62 +1,22 @@
-"use client";
+import Image from "next/image";
+import logo from "@/assets/logo/Sg_logo.png";
 
-import React from "react";
-
-interface StudentSidebarProps {
-  isSidebarOpen: boolean;
-  toggleSidebar: () => void;
-}
-
-export default function StudentSidebar({
-  isSidebarOpen,
-  toggleSidebar,
-}: StudentSidebarProps) {
+export default function Aside({ isOpen }: { isOpen: boolean }) {
   return (
-    <>
-      {/* Overlay for mobile when sidebar is open */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-30 z-20 md:hidden"
-          onClick={toggleSidebar}
+    <aside
+      className={`w-64 h-screen bg-white shadow-md fixed top-0 left-0 z-20 flex flex-col transform transition-transform duration-300 ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
+      <div className="p-6">
+        <Image
+          src={logo}
+          alt="TailAdmin Logo"
+          width={150}
+          height={40}
+          priority
         />
-      )}
-
-      <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-white shadow-md z-30 transform transition-transform duration-300 ease-in-out
-        ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 md:static md:flex-shrink-0`}
-      >
-        <div className="p-4 text-lg font-bold border-b border-gray-200">
-          Menu
-        </div>
-        <nav className="flex flex-col p-4 space-y-2">
-          <a
-            href="/student/dashboard"
-            className="px-3 py-2 rounded hover:bg-blue-100"
-          >
-            Dashboard
-          </a>
-          <a
-            href="/student/courses"
-            className="px-3 py-2 rounded hover:bg-blue-100"
-          >
-            Courses
-          </a>
-          <a
-            href="/student/profile"
-            className="px-3 py-2 rounded hover:bg-blue-100"
-          >
-            Profile
-          </a>
-          <a
-            href="/student/settings"
-            className="px-3 py-2 rounded hover:bg-blue-100"
-          >
-            Settings
-          </a>
-        </nav>
-      </aside>
-    </>
+      </div>
+    </aside>
   );
 }

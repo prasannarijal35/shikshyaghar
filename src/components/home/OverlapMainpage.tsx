@@ -7,8 +7,8 @@ import Link from "next/link";
 
 export default function OverlapMainpage() {
   return (
-    <section className="py-16 px-6 md:px-20 overflow-hidden container">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-10">
+    <section className="py-16  overflow-hidden container">
+      <div className="max-w-6xl grid grid-cols-1 md:grid-cols-2 items-center gap-10">
         <MotionDiv
           className="flex space-y-8 flex-col items-start"
           initial={{ opacity: 0, x: -60 }}
