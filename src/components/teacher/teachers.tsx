@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import TeacherCard from "@/components/teacher/SingleTeacherCard";
 import { teachers } from "@/data/teacher";
