@@ -1,5 +1,6 @@
+import { TeacherProfile } from "@/components/teacherpanel";
 import React from "react";
 
-export default function TeacherProfile() {
+export default function page() {
   return <TeacherProfile />;
 }
