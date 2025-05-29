@@ -49,13 +49,13 @@ const TeacherCard = ({ teacher }: Props) => {
       <div className="ml-5 flex flex-col gap-2">
         <Link
           href={`/teacherdetails/${teacher.slug}`}
-          className="text-md border border-primary text-primary px-4 py-2 rounded hover:bg-primary hover:text-white transition duration-300 text-center"
+          className="text-md border border-primary text-primary px-4 py-2 rounded-l-2xl rounded-r-2xl hover:bg-primary hover:text-white transition duration-300 text-center"
         >
           View Profile
         </Link>
         <button
           onClick={() => alert(`Booking request sent to ${teacher.name}`)}
-          className="text-md border border-primary text-white bg-primary  hover:text-primary hover:bg-white px-4 py-2 rounded transition duration-300"
+          className="text-md border border-primary text-white bg-primary  hover:text-primary hover:bg-white px-4 py-2 rounded-l-2xl rounded-r-2xl transition duration-300"
         >
           Book Now
         </button>

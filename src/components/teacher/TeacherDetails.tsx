@@ -62,9 +62,38 @@ export default function TeacherDetailsCard({ teacher }: Props) {
             </span>
           </div>
 
+          {/* Info Grid */}
+          <div className="flex justify-between w-full py-4 max-w-2xl mx-auto text-md text-gray-700 gap-8">
+            {/* Left side */}
+            <div className="space-y-3 text-left">
+              <p>
+                <strong>Gender:</strong> {teacher.gender}
+              </p>
+              <p>
+                <strong>Contact:</strong> {teacher.contact}
+              </p>
+              <p>
+                <strong>Education:</strong> {teacher.education}
+              </p>
+            </div>
+
+            {/* Right side */}
+            <div className="space-y-3 text-left">
+              <p>
+                <strong>Age:</strong> {teacher.age}
+              </p>
+              <p>
+                <strong>Email:</strong> {teacher.email}
+              </p>
+              <p>
+                <strong>Experience:</strong> {teacher.teachingExperience}
+              </p>
+            </div>
+          </div>
+
           {/* About Me */}
           {teacher.about && (
-            <div className="w-full max-w-xl text-left">
+            <div className="w-full max-w-2xl text-left ">
               <h3 className="text-base sm:text-lg font-semibold mb-2 text-center">
                 About Me
               </h3>
@@ -74,33 +103,8 @@ export default function TeacherDetailsCard({ teacher }: Props) {
             </div>
           )}
 
-          {/* Info Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-md text-gray-700 text-left w-full max-w-xl mx-auto">
-            <p>
-              <strong>Gender:</strong> {teacher.gender}
-            </p>
-            <p>
-              <strong>Age:</strong> {teacher.age}
-            </p>
-            <p>
-              <strong>Contact:</strong> {teacher.contact}
-            </p>
-            <p>
-              <strong>Email:</strong> {teacher.email}
-            </p>
-            <p>
-              <strong>Education:</strong> {teacher.education}
-            </p>
-            <p>
-              <strong>Experience:</strong> {teacher.teachingExperience}
-            </p>
-            <p>
-              <strong>City:</strong> {teacher.city}
-            </p>
-          </div>
-
           {/* Subjects */}
-          <div className="w-full max-w-xl">
+          <div className="w-full max-w-2xl mt-6">
             <h3 className="text-base sm:text-lg font-semibold mb-2 text-center">
               Subjects Taught
             </h3>
@@ -116,7 +120,7 @@ export default function TeacherDetailsCard({ teacher }: Props) {
             </div>
           </div>
 
-          {/* Button */}
+          {/* Book Button */}
           <Link
             href={"/book"}
             className="mt-4 px-5 sm:px-6 py-2.5 sm:py-3 bg-white border border-primary text-primary hover:bg-primary hover:text-white font-semibold rounded-lg transition duration-200 text-sm sm:text-base"
