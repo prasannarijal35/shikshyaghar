@@ -8,21 +8,21 @@ import {
   MdPerson,
   MdClass,
   MdAssignment,
-  MdForum,
-  MdEvent,
   MdNotifications,
   MdHelp,
+  MdFindReplace,
+  MdLogout,
 } from "react-icons/md";
 
 export const navItems = [
   { name: "Dashboard", href: "/student/dashboard", icon: MdDashboard },
   { name: "My Profile", href: "/student/profile", icon: MdPerson },
-  { name: "My Courses", href: "/student/courses", icon: MdClass },
-  { name: "Assignments", href: "/student/assignments", icon: MdAssignment },
-  { name: "Discussion Forum", href: "/forum", icon: MdForum },
-  { name: "Live Classes", href: "/live-classes", icon: MdEvent },
+  { name: "My Classes", href: "/student/class", icon: MdClass },
+  { name: "Find Teachers", href: "/student/findteacher", icon: MdFindReplace },
+  { name: "My Schedule", href: "/student/schedule", icon: MdAssignment },
   { name: "Notifications", href: "/notifications", icon: MdNotifications },
   { name: "Help & Support", href: "/support", icon: MdHelp },
+  { name: "Logout", href: "/logout", icon: MdLogout },
 ];
 
 export default function Aside({ isOpen }: { isOpen: boolean }) {
@@ -56,7 +56,7 @@ export default function Aside({ isOpen }: { isOpen: boolean }) {
                   className={`flex items-center gap-3 px-6 py-3 rounded-lg transition-all duration-200 cursor-pointer
     ${
       pathname === href
-        ? "bg-indigo-600 text-white shadow-md"
+        ? "bg-cyan-600 text-white shadow-md"
         : "text-gray-700 hover:bg-cyan-100 hover:text-primary"
     }`}
                 >
