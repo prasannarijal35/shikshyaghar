@@ -1,8 +1,8 @@
 "use client";
 import { ReactNode, useState } from "react";
-import AdminSidebar from "@/components/layout.tsx/adminlayouts/AdminAside";
-import AdminHeader from "@/components/layout.tsx/adminlayouts/AdminHeader";
-import AdminFooter from "@/components/layout.tsx/adminlayouts/AdminFooter";
+import AdminSidebar from "@/components/layouts/adminlayouts/AdminAside";
+import AdminHeader from "@/components/layouts/adminlayouts/AdminHeader";
+import AdminFooter from "@/components/layouts/adminlayouts/AdminFooter";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
