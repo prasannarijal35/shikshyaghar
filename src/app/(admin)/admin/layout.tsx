@@ -1,5 +1,4 @@
-
-import { AdminLayout } from "@/components/layout.tsx/adminlayouts";
+import { AdminLayout } from "@/components/layouts/adminlayouts";
 import "@/styles/globals.css";
 import { Poppins } from "next/font/google";
 
