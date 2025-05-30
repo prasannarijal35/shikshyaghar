@@ -1,4 +1,4 @@
-import TeacherFilterPage from "@/components/teacher/teachers";
+import TeacherFilterPage from "@/components/teacher/Teachers";
 import React from "react";
 
 export default function page() {

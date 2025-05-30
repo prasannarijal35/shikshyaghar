@@ -61,8 +61,8 @@ export default function TeacherFilterPage() {
   });
 
   return (
-    <section className="min-h-screen bg-gray-200 py-20 pb-36 container ">
-      <div className="w-full ">
+    <section className="min-h-screen bg-gray-200 py-20 pb-36 w-full ">
+      <div className=" container ">
         <h1 className="text-3xl font-bold mb-6  text-start text-primary">
           Teachers
         </h1>
