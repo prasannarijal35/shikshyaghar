@@ -7,7 +7,7 @@ import { IoNotifications } from "react-icons/io5";
 import { FaSignOutAlt, FaUser } from "react-icons/fa";
 import Link from "next/link";
 
-export default function StudentHeader({
+export default function TeacherHeader({
   toggleSidebar,
   isSidebarOpen,
 }: {
@@ -110,7 +110,7 @@ export default function StudentHeader({
                     <div className="bg-gray-100 rounded-md p-2 flex justify-center items-center">
                       <FaUser className="text-primary" />
                     </div>
-                    <Link href={"/student/profile"} className="flex flex-col">
+                    <Link href={"/teacher/profile"} className="flex flex-col">
                       <p className="font-normal text-sm text-gray-700">
                         Profile
                       </p>

@@ -1,6 +1,6 @@
 // app/layout.tsx (this stays a server component)
 
-import { TeacherLayout } from "@/components/layout.tsx/teacherlayouts";
+import { TeacherLayout } from "@/components/layouts/teacherlayouts";
 import "@/styles/globals.css";
 import { Poppins } from "next/font/google";
 
