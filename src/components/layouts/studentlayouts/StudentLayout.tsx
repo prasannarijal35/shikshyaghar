@@ -1,8 +1,8 @@
 "use client";
 import { ReactNode, useState } from "react";
-import StudentHeader from "@/components/layout.tsx/studentlayouts/StudentHeader";
-import StudentSidebar from "@/components/layout.tsx/studentlayouts/StudentAside";
-import StudentFooter from "@/components/layout.tsx/studentlayouts/StudentFooter";
+import StudentHeader from "@/components/layouts/studentlayouts/StudentHeader";
+import StudentSidebar from "@/components/layouts/studentlayouts/StudentAside";
+import StudentFooter from "@/components/layouts/studentlayouts/StudentFooter";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

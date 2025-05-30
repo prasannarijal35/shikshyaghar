@@ -8,19 +8,21 @@ import {
   MdPerson,
   MdClass,
   MdAssignment,
-  MdForum,
   MdEvent,
   MdNotifications,
   MdHelp,
+  MdMessage,
+  MdGroup,
 } from "react-icons/md";
 
 export const teacherNavItems = [
   { name: "Dashboard", href: "/teacher/dashboard", icon: MdDashboard },
   { name: "My Profile", href: "/teacher/profile", icon: MdPerson },
-  { name: "My Courses", href: "/teacher/courses", icon: MdClass },
-  { name: "Assignments", href: "/teacher/assignments", icon: MdAssignment },
-  { name: "Discussion Forum", href: "/teacher/forum", icon: MdForum },
+  { name: "My Courses", href: "/teacher/mycourses", icon: MdClass },
+  { name: "Requests", href: "/teacher/requests", icon: MdAssignment },
   { name: "Live Classes", href: "/teacher/live-classes", icon: MdEvent },
+  { name: "Messages", href: "/teacher/messages", icon: MdMessage },
+  { name: "Students", href: "/teacher/students", icon: MdGroup },
   {
     name: "Notifications",
     href: "/teacher/notifications",
