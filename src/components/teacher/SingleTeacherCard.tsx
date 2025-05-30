@@ -27,7 +27,6 @@ const TeacherCard = ({ teacher }: Props) => {
       <div className="flex-1 space-y-1 text-sm">
         <h3 className="font-semibold text-xl text-gray-900 flex items-center gap-2">
           {teacher.name}
-          <BsFillPatchCheckFill className="text-green-600 text-base" />
         </h3>
         <p className="text-gray-700">
           {teacher.gender}, {teacher.age} years
