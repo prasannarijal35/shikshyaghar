@@ -1,11 +1,16 @@
 "use client";
 
 import React from "react";
+import {
+  CalendarDays,
+  Users,
+  ClipboardList,
+  MessageSquare,
+} from "lucide-react";
 
 export default function TeacherDashboard() {
-  const teacherName = "Mr. Sharma"; // Example name
+  const teacherName = "Mr. Sharma";
 
-  // Dummy data (replace with real API/data)
   const todayClasses = [
     { subject: "Math", time: "9:00 AM" },
     { subject: "Physics", time: "1:30 PM" },
@@ -32,11 +37,10 @@ export default function TeacherDashboard() {
         Welcome, <span className="text-blue-600">{teacherName}</span>!
       </h1>
 
-      {/* Top Section */}
+      {/* Top Grid: Classes & Meetings */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {/* Today's Classes */}
         <section className="bg-white rounded-lg shadow p-4">
-          <h2 className="font-semibold text-lg mb-3">Todayapos;s Classes</h2>
+          <h2 className="font-semibold text-lg mb-3">Todays Classes</h2>
           <ul className="space-y-2 text-gray-700">
             {todayClasses.map(({ subject, time }, i) => (
               <li key={i} className="flex justify-between">
@@ -48,7 +52,6 @@ export default function TeacherDashboard() {
           </ul>
         </section>
 
-        {/* Upcoming Meetings */}
         <section className="bg-white rounded-lg shadow p-4">
           <h2 className="font-semibold text-lg mb-3">Upcoming Meetings</h2>
           <ul className="space-y-2 text-gray-700">
@@ -63,9 +66,8 @@ export default function TeacherDashboard() {
         </section>
       </div>
 
-      {/* Middle Section */}
+      {/* Middle Grid: Tasks & Announcements */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {/* Tasks / To-do */}
         <section className="bg-white rounded-lg shadow p-4">
           <h2 className="font-semibold text-lg mb-3">Tasks</h2>
           <ul className="space-y-2 text-gray-700">
@@ -79,7 +81,6 @@ export default function TeacherDashboard() {
           </ul>
         </section>
 
-        {/* Announcements */}
         <section className="bg-white rounded-lg shadow p-4">
           <h2 className="font-semibold text-lg mb-3">Announcements</h2>
           <ul className="list-disc list-inside text-gray-700 space-y-1">
@@ -91,12 +92,24 @@ export default function TeacherDashboard() {
         </section>
       </div>
 
-      {/* Bottom Navigation / Quick Links */}
-      <nav className="bg-white rounded-lg shadow p-4 flex justify-around text-blue-600 font-semibold select-none">
-        <button className="hover:text-blue-800 transition">Messages</button>
-        <button className="hover:text-blue-800 transition">Attendance</button>
-        <button className="hover:text-blue-800 transition">Students</button>
-        <button className="hover:text-blue-800 transition">Support</button>
+      {/* Quick Navigation */}
+      <nav className="bg-white rounded-lg shadow p-4 flex flex-wrap justify-around gap-4 text-blue-600 font-semibold select-none">
+        <button className="flex items-center gap-2 hover:text-blue-800 transition">
+          <MessageSquare className="w-4 h-4" />
+          Messages
+        </button>
+        <button className="flex items-center gap-2 hover:text-blue-800 transition">
+          <ClipboardList className="w-4 h-4" />
+          Attendance
+        </button>
+        <button className="flex items-center gap-2 hover:text-blue-800 transition">
+          <Users className="w-4 h-4" />
+          Students
+        </button>
+        <button className="flex items-center gap-2 hover:text-blue-800 transition">
+          <CalendarDays className="w-4 h-4" />
+          My Courses
+        </button>
       </nav>
     </main>
   );
