@@ -36,7 +36,7 @@ export default function StudentDashboard() {
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-6 sm:p-8 md:p-12">
       {/* Welcome */}
       <h1 className="text-3xl font-bold mb-8 text-gray-800">
-        Welcome, <span className="text-blue-600">{studentName}</span>!
+        Welcome, <span className="text-primary">{studentName}</span>!
       </h1>
 
       {/* Top Section */}
@@ -44,7 +44,7 @@ export default function StudentDashboard() {
         {/* Upcoming Classes */}
         <section className={cardStyle}>
           <div className="flex items-center gap-2 mb-4">
-            <Calendar className="text-blue-600" size={20} />
+            <Calendar className="text-primary" size={20} />
             <h2 className="text-xl font-semibold text-gray-800">
               Upcoming Classes
             </h2>
@@ -62,7 +62,7 @@ export default function StudentDashboard() {
         {/* Assignments */}
         <section className={cardStyle}>
           <div className="flex items-center gap-2 mb-4">
-            <ClipboardList className="text-blue-600" size={20} />
+            <ClipboardList className="text-primary" size={20} />
             <h2 className="text-xl font-semibold text-gray-800">Assignments</h2>
           </div>
           <ul className="space-y-3 text-gray-700">
@@ -85,7 +85,7 @@ export default function StudentDashboard() {
         {/* Courses */}
         <section className={cardStyle}>
           <div className="flex items-center gap-2 mb-4">
-            <BookOpen className="text-blue-600" size={20} />
+            <BookOpen className="text-primary" size={20} />
             <h2 className="text-xl font-semibold text-gray-800">Courses</h2>
           </div>
           <ul className="space-y-5">
@@ -97,7 +97,7 @@ export default function StudentDashboard() {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div
-                    className="bg-blue-600 h-3 rounded-full"
+                    className="bg-primary h-3 rounded-full"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -109,7 +109,7 @@ export default function StudentDashboard() {
         {/* Notifications */}
         <section className={cardStyle}>
           <div className="flex items-center gap-2 mb-4">
-            <Bell className="text-blue-600" size={20} />
+            <Bell className="text-primary" size={20} />
             <h2 className="text-xl font-semibold text-gray-800">
               Notifications
             </h2>
@@ -125,7 +125,7 @@ export default function StudentDashboard() {
       </div>
 
       {/* Bottom Navigation */}
-      <nav className="bg-white rounded-2xl shadow p-5 flex flex-wrap justify-around gap-4 text-blue-600 font-medium text-sm sm:text-base">
+      <nav className="bg-white rounded-2xl shadow p-5 flex flex-wrap justify-around gap-4 text-primary font-medium text-sm sm:text-base">
         <button className="flex items-center gap-1 hover:text-blue-800 transition">
           <MessageCircle size={18} /> Messages
         </button>

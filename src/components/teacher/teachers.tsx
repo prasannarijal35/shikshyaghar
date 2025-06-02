@@ -2,6 +2,7 @@
 import { useState } from "react";
 import TeacherCard from "@/components/teacher/SingleTeacherCard";
 import { teachers } from "@/data/teacher";
+import { FiRefreshCw } from "react-icons/fi";
 
 const grades = [
   "All Grades",
@@ -60,78 +61,89 @@ export default function TeacherFilterPage() {
     );
   });
 
+  const clearFilters = () => {
+    setSelectedGrade(grades[0]);
+    setSelectedSubject(subjects[0]);
+    setSelectedQualification(qualifications[0]);
+    setSelectedExperience(null);
+    setSelectedGender(null);
+  };
+
   return (
-    <section className="min-h-screen bg-gray-200 py-20 pb-36 w-full ">
-      <div className=" container ">
-        <h1 className="text-3xl font-bold mb-6  text-start text-primary">
-          Teachers
-        </h1>
-
-        {/* Filters */}
-        <div className="flex flex-wrap gap-4 mb-10 justify-start">
-          <select
-            className="border border-gray-700 rounded px-4 py-2"
-            value={selectedGrade}
-            onChange={(e) => setSelectedGrade(e.target.value)}
+    <section className="min-h-screen bg-white py-20 pb-36 w-full">
+      <div className="container">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold text-start text-primary">
+            Teachers
+          </h1>
+          <button
+            onClick={clearFilters}
+            className="flex justify-between items-center gap-2 px-4 py-2 rounded-lg border border-primary text-primary hover:bg-primary hover:text-white transition duration-300"
+            aria-label="Clear filters"
+            title="Clear filters"
           >
-            {grades.map((g) => (
-              <option key={g} value={g}>
-                {g}
-              </option>
-            ))}
-          </select>
-
-          <select
-            className="border border-gray-700 rounded px-4 py-2"
-            value={selectedSubject}
-            onChange={(e) => setSelectedSubject(e.target.value)}
-          >
-            {subjects.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-
-          <select
-            className="border border-gray-700 rounded px-4 py-2"
-            value={selectedQualification}
-            onChange={(e) => setSelectedQualification(e.target.value)}
-          >
-            {qualifications.map((q) => (
-              <option key={q} value={q}>
-                {q}
-              </option>
-            ))}
-          </select>
-
-          <select
-            className="border border-gray-700 rounded px-4 py-2"
-            value={selectedExperience ?? ""}
-            onChange={(e) => setSelectedExperience(e.target.value || null)}
-          >
-            <option value="">All Experience</option>
-            {["0", "2", "5", "8", "10"].map((exp) => (
-              <option key={exp} value={exp}>
-                {exp}+ Years
-              </option>
-            ))}
-          </select>
-
-          <select
-            className="border border-gray-700 rounded px-4 py-2"
-            value={selectedGender ?? ""}
-            onChange={(e) => setSelectedGender(e.target.value || null)}
-          >
-            <option value="">All Genders</option>
-            {["Male", "Female"].map((g) => (
-              <option key={g} value={g}>
-                {g}
-              </option>
-            ))}
-          </select>
+            <span className="">Refresh</span>
+            <FiRefreshCw className="w-5 h-5" />
+          </button>
         </div>
 
+        {/* Filters */}
+        <div className="flex flex-wrap gap-4 mb-4 justify-start">
+          {[
+            {
+              value: selectedGrade,
+              onChange: (e: React.ChangeEvent<HTMLSelectElement>) =>
+                setSelectedGrade(e.target.value),
+              options: grades,
+            },
+            {
+              value: selectedSubject,
+              onChange: (e: React.ChangeEvent<HTMLSelectElement>) =>
+                setSelectedSubject(e.target.value),
+              options: subjects,
+            },
+            {
+              value: selectedQualification,
+              onChange: (e: React.ChangeEvent<HTMLSelectElement>) =>
+                setSelectedQualification(e.target.value),
+              options: qualifications,
+            },
+            {
+              value: selectedExperience ?? "",
+              onChange: (e: React.ChangeEvent<HTMLSelectElement>) =>
+                setSelectedExperience(e.target.value || null),
+              options: ["", "0", "2", "5", "8", "10"],
+              labels: [
+                "All Experience",
+                "0+ Years",
+                "2+ Years",
+                "5+ Years",
+                "8+ Years",
+                "10+ Years",
+              ],
+            },
+            {
+              value: selectedGender ?? "",
+              onChange: (e: React.ChangeEvent<HTMLSelectElement>) =>
+                setSelectedGender(e.target.value || null),
+              options: ["", "Male", "Female"],
+              labels: ["All Genders", "Male", "Female"],
+            },
+          ].map(({ value, onChange, options, labels }, idx) => (
+            <select
+              key={idx}
+              className="border border-primary rounded-lg px-4 py-2 text-primary font-medium hover:bg-primary/5 focus:outline-none focus:ring-1 focus:ring-primary focus:ring-opacity-50 transition"
+              value={value}
+              onChange={onChange}
+            >
+              {(labels ?? options).map((opt, i) => (
+                <option key={opt} value={options ? options[i] : opt}>
+                  {opt}
+                </option>
+              ))}
+            </select>
+          ))}
+        </div>
         {/* Teacher Cards */}
         <div className="flex flex-col gap-8 items-center w-full">
           {filteredTeachers.length ? (
@@ -139,7 +151,7 @@ export default function TeacherFilterPage() {
               <TeacherCard key={teacher.id} teacher={teacher} />
             ))
           ) : (
-            <p className="text-red-500 text-center">
+            <p className="text-red-500 text-center font-semibold text-lg">
               No teachers match your filter criteria.
             </p>
           )}
