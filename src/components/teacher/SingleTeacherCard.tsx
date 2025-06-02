@@ -46,7 +46,7 @@ const TeacherCard = ({ teacher }: Props) => {
       {/* CTA Buttons */}
       <div className="ml-5 flex flex-col gap-4">
         <Link
-          href={`/teacherdetails/${teacher.slug}`}
+          href={`/teachers/teacherdetails/${teacher.slug}`}
           className="text-md border border-primary text-primary px-4 py-2 rounded-lg hover:bg-primary hover:text-white transition duration-300 text-center"
         >
           View Profile
