@@ -56,7 +56,7 @@ export default function Aside({ isOpen }: { isOpen: boolean }) {
                   className={`flex items-center gap-3 px-6 py-3 rounded-lg transition-all duration-200 cursor-pointer
     ${
       pathname === href
-        ? "bg-cyan-600 text-white shadow-md"
+        ? "bg-primary text-white shadow-md"
         : "text-gray-700 hover:bg-cyan-100 hover:text-primary"
     }`}
                 >

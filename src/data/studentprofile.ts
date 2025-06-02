@@ -1,5 +1,5 @@
 import { Student } from "@/types/studentprofile";
-import Photo from "@/assets/teachers/teacher1.png";
+import Photo from "@/assets/extraimages/girlimage.png";
 export const mockStudent: Student = {
   fullName: "Sanjiv Paneru",
   gender: "Male",
