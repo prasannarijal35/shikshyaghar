@@ -8,12 +8,19 @@ export const metadata: Metadata = {
   description: "Detailed view of a teacher profile",
 };
 
-export default async function Page(props: {
+export default async function Page({
+  params,
+}: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await props.params;
+  const { slug } = await params;
 
-  const teacher = teachers.find((t) => t?.slug === slug);
+  let teacher;
+  try {
+    teacher = await Promise.resolve(teachers.find((t) => t?.slug === slug));
+  } catch (error) {
+    console.error(error);
+  }
 
   if (!teacher) return notFound();
 
