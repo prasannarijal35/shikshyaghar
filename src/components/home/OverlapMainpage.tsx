@@ -30,7 +30,7 @@ export default function OverlapMainpage() {
           </h2>
           <Link
             href={"./login"}
-            className="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-md transition duration-300"
+            className="bg-primary hover:bg-white hover:text-primary text-white font-semibold py-3 px-6 rounded-md transition duration-300 hover:border"
           >
             Get Started
           </Link>

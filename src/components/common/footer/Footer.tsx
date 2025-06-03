@@ -25,7 +25,7 @@ export default function Footer() {
 
               <button
                 aria-label="Book an Appointment"
-                className="bg-primary text-[#eaeaf3] font-semibold px-6 py-2 rounded-full hover:bg-white hover:text-primary  transform transition duration-300"
+                className="bg-primary text-[#eaeaf3] font-semibold px-6 py-2 rounded-md hover:bg-white hover:text-primary  transform transition duration-300"
               >
                 Book an Appointment
               </button>
