@@ -10,25 +10,32 @@ import banner4 from "@/assets/bannerimages/banner4.png";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import Link from "next/link";
 
 const slides = [
   {
     image: banner5,
-    title: "A Successful Study platform for students",
+    title: "Personalized Tuition Made Easy",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit, luctus nec ullamcorper mattis, pulvinar dapibus.",
+      "Find the perfect tutor and learn at your own pace with fully customized sessions tailored just for you.",
+    link: "/login",
+    buttonText: "Start Learning",
   },
   {
     image: banner6,
-    title: "Learn from the Best Teachers",
+    title: "Top Tutors. Verified & Trusted.",
     description:
-      "Join classes with expert tutors and improve your skills effectively.",
+      "Browse a network of highly-rated teachers in various subjects and book sessions with confidence.",
+    link: "/teachers",
+    buttonText: "View Tutors",
   },
   {
     image: banner4,
-    title: "Flexible and Affordable Tuition",
+    title: "Affordable Learning for Everyone",
     description:
-      "Study at your own pace with affordable rates tailored for you.",
+      "Explore flexible pricing and plans that suit your budget — with no contracts or hidden charges.",
+    link: "/features/affordable-learning",
+    buttonText: "See Plans",
   },
 ];
 
@@ -42,6 +49,7 @@ export default function HeroSlider() {
         autoplay={{ delay: 5000, disableOnInteraction: false }}
         loop={true}
         className="h-full"
+        pagination={{ clickable: true }}
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
@@ -53,17 +61,20 @@ export default function HeroSlider() {
                 priority={index === 0}
                 className="object-cover object-center"
               />
-              <div className="absolute top-35 left-0 flex items-center container">
-                <div className="max-w-[45%] text-white">
+              <div className="absolute top-[20%] left-0 flex items-center container px-4 md:px-12">
+                <div className="max-w-[90%] sm:max-w-[45%] text-white z-20">
                   <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight">
                     {slide.title}
                   </h1>
                   <p className="text-lg md:text-xl mb-8 whitespace-normal">
                     {slide.description}
                   </p>
-                  <button className="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-md transition duration-300 w-max">
-                    READ MORE
-                  </button>
+                  <Link
+                    href={slide.link}
+                    className="bg-primary hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-md transition duration-300 w-max"
+                  >
+                    {slide.buttonText}
+                  </Link>
                 </div>
               </div>
             </div>
