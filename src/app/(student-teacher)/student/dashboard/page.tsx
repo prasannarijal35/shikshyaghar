@@ -1,4 +1,4 @@
-import { StudentDashBoard } from "@/components/studentpannel";
+import { StudentDashBoard } from "@/components/studentpanel";
 
 export default function Page() {
   return (
