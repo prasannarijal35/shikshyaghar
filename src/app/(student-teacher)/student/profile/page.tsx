@@ -1,4 +1,4 @@
-import { StudentProfile } from "@/components/studentpannel";
+import { StudentProfile } from "@/components/studentpanel";
 import React from "react";
 
 export default function page() {

@@ -1,4 +1,4 @@
-import { MyClasses } from "@/components/studentpannel";
+import { MyClasses } from "@/components/studentpanel";
 import React from "react";
 
 export default function page() {
