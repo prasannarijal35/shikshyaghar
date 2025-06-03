@@ -1,6 +1,4 @@
-
-
-import { BlogManager } from "@/components/adminPanel/blogmanager";
+import { BlogManager } from "@/components/adminpanel/blogmanager";
 import React from "react";
 
 export default function page() {

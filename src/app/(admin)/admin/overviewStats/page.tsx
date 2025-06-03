@@ -1,5 +1,4 @@
-
-import { OverviewStats } from "@/components/adminPanel";
+import { OverviewStats } from "@/components/adminpanel";
 import React from "react";
 
 export default function page() {

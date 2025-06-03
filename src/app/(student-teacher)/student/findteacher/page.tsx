@@ -1,4 +1,4 @@
-import { FindTeachers } from "@/components/studentPannel";
+import { FindTeachers } from "@/components/studentpannel";
 import React from "react";
 
 export default function page() {

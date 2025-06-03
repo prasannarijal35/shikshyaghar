@@ -1,4 +1,4 @@
-import { ContactUs } from "@/components/ExtraPages/";
+import { ContactUs } from "@/components/extrapages";
 
 export default function page() {
   return <ContactUs />;

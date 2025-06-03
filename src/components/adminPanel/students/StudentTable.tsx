@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { DeleteModal } from "@/components/adminPanel/students";
 import { mockStudents } from "@/data/students";
 import { Student } from "@/types/students";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
 import { FaBan, FaTrashAlt, FaEye } from "react-icons/fa";
+import { DeleteModal } from "@/components/adminpanel/students";
 
 export default function StudentTable() {
   const [students, setStudents] = useState<Student[]>(mockStudents);
@@ -35,12 +35,24 @@ export default function StudentTable() {
         <table className="min-w-full bg-white rounded-lg overflow-hidden">
           <thead className="bg-gray-100">
             <tr>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">ID</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Photo</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Name</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Email</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Course</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Actions</th>
+              <th className="py-4 px-4 text-left text-[15px] font-medium">
+                ID
+              </th>
+              <th className="py-4 px-4 text-left text-[15px] font-medium">
+                Photo
+              </th>
+              <th className="py-4 px-4 text-left text-[15px] font-medium">
+                Name
+              </th>
+              <th className="py-4 px-4 text-left text-[15px] font-medium">
+                Email
+              </th>
+              <th className="py-4 px-4 text-left text-[15px] font-medium">
+                Course
+              </th>
+              <th className="py-4 px-4 text-left text-[15px] font-medium">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="text-base">

@@ -1,20 +1,21 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Blog } from '@/types/blogs';
-import { blogs as initialBlogs } from '@/data/blog';
-import Image from 'next/image';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
-import { DeleteModal } from '@/components/adminPanel/students';
-import { toast } from 'react-hot-toast';
-import BlogModal from '@/components/adminPanel/blogmanager/AddBlogModal';
+import { useState } from "react";
+import { Blog } from "@/types/blogs";
+import { blogs as initialBlogs } from "@/data/blog";
+import Image from "next/image";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { toast } from "react-hot-toast";
+import { AddBlogModal } from "@/components/adminpanel/blogmanager";
+import { DeleteModal } from "../students";
 
 export default function BlogManagerTable() {
   const [blogs, setBlogs] = useState<Blog[]>(initialBlogs);
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedBlogForDelete, setSelectedBlogForDelete] = useState<Blog | null>(null);
+  const [selectedBlogForDelete, setSelectedBlogForDelete] =
+    useState<Blog | null>(null);
 
   const handleEdit = (blog: Blog) => {
     setSelectedBlog(blog);
@@ -110,7 +111,7 @@ export default function BlogManagerTable() {
 
       {/* Add/Edit Modal */}
       {showModal && (
-        <BlogModal
+        <AddBlogModal
           blog={selectedBlog || undefined}
           closeModal={() => setShowModal(false)}
           onSave={handleSave}

@@ -23,7 +23,7 @@ function renderStars(rating: number) {
   return stars;
 }
 
-export default function TeacherDetailsCard({ teacher }: Props) {
+export default function TeacherDetails({ teacher }: Props) {
   return (
     <div className="relative w-full min-h-screen pb-20 bg-gray-100">
       {/* Top Gradient Background */}

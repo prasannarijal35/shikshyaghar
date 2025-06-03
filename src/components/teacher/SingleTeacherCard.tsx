@@ -9,7 +9,7 @@ type Props = {
   teacher: Teacher;
 };
 
-const TeacherCard = ({ teacher }: Props) => {
+const SingleTeacherCard = ({ teacher }: Props) => {
   return (
     <div className="bg-white flex items-center p-5 rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow w-full">
       {/* Teacher Image */}
@@ -62,4 +62,4 @@ const TeacherCard = ({ teacher }: Props) => {
   );
 };
 
-export default TeacherCard;
+export default SingleTeacherCard;

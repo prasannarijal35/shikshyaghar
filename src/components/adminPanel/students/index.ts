@@ -1,2 +1,2 @@
-export {default as StudentTable} from "./StudentTable";
-export {default as DeleteModal} from "./DeleteModal"
+export { default as StudentTable } from "./StudentTable";
+export { default as DeleteModal } from "./DeleteModal";

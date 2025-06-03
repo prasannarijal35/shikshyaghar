@@ -1,5 +1,4 @@
-
-import { TeacherVerification } from "@/components/adminPanel/teacherverification";
+import { TeacherVerification } from "@/components/adminpanel/teacherverification";
 import React from "react";
 
 export default function page() {

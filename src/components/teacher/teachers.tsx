@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import TeacherCard from "@/components/teacher/SingleTeacherCard";
+import SingleTeacherCard from "@/components/teacher/SingleTeacherCard";
 import { teachers } from "@/data/teacher";
 import { FiRefreshCw } from "react-icons/fi";
 
@@ -26,7 +26,7 @@ const qualifications = [
   "Diploma",
 ];
 
-export default function TeacherFilterPage() {
+export default function Teachers() {
   const [selectedGrade, setSelectedGrade] = useState(grades[0]);
   const [selectedSubject, setSelectedSubject] = useState(subjects[0]);
   const [selectedQualification, setSelectedQualification] = useState(
@@ -148,7 +148,7 @@ export default function TeacherFilterPage() {
         <div className="flex flex-col gap-8 items-center w-full">
           {filteredTeachers.length ? (
             filteredTeachers.map((teacher) => (
-              <TeacherCard key={teacher.id} teacher={teacher} />
+              <SingleTeacherCard key={teacher.id} teacher={teacher} />
             ))
           ) : (
             <p className="text-red-500 text-center font-semibold text-lg">
