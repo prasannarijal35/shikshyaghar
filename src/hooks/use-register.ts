@@ -3,12 +3,13 @@ import { RegisterFormData } from "@/types/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { AxiosError } from "axios"; // ✅ added import
 
 export default function useRegister() {
   const router = useRouter();
 
   const [formData, setFormData] = useState<RegisterFormData>({
-    role: "student", // default role
+    role: "student",
     fullName: "",
     email: "",
     password: "",
@@ -38,7 +39,6 @@ export default function useRegister() {
       [name]: val,
     }));
 
-    // Clear error on change
     setErrors((prev) => ({
       ...prev,
       [name]: undefined,
@@ -134,12 +134,10 @@ export default function useRegister() {
 
       toast.success("Registration successful! Please login.");
       router.push("/login");
-    } catch (error: any) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
+
+      if (error.response?.data?.message) {
         toast.error(error.response.data.message);
       } else {
         toast.error("Something went wrong during registration.");
