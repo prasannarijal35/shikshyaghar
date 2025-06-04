@@ -114,10 +114,12 @@ export default function AdminHeader({
                     <div className="bg-gray-100 rounded-md p-2 flex justify-center items-center">
                       <FaUser className="text-primary" />
                     </div>
-                    <Link href={"/student/profile"} className="flex flex-col">
-                      <p className="font-normal text-sm text-gray-700">
-                        Profile
-                      </p>
+                    <Link
+                      href={"/admin/profile"}
+                      className="flex flex-col"
+                      onClick={() => setMenuOpen(false)} // Close menu on click
+                    >
+                      <p className="font-normal text-sm text-gray-700">Profile</p>
                       <span className="font-normal text-gray-500 text-[10px]">
                         View and update your profile.
                       </span>
@@ -138,3 +140,4 @@ export default function AdminHeader({
     </header>
   );
 }
+

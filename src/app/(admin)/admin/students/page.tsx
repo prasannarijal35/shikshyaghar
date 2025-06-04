@@ -1,4 +1,4 @@
-import StudentTable from "@/components/adminpanel/TeacherTable";
+import StudentTable from "@/components/adminpanel/teachers/TeacherTable";
 
 export default function StudentManagementPage() {
   return (

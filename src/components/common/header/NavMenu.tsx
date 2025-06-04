@@ -15,7 +15,7 @@ export default function NavMenu({ navbaropen }: { navbaropen: boolean }) {
 
         <NavLink
           title="Programs"
-          link="#"
+          link="/programs"
           dropdowns={[
             { title: "Class 8", link: "#" },
             { title: "Class 9", link: "#" },
@@ -28,7 +28,7 @@ export default function NavMenu({ navbaropen }: { navbaropen: boolean }) {
         />
         <NavLink
           title="Trainings"
-          link="#"
+          link="/trainings"
           dropdowns={[
             { title: "Medical Entrance Preparation", link: "#" },
             { title: "Engineering Entrance Preparation", link: "#" },

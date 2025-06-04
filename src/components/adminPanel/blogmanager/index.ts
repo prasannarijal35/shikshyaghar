@@ -1,2 +1,3 @@
-export { default as BlogManager } from "./BlogManager";
-export { default as AddBlogModal } from "./AddBlogModal";
+export {default as BlogManagerTable} from "./BlogManagerTable";
+export {default as AddBlogModal} from "./AddBlogModal";
+

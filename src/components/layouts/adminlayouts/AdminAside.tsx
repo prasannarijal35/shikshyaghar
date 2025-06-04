@@ -13,7 +13,7 @@ import {
 } from "react-icons/md";
 
 export const navItems = [
-   { name: "Overview Stats", href: "/admin/overviewStats", icon: MdBarChart },
+   { name: "Overview Stats", href: "/admin/dashboard", icon: MdBarChart },
   { name: "Student Management", href: "/admin/students", icon: MdGroup },
   { name: "Teacher Management", href: "/admin/teachers", icon: MdGroup },
   { name: "Teacher Verification", href: "/admin/teacherverification", icon: MdVerified },
@@ -52,7 +52,7 @@ export default function Aside({ isOpen }: { isOpen: boolean }) {
                 <div
                   className={`flex items-center gap-3 px-6 py-3 rounded-lg transition-all duration-200 cursor-pointer ${
                     pathname === href
-                      ? "bg-indigo-600 text-white shadow-md"
+                      ? "bg-primary text-white shadow-md"
                       : "text-gray-700 hover:bg-cyan-100 hover:text-primary"
                   }`}
                 >
