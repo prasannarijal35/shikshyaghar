@@ -1,112 +1,135 @@
-"use client";
+'use client';
+import { useState } from 'react';
+import Image from 'next/image';
+import { FaEdit, FaSave } from 'react-icons/fa';
 
-import Image from "next/image";
-import { useState } from "react";
-import { FaEdit } from "react-icons/fa";
-import { Admin } from "@/types/adminProfile";
-import { mockAdmin } from "@/data/adminProfile";
+const mockAdmin = {
+  profilePic: '/admin-profile.jpg',
+  fullName: 'Alex Johnson',
+  email: 'alex.johnson@example.com',
+  role: 'Administrator',
+  phone: '+1 (555) 123-4567',
+  department: 'IT Management',
+  office: 'Building A, Room 301',
+  accessLevel: 75, // out of 100
+};
 
 export default function AdminProfile() {
-  const [isEditing, setIsEditing] = useState(false);
-  const [admin, setAdmin] = useState<Admin>(mockAdmin);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState({ ...mockAdmin });
 
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) {
-    setAdmin({ ...admin, [e.target.name]: e.target.value });
-  }
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === 'accessLevel' ? Number(value) : value,
+    }));
+  };
 
-  function validate() {
-    const newErrors: Record<string, string> = {};
-    if (!admin.fullName) newErrors.fullName = "Full name is required";
-    if (!admin.email || !/^\S+@\S+\.\S+$/.test(admin.email))
-      newErrors.email = "Valid email required";
-    if (!admin.role) newErrors.role = "Role is required";
-    return newErrors;
-  }
+  const toggleEdit = () => setEditMode((prev) => !prev);
 
-  function handleSave() {
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-    setErrors({});
-    alert("Admin profile updated successfully!");
-    setIsEditing(false);
-  }
+  const handleSave = () => {
+    // Add validation or API call here if needed
+    setEditMode(false);
+  };
 
   return (
-    <div className="relative w-full min-h-screen pb-20 bg-gray-100">
-      <div className="h-64 bg-green-200 w-full"></div>
-
-      <div className="mt-[-4rem] bg-white rounded-3xl pt-24 pb-14 px-4 sm:px-6 md:px-8 shadow-lg max-w-3xl mx-auto relative">
-        <div className="absolute top-[-72px] left-1/2 transform -translate-x-1/2">
-          <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-full overflow-hidden shadow-lg">
-            <Image
-              src={admin.profilePic}
-              alt="Admin Profile"
-              width={144}
-              height={144}
-              className="object-cover w-full h-full"
-              priority
-            />
-          </div>
+    <div className="p-6 sm:p-10 bg-gradient-to-tr from-blue-50 to-purple-100 min-h-screen">
+      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-4xl mx-auto space-y-8 transition-all duration-300">
+        {/* Header */}
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-primary">Admin Profile</h1>
+          <button
+            onClick={editMode ? handleSave : toggleEdit}
+            className={`flex items-center gap-2 px-5 py-2 rounded-lg shadow-sm font-medium transition-all duration-200 ${
+              editMode
+                ? 'bg-green-500 hover:bg-green-600 text-white'
+                : 'bg-primary hover:bg-blue-700 text-white'
+            }`}
+          >
+            {editMode ? (
+              <>
+                <FaSave className="text-sm" /> Save
+              </>
+            ) : (
+              <>
+                <FaEdit className="text-sm" /> Edit
+              </>
+            )}
+          </button>
         </div>
 
-        <div className="flex flex-col gap-2 items-center text-center px-2 sm:px-4">
-          <div className="flex justify-between w-full items-center max-w-xl">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              {admin.fullName}
-            </h2>
-            <button
-              className="flex items-center gap-2 text-primary hover:underline text-sm"
-              onClick={() => setIsEditing(!isEditing)}
-            >
-              <FaEdit /> {isEditing ? "Cancel" : "Edit"}
-            </button>
+        {/* Profile Info */}
+        <div className="flex flex-col sm:flex-row gap-8">
+          {/* Profile Photo */}
+          <div className="flex-shrink-0 text-center">
+            <Image
+              src={formData.profilePic}
+              alt="Profile Picture"
+              width={130}
+              height={130}
+              className="rounded-full border-4 border-blue-200 shadow-md object-cover"
+            />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-md text-gray-700 text-left w-full max-w-xl mt-4">
-            {(Object.keys(admin) as (keyof Admin)[]).map((key) => {
-              if (["profilePic", "fullName"].includes(key)) return null;
+          {/* Info Form */}
+          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {[
+              ['Full Name', 'fullName', 'text'],
+              ['Email', 'email', 'email'],
+              ['Role', 'role', 'text', true], // disabled
+              ['Phone', 'phone', 'tel'],
+              ['Department', 'department', 'text'],
+              ['Office Location', 'office', 'text'],
+            ].map(([label, name, type, disabled]) => (
+              <div
+                key={name as string}
+                className={name === 'department' || name === 'office' ? 'sm:col-span-2' : ''}
+              >
+                <label className="text-sm text-gray-600">{label}</label>
+                {editMode && !disabled ? (
+                  <input
+                    type={type as string}
+                    name={name as string}
+                    value={formData[name as keyof typeof formData] as string}
+                    onChange={handleChange}
+                    className="w-full border px-3 py-2 rounded-md mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                ) : (
+                  <p className="mt-1 text-gray-900 font-medium">
+                    {formData[name as keyof typeof formData]}
+                  </p>
+                )}
+              </div>
+            ))}
 
-              const label = key.replace(/([A-Z])/g, " $1");
-              const value = admin[key];
-              const error = errors[key];
-
-              return (
-                <div key={key}>
-                  <label className="block text-sm text-gray-600 capitalize mb-1">
-                    {label}
-                  </label>
-                  {isEditing ? (
-                    <input
-                      name={key}
-                      value={value as string}
-                      onChange={handleChange}
-                      className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-                    />
-                  ) : (
-                    <p className="text-gray-800">{value}</p>
-                  )}
-                  {error && (
-                    <p className="text-xs text-red-600 mt-1">{error}</p>
-                  )}
+            {/* Access Level (slider) */}
+            <div className="sm:col-span-2">
+              <label className="text-sm text-gray-600">Access Level</label>
+              {editMode ? (
+                <input
+                  type="range"
+                  name="accessLevel"
+                  min={0}
+                  max={100}
+                  value={formData.accessLevel}
+                  onChange={handleChange}
+                  className="w-full mt-2"
+                />
+              ) : (
+                <div className="w-full bg-gray-200 rounded-full h-4 mt-1">
+                  <div
+                    className="bg-primary h-4 rounded-full text-right text-xs pr-2 text-white font-semibold"
+                    style={{ width: `${formData.accessLevel}%` }}
+                  >
+                    {formData.accessLevel}%
+                  </div>
                 </div>
-              );
-            })}
+              )}
+            </div>
           </div>
-
-          {isEditing && (
-            <button
-              onClick={handleSave}
-              className="mt-6 px-6 py-2.5 bg-white border border-primary text-primary hover:bg-green-600 hover:text-white font-semibold rounded-lg transition duration-200 text-sm sm:text-base"
-            >
-              Save
-            </button>
-          )}
         </div>
       </div>
     </div>

@@ -40,7 +40,7 @@ const dummyTeachers: Teacher[] = [
   },
 ];
 
-export default function TeacherVerificationPage() {
+export default function TeacherVerification() {
   const [teachers, setTeachers] = useState<Teacher[]>(dummyTeachers);
 
   const approveTeacher = (id: string) => {
@@ -49,7 +49,7 @@ export default function TeacherVerificationPage() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Pending Teacher Verifications</h1>
+      <h1 className="text-2xl text-primary font-bold mb-6">Pending Teacher Verifications</h1>
 
       {teachers.length === 0 ? (
         <p className="text-gray-500">No pending teacher profiles to verify.</p>
@@ -71,7 +71,7 @@ export default function TeacherVerificationPage() {
                   className="w-15 h-15 rounded-full object-cover"
                 />
                 <div>
-                  <h2 className="text-lg font-semibold">{teacher.name}</h2>
+                  <h2 className="text-lg text-gray-800 font-semibold">{teacher.name}</h2>
                   <p className="text-sm text-gray-600">{teacher.email}</p>
                   <p className="text-sm">Subject: {teacher.subject}</p>
                 </div>
@@ -81,13 +81,13 @@ export default function TeacherVerificationPage() {
               <div className="flex gap-2">
                 <button
                   onClick={() => alert(`Viewing profile for ${teacher.name}`)}
-                  className="bg-gray-600 text-white font-medium px-4 py-2 rounded-md hover:bg-gray-700 transition"
+                  className="bg-gray-500 text-white font-medium px-4 py-2 rounded-md hover:bg-white border border-gray-500 hover:text-gray-600 transition duration-200 cursor-pointer"
                 >
                   View Profile
                 </button>
                 <button
                   onClick={() => approveTeacher(teacher.id)}
-                  className="bg-blue-600 text-white font-medium px-4 py-2 rounded-md hover:bg-blue-700 transition"
+                  className="bg-primary text-white font-medium px-4 py-2 rounded-md border border-primary transition duration-200 hover:bg-white hover:text-primary cursor-pointer"
                 >
                   Approve
                 </button>

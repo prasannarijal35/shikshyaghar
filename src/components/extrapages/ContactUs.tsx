@@ -1,4 +1,5 @@
-export default function ContactPage() {
+export default function ContactUs
+() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-grey-200 container">
       <div className="w-full max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-900">

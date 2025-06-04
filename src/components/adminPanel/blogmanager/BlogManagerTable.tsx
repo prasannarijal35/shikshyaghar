@@ -1,21 +1,21 @@
-"use client";
 
-import { useState } from "react";
-import { Blog } from "@/types/blogs";
-import { blogs as initialBlogs } from "@/data/blog";
-import Image from "next/image";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import { toast } from "react-hot-toast";
-import { AddBlogModal } from "@/components/adminpanel/blogmanager";
-import { DeleteModal } from "../students";
+'use client';
+
+import { useState } from 'react';
+import { Blog } from '@/types/blogs';
+import { blogs as initialBlogs } from '@/data/blog';
+import Image from 'next/image';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { DeleteModal } from '@/components/adminpanel/students';
+import { toast } from 'react-hot-toast';
+import BlogModal from '@/components/adminpanel/blogmanager/AddBlogModal';
 
 export default function BlogManagerTable() {
   const [blogs, setBlogs] = useState<Blog[]>(initialBlogs);
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedBlogForDelete, setSelectedBlogForDelete] =
-    useState<Blog | null>(null);
+  const [selectedBlogForDelete, setSelectedBlogForDelete] = useState<Blog | null>(null);
 
   const handleEdit = (blog: Blog) => {
     setSelectedBlog(blog);
@@ -34,6 +34,7 @@ export default function BlogManagerTable() {
         : [...prev, updatedBlog]
     );
     toast.success(`Saved blog "${updatedBlog.title}"`);
+    setShowModal(false);  // <--- Closing the modal after save
   };
 
   const handleDelete = () => {
@@ -47,10 +48,10 @@ export default function BlogManagerTable() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">Blog Manager</h1>
+        <h1 className="text-2xl text-primary font-semibold">Blog Manager</h1>
         <button
           onClick={handleAdd}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-primary  text-white px-4 py-2 rounded hover:bg-white hover:text-primary border border-primary"
         >
           Add Blog
         </button>
@@ -58,7 +59,7 @@ export default function BlogManagerTable() {
 
       <div className="overflow-x-auto rounded shadow">
         <table className="min-w-full bg-white">
-          <thead className="bg-gray-100">
+          <thead className="bg-gray-100 text-gray-700">
             <tr>
               <th className="py-3 px-4 text-left">ID</th>
               <th className="py-3 px-4 text-left">Image</th>
@@ -86,7 +87,7 @@ export default function BlogManagerTable() {
                   <div className="flex gap-3">
                     <button
                       onClick={() => handleEdit(blog)}
-                      className="text-blue-600 hover:text-white hover:bg-blue-600 p-2 rounded transition"
+                      className="text-primary hover:text-white hover:bg-primary p-2 rounded transition"
                       title="Edit"
                     >
                       <FaEdit size={16} />
@@ -111,7 +112,7 @@ export default function BlogManagerTable() {
 
       {/* Add/Edit Modal */}
       {showModal && (
-        <AddBlogModal
+        <BlogModal
           blog={selectedBlog || undefined}
           closeModal={() => setShowModal(false)}
           onSave={handleSave}
