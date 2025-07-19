@@ -35,7 +35,7 @@ export default function TeacherDetails({ teacher }: Props) {
         <div className="absolute top-[-72px] left-1/2 transform -translate-x-1/2">
           <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-full overflow-hidden shadow-lg ">
             <Image
-              src={teacher.photo}
+              src={teacher.image}
               alt={teacher.name}
               width={144}
               height={144}

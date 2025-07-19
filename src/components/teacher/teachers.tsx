@@ -132,7 +132,7 @@ export default function Teachers() {
           ].map(({ value, onChange, options, labels }, idx) => (
             <select
               key={idx}
-              className="border border-primary rounded-lg px-4 py-2 text-primary font-medium hover:bg-primary/5 focus:outline-none focus:ring-1 focus:ring-primary focus:ring-opacity-50 transition"
+              className="border border-primary rounded-3xl px-4 py-2 text-primary font-medium hover:bg-primary/5 focus:outline-none focus:ring-1 focus:ring-primary focus:ring-opacity-50 transition"
               value={value}
               onChange={onChange}
             >
@@ -145,7 +145,7 @@ export default function Teachers() {
           ))}
         </div>
         {/* Teacher Cards */}
-        <div className="flex flex-col gap-8 items-center w-full">
+        <div className="flex flex-col gap-8 items-center w-full border border-primary rounded-lg ">
           {filteredTeachers.length ? (
             filteredTeachers.map((teacher) => (
               <SingleTeacherCard key={teacher.id} teacher={teacher} />

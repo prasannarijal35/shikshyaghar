@@ -15,7 +15,7 @@ const SingleTeacherCard = ({ teacher }: Props) => {
       {/* Teacher Image */}
       <div className="w-32 h-32 relative rounded-lg overflow-hidden mr-5 flex-shrink-0 shadow-sm">
         <Image
-          src={teacher.photo}
+          src={teacher.image}
           alt={teacher.name}
           fill
           className="object-cover rounded-lg"

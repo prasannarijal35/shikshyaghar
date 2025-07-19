@@ -41,7 +41,7 @@ const programs = [
 
 export default function Programs() {
   return (
-    <div className="min-h-screen bg-gray-50 px-4 md:px-12 py-8">
+    <div className="min-h-screen bg-gray-50 px-4 md:px-12 py-8 mb-20">
       <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
         Our Programs
       </h1>

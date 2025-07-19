@@ -1,4 +1,5 @@
-import { AdminDashBoard } from "@/components/adminpanel";
+
+import { AdminDashBoard } from "@/components/adminPanel";
 import React from "react";
 
 export default function page() {
