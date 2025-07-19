@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import book from "@/assets/extraimages/BreadCrumbimage.jpg";
-import { AiOutlineHome } from "react-icons/ai";
 
 interface Props {
   title: string;
@@ -33,7 +32,6 @@ export default function Breadcrumb({
       <div className="relative z-10 container flex flex-col items-center text-center gap-4">
         <div className="flex items-center gap-2 text-sm md:text-base text-gray-200 font-medium">
           <Link href="/" className="flex items-center gap-1 hover:text-white">
-           
             <span>Home</span>
           </Link>
           {subTitle && (
