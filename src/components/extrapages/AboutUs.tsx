@@ -6,7 +6,7 @@ import BreadCrumb from "@/components/common/BreadCrumb";
 export default function AboutUs() {
   return (
     <>
-      <BreadCrumb title={"About Us"} />
+      
       <div className="container mx-auto px-4 pb-20 bg-primary/15">
         <div className="flex flex-col lg:flex-row items-center gap-10">
           <div className="w-full lg:w-1/2">

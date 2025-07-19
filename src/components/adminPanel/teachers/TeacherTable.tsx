@@ -1,46 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import DeleteModal  from "@/components/adminpanel/teachers/DeleteModal"; // You must have this component
+import { DeleteModal } from "@/components/adminPanel/teachers";
+import { teachers as Teachers } from "@/data/teacher";
+import { Teacher } from "@/types/teacher";
 import { toast } from "react-hot-toast";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import { FaBan, FaTrashAlt, FaEye } from "react-icons/fa";
-import teacher from "@/assets/teachers/teacher1.png"
-
-type Teacher = {
-  id: number;
-  name: string;
-  email: string;
-  subject: string;
-  image?: string | StaticImageData;
-};
-
-const mockTeachers: Teacher[] = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "johndoe@example.com",
-    subject: "Mathematics",
-    image: teacher,
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    email: "janesmith@example.com",
-    subject: "Physics",
-   image: teacher,
-  },
-  {
-    id: 3,
-    name: "Abhinav Gurung",
-    email: "abhinav@example.com",
-    subject: "Computer Science",
-    image: teacher,
-  },
-];
 
 export default function TeacherTable() {
-  const [teachers, setTeachers] = useState<Teacher[]>(mockTeachers);
+  const [teachers, setTeachers] = useState<Teacher[]>(Teachers);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
 
@@ -61,7 +30,10 @@ export default function TeacherTable() {
   };
 
   return (
-    <div>
+    <main className="min-h-screen p-6 bg-gray-50">
+      <h1 className="text-3xl font-bold text-primary mb-8">
+        Teacher Management
+      </h1>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg overflow-hidden">
           <thead className="bg-gray-100">
@@ -89,7 +61,7 @@ export default function TeacherTable() {
                 </td>
                 <td className="py-5 px-4">{teacher.name}</td>
                 <td className="py-5 px-4">{teacher.email}</td>
-                <td className="py-5 px-4">{teacher.subject}</td>
+                <td className="py-5 px-4">{teacher.subjects}</td>
                 <td className="py-5 px-4">
                   <div className="flex gap-3">
                     <button
@@ -131,6 +103,6 @@ export default function TeacherTable() {
         description={`Are you sure you want to delete ${selectedTeacher?.name}? This action cannot be undone.`}
         onConfirm={handleDelete}
       />
-    </div>
+    </main>
   );
 }

@@ -1,12 +1,9 @@
-import StudentTable from "@/components/adminpanel/teachers/TeacherTable";
+import { StudentTable } from "@/components/adminPanel/students";
+
+
 
 export default function StudentManagementPage() {
   return (
-    <main className="min-h-screen p-6 bg-gray-50">
-      <h1 className="text-3xl font-bold text-primary mb-8">
-        Student Management
-      </h1>
       <StudentTable />
-    </main>
   );
 }

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { DeleteModal } from "@/components/adminpanel/students";
+
 import { mockStudents } from "@/data/students";
 import { Student } from "@/types/students";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
 import { FaBan, FaTrashAlt, FaEye } from "react-icons/fa";
+import DeleteModal from "@/components/adminPanel/students/DeleteModal";
 
 export default function StudentTable() {
   const [students, setStudents] = useState<Student[]>(mockStudents);
@@ -30,7 +31,11 @@ export default function StudentTable() {
   };
 
   return (
-    <div>
+        <>
+        <main className="min-h-screen p-6 bg-gray-50">
+      <h1 className="text-3xl font-bold text-primary mb-8">
+        Student Management
+      </h1>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg overflow-hidden">
           <thead className="bg-gray-100">
@@ -100,6 +105,7 @@ export default function StudentTable() {
         description={`Are you sure you want to delete ${selectedStudent?.name}? This action cannot be undone.`}
         onConfirm={handleDelete}
       />
-    </div>
+    </main>
+    </>
   );
 }

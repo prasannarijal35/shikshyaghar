@@ -11,7 +11,7 @@ export interface Teacher {
   subjects: string[];
   rating: number; // from 0 to 5
   slug: string;
-  photo: string;
+  image: string;
   about: string;
   gradeRange: string;
 }
