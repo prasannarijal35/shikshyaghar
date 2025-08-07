@@ -2,15 +2,11 @@
 import { useState } from "react";
 import SingleTeacherCard from "@/components/teacher/SingleTeacherCard";
 import { teachers } from "@/data/teacher";
+import { Grade as gradeOptions } from "@/data/grade";
 import { FiRefreshCw } from "react-icons/fi";
 
-const grades = [
-  "All Grades",
-  "Grade 1 to 5",
-  "Grade 6 to 8",
-  "Grade 9 to 10",
-  "Grade 11 to 12",
-];
+const grades = ["All Grades", ...gradeOptions.map((g) => g.name)];
+
 const subjects = [
   "All Subjects",
   "Mathematics",
@@ -18,6 +14,7 @@ const subjects = [
   "Physics",
   "Communication Skills",
 ];
+
 const qualifications = [
   "All Qualifications",
   "Bachelor's Degree",
@@ -144,8 +141,9 @@ export default function Teachers() {
             </select>
           ))}
         </div>
+
         {/* Teacher Cards */}
-        <div className="flex flex-col gap-8 items-center w-full border border-primary rounded-lg ">
+        <div className="flex flex-col gap-8 items-center w-full rounded-lg">
           {filteredTeachers.length ? (
             filteredTeachers.map((teacher) => (
               <SingleTeacherCard key={teacher.id} teacher={teacher} />

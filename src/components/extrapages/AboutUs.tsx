@@ -1,15 +1,15 @@
 import Image from "next/image";
 import React from "react";
-import image1 from "@/assets/about-us/aboutus.png";
+import image1 from "@/assets/about-us/About_us.png";
 
 export default function AboutUs() {
   return (
     <>
-      <div className="container mx-auto px-4 pb-20 bg-primary/15">
+      <div className="container mx-auto px-4 pt-16 pb-20 bg-primary/15">
         <div className="flex flex-col lg:flex-row items-center gap-10">
           <div className="w-full lg:w-1/2">
             <Image
-              className="w-full h-auto max-h-[500px] object-cover rounded-xl "
+              className="w-full h-auto max-h-[500px] object-cover object-top rounded-xl"
               src={image1}
               alt="Team collaborating"
             />
@@ -63,7 +63,7 @@ export default function AboutUs() {
             </p>
             <a
               href="/signup"
-              className="inline-block border border-white bg-primary text-white font-medium px-6 py-3 rounded-lg hover:bg-white hover:text-primary transition duration-200 "
+              className="inline-block border border-white bg-primary text-white font-medium px-6 py-3 rounded-lg hover:bg-white hover:text-primary transition duration-200"
             >
               Get Started
             </a>

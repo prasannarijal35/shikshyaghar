@@ -9,7 +9,7 @@ export interface Teacher {
   teachingExperience: string;
   city: string;
   subjects: string[];
-  rating: number; // from 0 to 5
+  rating: number;
   slug: string;
   image: string;
   about: string;
