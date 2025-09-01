@@ -5,8 +5,13 @@ import { DeleteModal } from "@/components/adminPanel/teachers";
 import { teachers as Teachers } from "@/data/teacher";
 import { Teacher } from "@/types/teacher";
 import { toast } from "react-hot-toast";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { FaBan, FaTrashAlt, FaEye } from "react-icons/fa";
+
+// Type guard for StaticImageData
+function isStaticImageData(image: string | StaticImageData): image is StaticImageData {
+  return typeof image !== "string" && typeof (image as StaticImageData).src === "string";
+}
 
 export default function TeacherTable() {
   const [teachers, setTeachers] = useState<Teacher[]>(Teachers);
@@ -31,9 +36,7 @@ export default function TeacherTable() {
 
   return (
     <main className="min-h-screen p-6 bg-gray-50">
-      <h1 className="text-3xl font-bold text-primary mb-8">
-        Teacher Management
-      </h1>
+      <h1 className="text-3xl font-bold text-primary mb-8">Teacher Management</h1>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg overflow-hidden">
           <thead className="bg-gray-100">
@@ -52,16 +55,23 @@ export default function TeacherTable() {
                 <td className="py-5 px-4">{teacher.id}</td>
                 <td className="py-5 px-4">
                   <Image
-                    src={teacher.image || "/default-avatar.png"}
+                    src={
+                      typeof teacher.image === "string"
+                        ? teacher.image
+                        : isStaticImageData(teacher.image)
+                        ? teacher.image.src
+                        : "/default-avatar.png"
+                    }
                     alt={teacher.name}
                     width={48}
                     height={48}
                     className="w-12 h-12 rounded-full object-cover"
+                    unoptimized
                   />
                 </td>
                 <td className="py-5 px-4">{teacher.name}</td>
                 <td className="py-5 px-4">{teacher.email}</td>
-                <td className="py-5 px-4">{teacher.subjects}</td>
+                <td className="py-5 px-4">{teacher.teacherSubject.name}</td>
                 <td className="py-5 px-4">
                   <div className="flex gap-3">
                     <button
