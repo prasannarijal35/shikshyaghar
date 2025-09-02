@@ -82,7 +82,7 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-md text-[#06034D]">
               <li>
-                <Link href="/about" className="hover:text-secondary">
+                <Link href="/about-us" className="hover:text-secondary">
                   About Us
                 </Link>
               </li>
@@ -102,7 +102,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-secondary">
+                <Link href="/contact-us" className="hover:text-secondary">
                   Contact
                 </Link>
               </li>
@@ -168,7 +168,7 @@ export default function Footer() {
                 <Link href="#" className="hover:underline">
                   Home
                 </Link>
-                <Link href="AboutUs" className="hover:underline">
+                <Link href="/about-us" className="hover:underline">
                   About
                 </Link>
                 <Link href="/contact-us" className="hover:underline">

@@ -10,6 +10,11 @@ type Props = {
 };
 
 const SingleTeacherCard = ({ teacher }: Props) => {
+  // Extract unique subjects for summary display
+  const uniqueSubjects = Array.from(
+    new Set(teacher.gradeSubjects.map(gs => gs.subject.name))
+  );
+
   return (
     <div className="bg-white flex items-center p-5 rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow w-full">
       {/* Teacher Image */}
@@ -31,12 +36,24 @@ const SingleTeacherCard = ({ teacher }: Props) => {
           {teacher.gender}, {teacher.age} years
         </p>
         <p className="text-gray-600">🎓 {teacher.education}</p>
+        <p className="text-gray-600">🏫 {teacher.teachingExperience} experience</p>
+
         <p className="text-gray-600">
-          🏫 {teacher.teachingExperience} experience
+          📚 Subjects: {uniqueSubjects.join(", ")}
         </p>
-        <p className="text-gray-600">
-          📚 Subjects: {teacher.subjects.join(", ")}
-        </p>
+
+        {/* Optional: show grade-subject detail list */}
+        <div className="text-gray-600 mt-2">
+          <strong>Grades & Subjects:</strong>
+          <ul className="list-disc list-inside">
+            {teacher.gradeSubjects.map(({ grade, subject }, idx) => (
+              <li key={idx}>
+                {grade}: {subject.name}
+              </li>
+            ))}
+          </ul>
+        </div>
+
         <div className="flex items-center gap-1 mt-2">
           <AiFillStar className="text-yellow-400 text-base" />
           <span className="font-semibold text-gray-900">{teacher.rating}</span>
@@ -55,7 +72,7 @@ const SingleTeacherCard = ({ teacher }: Props) => {
           onClick={() => alert(`Booking request sent to ${teacher.name}`)}
           className="text-md border border-primary bg-primary text-white px-4 py-2 rounded-lg hover:text-primary hover:bg-white transition duration-300"
         >
-          Book Now
+         Subscribe Now
         </button>
       </div>
     </div>

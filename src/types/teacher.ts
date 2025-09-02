@@ -1,3 +1,5 @@
+import { StaticImageData } from "next/image";
+import { GradeSubject } from "./gradeSubject";
 export interface Teacher {
   id: number;
   name: string;
@@ -8,10 +10,15 @@ export interface Teacher {
   education: string;
   teachingExperience: string;
   city: string;
-  subjects: string[];
-  rating: number; // from 0 to 5
+  teacherSubject: {
+    id: number;
+    name: string;
+    slug: string;
+  };
+  rating: number;
   slug: string;
-  image: string;
+  image: string|StaticImageData;
   about: string;
-  gradeRange: string;
+  grade: string[]; // optional, can keep or remove
+  gradeSubjects: GradeSubject[];  // NEW
 }

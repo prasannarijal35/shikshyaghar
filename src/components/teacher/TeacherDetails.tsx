@@ -109,24 +109,25 @@ export default function TeacherDetails({ teacher }: Props) {
               Subjects Taught
             </h3>
             <div className="flex flex-wrap justify-center gap-2">
-              {teacher.subjects.map((subj, idx) => (
-                <span
-                  key={idx}
-                  className="px-3 py-1 bg-gray-100 border rounded-full text-sm text-gray-800"
-                >
-                  {subj}
-                </span>
-              ))}
-            </div>
+  {teacher.gradeSubjects.map(({ grade, subject }, idx) => (
+    <span
+      key={idx}
+      className="px-3 py-1 bg-gray-100 border rounded-full text-sm text-gray-800"
+      title={`${grade} - ${subject.name}`}
+    >
+      {grade}: {subject.name}
+    </span>
+  ))}
+</div>
           </div>
 
-          {/* Book Button */}
+          {/* Subscribe Button */}
           <Link
-            href={"/book"}
+            href={"/subscribe"}
             className="mt-4 px-5 sm:px-6 py-2.5 sm:py-3 bg-white border border-primary text-primary hover:bg-primary hover:text-white font-semibold rounded-lg transition duration-200 text-sm sm:text-base"
             onClick={() => alert(`Booking request sent for ${teacher.name}`)}
           >
-            Book Now
+            Subscribe Now
           </Link>
         </div>
       </div>

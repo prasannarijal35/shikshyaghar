@@ -2,15 +2,11 @@
 import { useState } from "react";
 import SingleTeacherCard from "@/components/teacher/SingleTeacherCard";
 import { teachers } from "@/data/teacher";
+import { Grade as gradeOptions } from "@/data/grade";
 import { FiRefreshCw } from "react-icons/fi";
 
-const grades = [
-  "All Grades",
-  "Grade 1 to 5",
-  "Grade 6 to 8",
-  "Grade 9 to 10",
-  "Grade 11 to 12",
-];
+const grades = ["All Grades", ...gradeOptions.map((g) => g.name)];
+
 const subjects = [
   "All Subjects",
   "Mathematics",
@@ -18,6 +14,7 @@ const subjects = [
   "Physics",
   "Communication Skills",
 ];
+
 const qualifications = [
   "All Qualifications",
   "Bachelor's Degree",
@@ -38,20 +35,31 @@ export default function Teachers() {
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
 
   const filteredTeachers = teachers.filter((teacher) => {
+    // Grade filter: check if teacher.grade array includes selectedGrade or if all selected
     const matchGrade =
-      selectedGrade === "All Grades" || teacher.gradeRange === selectedGrade;
+      selectedGrade === "All Grades" || teacher.grade.includes(selectedGrade);
+
+    // Subject filter: check teacherSubject.name or all selected
     const matchSubject =
       selectedSubject === "All Subjects" ||
-      teacher.subjects.includes(selectedSubject);
+      teacher.teacherSubject.name === selectedSubject;
+
+    // Qualification filter: substring match ignoring case or all selected
     const matchQualification =
       selectedQualification === "All Qualifications" ||
-      teacher.education.includes(selectedQualification);
-    const matchGender = selectedGender
-      ? teacher.gender === selectedGender
-      : true;
+      teacher.education.toLowerCase().includes(selectedQualification.toLowerCase());
+
+    // Gender filter
+    const matchGender = selectedGender ? teacher.gender === selectedGender : true;
+
+    // Experience filter: parse years from string and compare
+    const experienceYearsMatch = teacher.teachingExperience.match(/\d+/);
+    const experienceYears = experienceYearsMatch ? parseInt(experienceYearsMatch[0]) : 0;
+
     const matchExperience = selectedExperience
-      ? parseInt(teacher.teachingExperience) >= parseInt(selectedExperience)
+      ? experienceYears >= parseInt(selectedExperience)
       : true;
+
     return (
       matchGrade &&
       matchSubject &&
@@ -82,7 +90,7 @@ export default function Teachers() {
             aria-label="Clear filters"
             title="Clear filters"
           >
-            <span className="">Refresh</span>
+            <span>Refresh</span>
             <FiRefreshCw className="w-5 h-5" />
           </button>
         </div>
@@ -144,8 +152,9 @@ export default function Teachers() {
             </select>
           ))}
         </div>
+
         {/* Teacher Cards */}
-        <div className="flex flex-col gap-8 items-center w-full border border-primary rounded-lg ">
+        <div className="flex flex-col gap-8 items-center w-full rounded-lg">
           {filteredTeachers.length ? (
             filteredTeachers.map((teacher) => (
               <SingleTeacherCard key={teacher.id} teacher={teacher} />
