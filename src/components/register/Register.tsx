@@ -5,21 +5,24 @@ import logo from "@/assets/logo/Sg_logo.png";
 import Link from "next/link";
 import avatar1 from "@/assets/extraimages/avatar1.png";
 import avatar2 from "@/assets/extraimages/avatar2.png";
-
 import useRegister from "@/hooks/use-register";
+import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Register() {
   const { formData, errors, loading, handleChange, handleSubmit } =
     useRegister();
-
   const isTeacher = formData.role === "teacher";
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   return (
     <MotionDiv
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="flex items-center justify-center bg-gray-200 min-h-screen p-6"
+      className="flex items-center justify-center bg-gray-100 min-h-screen p-6"
     >
       <MotionDiv
         initial={{ scale: 0.95, opacity: 0 }}
@@ -28,7 +31,7 @@ export default function Register() {
         className="bg-white shadow-xl rounded-3xl flex w-full max-w-5xl overflow-hidden"
       >
         {/* Left Banner */}
-        <div className="flex-1 hidden md:flex flex-col justify-between px-8 py-10 bg-gradient-to-br from-primary to-white text-white rounded-l-3xl">
+        <div className="flex-1 hidden md:flex flex-col justify-between px-8 py-10 bg-gradient-to-br from-primary to-secondary text-white rounded-l-3xl">
           <div>
             <h1 className="text-3xl font-bold mb-4">Join ShikshyaGhar</h1>
             <p className="text-lg min-h-[2.5rem]">
@@ -36,29 +39,13 @@ export default function Register() {
               teaching!
             </p>
           </div>
-          {isTeacher && (
-            <MotionDiv
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.5 }}
-            >
-              <Image
-                src={avatar2}
-                alt="Teacher avatar"
-                width={400}
-                height={400}
-                className="object-contain"
-              />
-            </MotionDiv>
-          )}
           <MotionDiv
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            whileHover={{ y: -5 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
             <Image
-              src={avatar1}
+              src={isTeacher ? avatar2 : avatar1}
               alt="avatar"
               width={400}
               height={400}
@@ -85,7 +72,12 @@ export default function Register() {
           </h2>
 
           {/* Role selection */}
-          <div className="flex justify-center gap-8 mb-6">
+          <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="flex justify-center gap-8 mb-6 text-sm"
+          >
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="radio"
@@ -93,7 +85,6 @@ export default function Register() {
                 value="student"
                 checked={formData.role === "student"}
                 onChange={handleChange}
-                className="cursor-pointer"
               />
               Student
             </label>
@@ -104,15 +95,15 @@ export default function Register() {
                 value="teacher"
                 checked={formData.role === "teacher"}
                 onChange={handleChange}
-                className="cursor-pointer"
               />
               Teacher
             </label>
-          </div>
+          </MotionDiv>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {isTeacher && (
               <>
+                {/* Full Name */}
                 <div>
                   <label className="text-sm font-medium text-gray-700">
                     Full Name
@@ -125,7 +116,7 @@ export default function Register() {
                     placeholder="Your full name"
                     className={`w-full mt-1 px-3 py-2 border ${
                       errors.fullName ? "border-red-500" : "border-gray-300"
-                    } rounded-md focus:outline-none`}
+                    } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
                   />
                   {errors.fullName && (
                     <p className="text-red-500 text-xs mt-1">
@@ -134,6 +125,7 @@ export default function Register() {
                   )}
                 </div>
 
+                {/* Phone */}
                 <div>
                   <label className="text-sm font-medium text-gray-700">
                     Phone Number
@@ -146,13 +138,14 @@ export default function Register() {
                     placeholder="Your phone number"
                     className={`w-full mt-1 px-3 py-2 border ${
                       errors.phone ? "border-red-500" : "border-gray-300"
-                    } rounded-md focus:outline-none`}
+                    } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
                   />
                   {errors.phone && (
                     <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
                   )}
                 </div>
 
+                {/* Gender */}
                 <div>
                   <label className="text-sm font-medium text-gray-700">
                     Gender
@@ -163,7 +156,7 @@ export default function Register() {
                     onChange={handleChange}
                     className={`w-full mt-1 px-3 py-2 border ${
                       errors.gender ? "border-red-500" : "border-gray-300"
-                    } rounded-md focus:outline-none`}
+                    } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
                   >
                     <option value="">Select gender</option>
                     <option value="male">Male</option>
@@ -175,6 +168,7 @@ export default function Register() {
                   )}
                 </div>
 
+                {/* Birth Year */}
                 <div>
                   <label className="text-sm font-medium text-gray-700">
                     Birth Year
@@ -187,7 +181,7 @@ export default function Register() {
                     placeholder="e.g. 1995"
                     className={`w-full mt-1 px-3 py-2 border ${
                       errors.birthYear ? "border-red-500" : "border-gray-300"
-                    } rounded-md focus:outline-none`}
+                    } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
                     min="1900"
                     max={new Date().getFullYear()}
                   />
@@ -198,6 +192,7 @@ export default function Register() {
                   )}
                 </div>
 
+                {/* Teaching Experience */}
                 <div>
                   <label className="text-sm font-medium text-gray-700">
                     Teaching Experience
@@ -211,7 +206,7 @@ export default function Register() {
                       errors.teachingExperience
                         ? "border-red-500"
                         : "border-gray-300"
-                    } rounded-md focus:outline-none resize-y`}
+                    } rounded-md focus:ring-2 focus:ring-primary focus:border-primary resize-y`}
                   />
                   {errors.teachingExperience && (
                     <p className="text-red-500 text-xs mt-1">
@@ -220,6 +215,7 @@ export default function Register() {
                   )}
                 </div>
 
+                {/* Currently Studying */}
                 <div>
                   <label className="text-sm font-medium text-gray-700">
                     Currently Studying
@@ -232,7 +228,7 @@ export default function Register() {
                       errors.currentlyStudying
                         ? "border-red-500"
                         : "border-gray-300"
-                    } rounded-md focus:outline-none`}
+                    } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
                   >
                     <option value="">Select your current study field</option>
                     <option value="bachelor">Bachelor</option>
@@ -249,7 +245,7 @@ export default function Register() {
               </>
             )}
 
-            {/* Common fields for both roles */}
+            {/* Common Fields */}
             <div>
               <label className="text-sm font-medium text-gray-700">Email</label>
               <input
@@ -260,46 +256,68 @@ export default function Register() {
                 placeholder="e.g. john@domain.com"
                 className={`w-full mt-1 px-3 py-2 border ${
                   errors.email ? "border-red-500" : "border-gray-300"
-                } rounded-md focus:outline-none`}
+                } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
               />
               {errors.email && (
                 <p className="text-red-500 text-xs mt-1">{errors.email}</p>
               )}
             </div>
 
+            {/* Password */}
             <div>
               <label className="text-sm font-medium text-gray-700">
                 Password
               </label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Your password"
-                className={`w-full mt-1 px-3 py-2 border ${
-                  errors.password ? "border-red-500" : "border-gray-300"
-                } rounded-md focus:outline-none`}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Your password"
+                  className={`w-full mt-1 px-3 py-2 border ${
+                    errors.password ? "border-red-500" : "border-gray-300"
+                  } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
               {errors.password && (
                 <p className="text-red-500 text-xs mt-1">{errors.password}</p>
               )}
             </div>
 
+            {/* Confirm Password */}
             <div>
               <label className="text-sm font-medium text-gray-700">
                 Confirm Password
               </label>
-              <input
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="Confirm your password"
-                className={`w-full mt-1 px-3 py-2 border ${
-                  errors.confirmPassword ? "border-red-500" : "border-gray-300"
-                } rounded-md focus:outline-none`}
-              />
+              <div className="relative">
+                <input
+                  type={showConfirm ? "text" : "password"}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm your password"
+                  className={`w-full mt-1 px-3 py-2 border ${
+                    errors.confirmPassword
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirm(!showConfirm)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showConfirm ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
               {errors.confirmPassword && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors.confirmPassword}
@@ -307,20 +325,23 @@ export default function Register() {
               )}
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-primary text-white py-3 rounded-md font-semibold hover:bg-primary-dark disabled:opacity-70 transition"
-            >
-              {loading ? "Registering..." : "Register"}
-            </button>
+            {/* Submit */}
+            <MotionDiv whileTap={{ scale: 0.97 }}>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-primary text-white py-3 rounded-md font-semibold hover:bg-secondary disabled:opacity-70 transition focus:ring-2 focus:ring-primary focus:outline-none"
+              >
+                {loading ? "Registering..." : "Register"}
+              </button>
+            </MotionDiv>
           </form>
 
           <p className="text-center mt-4 text-sm text-gray-600">
             Already have an account?{" "}
             <Link
               href="/login"
-              className="text-primary font-medium hover:underline"
+              className="text-secondary font-medium hover:underline"
             >
               Login here
             </Link>

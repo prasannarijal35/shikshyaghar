@@ -1,13 +1,14 @@
 "use client";
 import { Typewriter } from "react-simple-typewriter";
 import Image from "next/image";
-import { FaFacebook } from "react-icons/fa";
+import { FaFacebook, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import logo from "@/assets/logo/Sg_logo.png";
 import avatar1 from "@/assets/extraimages/avatar1.png";
 import Link from "next/link";
 import useLogin from "@/hooks/use-login";
 import { MotionDiv } from "../MotionDiv";
+import { useState } from "react";
 
 export default function Login() {
   const {
@@ -23,6 +24,8 @@ export default function Login() {
     validatePassword,
   } = useLogin();
 
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <MotionDiv
       initial={{ opacity: 0, y: 30 }}
@@ -37,7 +40,7 @@ export default function Login() {
         className="bg-white shadow-xl rounded-3xl flex w-full max-w-5xl overflow-hidden"
       >
         {/* Left Banner */}
-        <div className="flex-1 hidden md:flex flex-col justify-between px-8 py-10 bg-gradient-to-br from-primary to-white text-white rounded-l-3xl">
+        <div className="flex-1 hidden md:flex flex-col justify-between px-8 py-10 bg-gradient-to-br from-primary to-secondary text-white rounded-l-3xl">
           <div>
             <h1 className="text-3xl font-bold mb-4">Welcome to ShikshyaGhar</h1>
             <p className="text-lg min-h-[2.5rem]">
@@ -94,7 +97,12 @@ export default function Login() {
 
           <form className="space-y-5" onSubmit={handleSubmit}>
             {/* Role selector */}
-            <div className="flex gap-4 text-sm">
+            <MotionDiv
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="flex gap-4 text-sm"
+            >
               <label className="flex items-center gap-2">
                 <input
                   type="radio"
@@ -115,9 +123,14 @@ export default function Login() {
                 />
                 Teacher
               </label>
-            </div>
+            </MotionDiv>
 
-            <div>
+            {/* Email */}
+            <MotionDiv
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
               <label className="text-sm font-medium text-gray-700">Email</label>
               <input
                 type="email"
@@ -129,35 +142,58 @@ export default function Login() {
                 placeholder="e.g. john@domain.com"
                 className={`w-full mt-1 px-3 py-2 border ${
                   emailError ? "border-red-500" : "border-gray-300"
-                } rounded-md focus:outline-none`}
+                } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
+                aria-label="Email"
               />
               {emailError && (
                 <p className="text-red-500 text-xs mt-1">{emailError}</p>
               )}
-            </div>
+            </MotionDiv>
 
-            <div>
+            {/* Password */}
+            <MotionDiv
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
               <label className="text-sm font-medium text-gray-700">
                 Password
               </label>
-              <input
-                type="password"
-                name="password"
-                value={password}
-                onBlur={validatePassword}
-                onFocus={validatePassword}
-                onChange={handleChange}
-                placeholder="Your password"
-                className={`w-full mt-1 px-3 py-2 border ${
-                  passwordError ? "border-red-500" : "border-gray-300"
-                } rounded-md focus:outline-none`}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={password}
+                  onBlur={validatePassword}
+                  onFocus={validatePassword}
+                  onChange={handleChange}
+                  placeholder="Your password"
+                  className={`w-full mt-1 px-3 py-2 border ${
+                    passwordError ? "border-red-500" : "border-gray-300"
+                  } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
+                  aria-label="Password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
               {passwordError && (
                 <p className="text-red-500 text-xs mt-1">{passwordError}</p>
               )}
-            </div>
+            </MotionDiv>
 
-            <div className="flex justify-between items-center text-sm">
+            {/* Remember me + Forgot */}
+            <MotionDiv
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="flex justify-between items-center text-sm"
+            >
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -169,39 +205,43 @@ export default function Login() {
               <Link href="/forgot-password" className="text-primary">
                 Forgot password?
               </Link>
-            </div>
+            </MotionDiv>
 
+            {/* Submit */}
             <MotionDiv whileTap={{ scale: 0.97 }}>
               <button
                 type="submit"
-                className="w-full py-2 rounded-md bg-primary text-white font-semibold hover:bg-secondary transition"
+                className="w-full py-2 rounded-md bg-primary text-white font-semibold hover:bg-secondary transition focus:ring-2 focus:ring-primary focus:outline-none"
               >
                 {loading ? "Logging in..." : "Login"}
               </button>
             </MotionDiv>
           </form>
 
+          {/* Divider */}
           <div className="my-6 flex items-center gap-4">
             <hr className="flex-grow border-gray-300" />
             <span className="text-gray-500 text-sm">OR</span>
             <hr className="flex-grow border-gray-300" />
           </div>
 
+          {/* Social Login */}
           <div className="flex gap-4">
             <MotionDiv whileTap={{ scale: 0.97 }} className="w-full">
-              <button className="w-full flex items-center justify-center gap-2 border border-gray-300 py-2 rounded-md">
+              <button className="w-full flex items-center justify-center gap-2 border border-gray-300 py-2 rounded-md bg-white shadow-sm hover:shadow transition">
                 <FcGoogle className="text-lg" />
                 Google
               </button>
             </MotionDiv>
             <MotionDiv whileTap={{ scale: 0.97 }} className="w-full">
-              <button className="w-full flex items-center justify-center gap-2 border border-gray-300 py-2 rounded-md">
-                <FaFacebook className="text-blue-600 text-lg" />
+              <button className="w-full flex items-center justify-center gap-2 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition shadow-sm">
+                <FaFacebook className="text-white text-lg" />
                 Facebook
               </button>
             </MotionDiv>
           </div>
 
+          {/* Register */}
           <p className="text-center text-sm text-gray-600 mt-6">
             Don’t have an account?{" "}
             <Link href="/register" className="text-secondary font-medium">

@@ -3,8 +3,8 @@
 @theme {
   --color-background: #ffffff;
   --color-foreground: #000000;
-  --color-primary: #08ade6;
-  --color-secondary: #c72b32;
+  --color-primary: #1d4ed8;
+  --color-secondary: #f59e0b;
 
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
