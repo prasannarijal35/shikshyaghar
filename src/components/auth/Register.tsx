@@ -131,7 +131,7 @@ export default function Register() {
                     Phone Number
                   </label>
                   <input
-                    type="number"
+                    type="numbercls"
                     name="phone"
                     value={formData.phone || ""}
                     onChange={handleChange}
