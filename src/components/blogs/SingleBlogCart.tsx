@@ -25,7 +25,7 @@ const BlogCard = ({ blog }: Props) => {
         quality={100}
         className="rounded-t-xl mb-4 w-full h-56 object-cover"
       />
-      <p className="text-sky-500 font-semibold p-4 text-sm mb-1">
+      <p className="text-primary font-semibold p-4 text-sm mb-1">
         {blog.category}
       </p>
       <Link href={`/blogsdetails/${blog.slug}`}>
