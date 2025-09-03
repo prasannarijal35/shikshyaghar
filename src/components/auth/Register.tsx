@@ -131,7 +131,7 @@ export default function Register() {
                     Phone Number
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     name="phone"
                     value={formData.phone || ""}
                     onChange={handleChange}
@@ -195,18 +195,20 @@ export default function Register() {
                 {/* Teaching Experience */}
                 <div>
                   <label className="text-sm font-medium text-gray-700">
-                    Teaching Experience
+                    Teaching Experience (years)
                   </label>
-                  <textarea
+                  <input
+                    type="number"
                     name="teachingExperience"
                     value={formData.teachingExperience || ""}
                     onChange={handleChange}
-                    placeholder="Describe your teaching experience"
+                    placeholder="Number of years"
                     className={`w-full mt-1 px-3 py-2 border ${
                       errors.teachingExperience
                         ? "border-red-500"
                         : "border-gray-300"
-                    } rounded-md focus:ring-2 focus:ring-primary focus:border-primary resize-y`}
+                    } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
+                    min={0}
                   />
                   {errors.teachingExperience && (
                     <p className="text-red-500 text-xs mt-1">

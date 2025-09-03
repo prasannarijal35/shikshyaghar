@@ -1,49 +1,49 @@
+import { User } from "@/types/user";
 import myAxios from "./apiServices";
-export const login = async (email: string, password: string) => {
+import { RegisterPayload } from "@/types/auth";
+
+interface AuthResponse {
+  token: string;
+  user: User;
+}
+
+// Login service
+export const login = async (
+  email: string,
+  password: string
+): Promise<AuthResponse> => {
   const response = await myAxios.post(
     "/auth/login",
-    {
-      email,
-      password,
-    },
-    {
-      isAuthRoute: false,
-    }
+    { email, password },
+    { isAuthRoute: false }
   );
+  const data = response.data;
 
-  return response.data;
+  if (!data.token || !data.user) {
+    throw new Error("Invalid login response from server");
+  }
+
+  return {
+    token: data.token,
+    user: data.user,
+  };
 };
 
+// Register service (payload version)
 export const register = async (
-  fullName: string,
-  email: string,
-  password: string,
-  confirmPassword: string,
-  role: "teacher" | "student",
-  phone?: string,
-  gender?: string,
-  birthYear?: number,
-  teachingExperience?: string,
-  currentlyStudying?: string
-) => {
-  const response = await myAxios.post(
-    "/auth/register",
-    {
-      fullName,
-      email,
-      password,
-      confirmPassword,
-      role,
-      phone,
-      gender,
-      birthYear,
-      teachingExperience,
-      currentlyStudying,
-    },
-    {
-      isAuthRoute: false,
-    }
-  );
+  payload: RegisterPayload
+): Promise<AuthResponse> => {
+  const response = await myAxios.post("/auth/register", payload, {
+    isAuthRoute: false,
+  });
+  const data = response.data;
 
-  return response.data;
+  if (!data.token || !data.user) {
+    throw new Error("Invalid registration response from server");
+  }
+
+  return {
+    token: data.token,
+    user: data.user,
+  };
 };

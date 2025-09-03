@@ -1,9 +1,9 @@
-import { register } from "@/services/authServices";
-import { RegisterFormData } from "@/types/auth";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { AxiosError } from "axios"; // ✅ added import
+import { AxiosError } from "axios";
+import { register } from "@/services/authServices";
+import { RegisterFormData, RegisterPayload } from "@/types/auth";
 
 export default function useRegister() {
   const router = useRouter();
@@ -14,11 +14,11 @@ export default function useRegister() {
     email: "",
     password: "",
     confirmPassword: "",
-    phone: "",
+    phone: undefined,
     gender: "",
     birthYear: undefined,
-    teachingExperience: "",
     currentlyStudying: "",
+    teachingExperience: undefined,
   });
 
   const [errors, setErrors] = useState<
@@ -32,7 +32,12 @@ export default function useRegister() {
     >
   ) => {
     const { name, value, type } = e.target;
-    const val = type === "number" ? Number(value) : value;
+
+    // Convert number inputs
+    const val =
+      type === "number" || name === "phone" || name === "teachingExperience"
+        ? Number(value)
+        : value;
 
     setFormData((prev) => ({
       ...prev,
@@ -73,13 +78,14 @@ export default function useRegister() {
       valid = false;
     }
 
+    // Teacher-specific validations
     if (formData.role === "teacher") {
       if (!formData.fullName) {
         newErrors.fullName = "Full name is required";
         valid = false;
       }
-      if (!formData.phone) {
-        newErrors.phone = "Phone number is required";
+      if (!formData.phone || isNaN(Number(formData.phone))) {
+        newErrors.phone = "Phone number is required and must be a number";
         valid = false;
       }
       if (!formData.gender) {
@@ -94,13 +100,15 @@ export default function useRegister() {
         newErrors.birthYear = "Enter a valid birth year";
         valid = false;
       }
-      if (!formData.teachingExperience) {
-        newErrors.teachingExperience =
-          "Please describe your teaching experience";
-        valid = false;
-      }
       if (!formData.currentlyStudying) {
         newErrors.currentlyStudying = "Please select your current study field";
+        valid = false;
+      }
+      if (
+        formData.teachingExperience === undefined ||
+        formData.teachingExperience < 0
+      ) {
+        newErrors.teachingExperience = "Provide valid teaching experience";
         valid = false;
       }
     }
@@ -111,32 +119,32 @@ export default function useRegister() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!validate()) {
-      return;
-    }
+    if (!validate()) return;
 
     try {
       setLoading(true);
 
-      await register(
-        formData.fullName || "",
-        formData.email,
-        formData.password,
-        formData.confirmPassword,
-        formData.role,
-        formData.phone,
-        formData.gender,
-        formData.birthYear,
-        formData.teachingExperience,
-        formData.currentlyStudying
-      );
+      const payload: RegisterPayload = {
+        fullName: formData.fullName || "",
+        email: formData.email,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+        role: formData.role,
+        phone: formData.phone,
+        gender: formData.gender || undefined,
+        birthYear: formData.birthYear,
+        currentlyStudying:
+          formData.role === "student" ? formData.currentlyStudying : undefined,
+        teachingExperience:
+          formData.role === "teacher" ? formData.teachingExperience : undefined,
+      };
+
+      await register(payload);
 
       toast.success("Registration successful! Please login.");
       router.push("/login");
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;
-
       if (error.response?.data?.message) {
         toast.error(error.response.data.message);
       } else {
