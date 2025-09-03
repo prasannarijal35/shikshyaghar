@@ -14,10 +14,7 @@ export default function NavMenu({ navbaropen }: { navbaropen: boolean }) {
         <NavLink title="Home" link="/" />
         <NavLink title="About Us" link="/about-us" />
 
-        <NavLink
-          title="Find a Teacher"
-          link="/teachers"
-        />
+        <NavLink title="Find a Teacher" link="/teachers" />
         <NavLink title="Contact Us" link="/contact-us" />
       </ul>
     </div>
