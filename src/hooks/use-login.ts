@@ -1,5 +1,5 @@
 import { login } from "@/services/authServices";
-import { Login } from "@/types/auth";
+import { LoginFormData } from "@/types/auth";
 import { setAccessToken, setUser } from "@/utils/localStorage";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -13,7 +13,8 @@ interface LoginErrorResponse {
 
 export default function useLogin() {
   const router = useRouter();
-  const [formData, setFormData] = useState<Login & { role: string }>({
+
+  const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
     role: "student",
@@ -50,6 +51,7 @@ export default function useLogin() {
       try {
         setLoading(true);
 
+        // Login request
         const response = await login(email, password);
         const token = response.token;
         await setAccessToken(token);
