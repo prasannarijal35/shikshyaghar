@@ -9,8 +9,13 @@ import Image, { StaticImageData } from "next/image";
 import { FaBan, FaTrashAlt, FaEye } from "react-icons/fa";
 
 // Type guard for StaticImageData
-function isStaticImageData(image: string | StaticImageData): image is StaticImageData {
-  return typeof image !== "string" && typeof (image as StaticImageData).src === "string";
+function isStaticImageData(
+  image: string | StaticImageData
+): image is StaticImageData {
+  return (
+    typeof image !== "string" &&
+    typeof (image as StaticImageData).src === "string"
+  );
 }
 
 export default function TeacherTable() {
@@ -31,22 +36,36 @@ export default function TeacherTable() {
 
   const handleView = (teacher: Teacher) => {
     toast(`Viewing ${teacher.name}`);
-    // You can navigate to a detailed page or open a modal here.
+    // Navigate to detail page or open modal if needed
   };
 
   return (
     <main className="min-h-screen p-6 bg-gray-50">
-      <h1 className="text-3xl font-bold text-primary mb-8">Teacher Management</h1>
+      <h1 className="text-3xl font-bold text-primary mb-8">
+        Teacher Management
+      </h1>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg overflow-hidden">
           <thead className="bg-gray-100">
             <tr>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">ID</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Photo</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Name</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Email</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Subject</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Actions</th>
+              <th className="py-4 px-4 text-left text-[15px] font-medium">
+                ID
+              </th>
+              <th className="py-4 px-4 text-left text-[15px] font-medium">
+                Photo
+              </th>
+              <th className="py-4 px-4 text-left text-[15px] font-medium">
+                Name
+              </th>
+              <th className="py-4 px-4 text-left text-[15px] font-medium">
+                Email
+              </th>
+              <th className="py-4 px-4 text-left text-[15px] font-medium">
+                Subjects
+              </th>
+              <th className="py-4 px-4 text-left text-[15px] font-medium">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="text-base">
@@ -71,7 +90,13 @@ export default function TeacherTable() {
                 </td>
                 <td className="py-5 px-4">{teacher.name}</td>
                 <td className="py-5 px-4">{teacher.email}</td>
-                <td className="py-5 px-4">{teacher.teacherSubject.name}</td>
+                <td className="py-5 px-4">
+                  {teacher.gradeSubjects && teacher.gradeSubjects.length > 0
+                    ? teacher.gradeSubjects
+                        .map((gs) => gs.subject.name)
+                        .join(", ")
+                    : teacher.teacherSubject?.name || "-"}
+                </td>
                 <td className="py-5 px-4">
                   <div className="flex gap-3">
                     <button

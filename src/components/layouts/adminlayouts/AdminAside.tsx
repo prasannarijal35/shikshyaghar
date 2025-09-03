@@ -4,19 +4,24 @@ import logo from "@/assets/logo/Sg_logo.png";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  MdBarChart,       
-  MdGroup,          
-  MdVerified,       
-  MdCampaign,       
-  MdEditNote,       
-  MdSettings,       
+  MdBarChart,
+  MdGroup,
+  MdVerified,
+  MdCampaign,
+  MdEditNote,
+  MdSettings,
 } from "react-icons/md";
 
 export const navItems = [
-   { name: "Overview Stats", href: "/admin/dashboard", icon: MdBarChart },
+  { name: "Overview Stats", href: "/admin/dashboard", icon: MdBarChart },
   { name: "Student Management", href: "/admin/students", icon: MdGroup },
   { name: "Teacher Management", href: "/admin/teachers", icon: MdGroup },
-  { name: "Teacher Verification", href: "/admin/teacherverification", icon: MdVerified },
+  {
+    name: "Teacher Verification",
+    href: "/admin/teacherverification",
+    icon: MdVerified,
+  },
+  { name: "Class Management", href: "/admin/classes", icon: MdGroup },
   { name: "Announcements", href: "/admin/announcements", icon: MdCampaign },
   { name: "Blog Manager", href: "/admin/blogs", icon: MdEditNote },
   { name: "Settings", href: "/admin/settings", icon: MdSettings },

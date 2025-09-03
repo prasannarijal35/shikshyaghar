@@ -20,7 +20,7 @@ export const teacherNavItems = [
   { name: "My Profile", href: "/teacher/profile", icon: MdPerson },
   { name: "My Courses", href: "/teacher/mycourses", icon: MdClass },
   { name: "Requests", href: "/teacher/requests", icon: MdAssignment },
-  { name: "Live Classes", href: "/teacher/live-classes", icon: MdEvent },
+  { name: "Live Classes", href: "/teacher/class", icon: MdEvent },
   { name: "Messages", href: "/teacher/messages", icon: MdMessage },
   { name: "Students", href: "/teacher/students", icon: MdGroup },
   {
