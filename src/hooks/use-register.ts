@@ -78,12 +78,13 @@ export default function useRegister() {
       valid = false;
     }
 
+    if (!formData.fullName) {
+      newErrors.fullName = "Full name is required";
+      valid = false;
+    }
+
     // Teacher-specific validations
     if (formData.role === "teacher") {
-      if (!formData.fullName) {
-        newErrors.fullName = "Full name is required";
-        valid = false;
-      }
       if (!formData.phone || isNaN(Number(formData.phone))) {
         newErrors.phone = "Phone number is required and must be a number";
         valid = false;
@@ -126,15 +127,17 @@ export default function useRegister() {
 
       const payload: RegisterPayload = {
         fullName: formData.fullName || "",
-        email: formData.email,
-        password: formData.password,
-        confirmPassword: formData.confirmPassword,
+        email: formData.email || "",
+        password: formData.password || "",
+        confirmPassword: formData.confirmPassword || "",
         role: formData.role,
         phone: formData.phone,
         gender: formData.gender || undefined,
         birthYear: formData.birthYear,
         currentlyStudying:
-          formData.role === "student" ? formData.currentlyStudying : undefined,
+          formData.role === "student"
+            ? formData.currentlyStudying || ""
+            : undefined,
         teachingExperience:
           formData.role === "teacher" ? formData.teachingExperience : undefined,
       };

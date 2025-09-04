@@ -101,37 +101,36 @@ export default function Register() {
           </MotionDiv>
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Full Name for both roles */}
+            <div>
+              <label className="text-sm font-medium text-gray-700">
+                Full Name
+              </label>
+              <input
+                type="text"
+                name="fullName"
+                value={formData.fullName || ""}
+                onChange={handleChange}
+                placeholder="Your full name"
+                className={`w-full mt-1 px-3 py-2 border ${
+                  errors.fullName ? "border-red-500" : "border-gray-300"
+                } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
+              />
+              {errors.fullName && (
+                <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>
+              )}
+            </div>
+
+            {/* Teacher-specific fields */}
             {isTeacher && (
               <>
-                {/* Full Name */}
-                <div>
-                  <label className="text-sm font-medium text-gray-700">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={formData.fullName || ""}
-                    onChange={handleChange}
-                    placeholder="Your full name"
-                    className={`w-full mt-1 px-3 py-2 border ${
-                      errors.fullName ? "border-red-500" : "border-gray-300"
-                    } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
-                  />
-                  {errors.fullName && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.fullName}
-                    </p>
-                  )}
-                </div>
-
                 {/* Phone */}
                 <div>
                   <label className="text-sm font-medium text-gray-700">
                     Phone Number
                   </label>
                   <input
-                    type="numbercls"
+                    type="number"
                     name="phone"
                     value={formData.phone || ""}
                     onChange={handleChange}
@@ -247,7 +246,7 @@ export default function Register() {
               </>
             )}
 
-            {/* Common Fields */}
+            {/* Email */}
             <div>
               <label className="text-sm font-medium text-gray-700">Email</label>
               <input
@@ -266,60 +265,52 @@ export default function Register() {
             </div>
 
             {/* Password */}
-            <div>
+            <div className="relative">
               <label className="text-sm font-medium text-gray-700">
                 Password
               </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Your password"
-                  className={`w-full mt-1 px-3 py-2 border ${
-                    errors.password ? "border-red-500" : "border-gray-300"
-                  } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
-              </div>
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter password"
+                className={`w-full mt-1 px-3 py-2 border ${
+                  errors.password ? "border-red-500" : "border-gray-300"
+                } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
+              />
+              <span
+                className="absolute right-3 top-9 cursor-pointer"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
               {errors.password && (
                 <p className="text-red-500 text-xs mt-1">{errors.password}</p>
               )}
             </div>
 
             {/* Confirm Password */}
-            <div>
+            <div className="relative">
               <label className="text-sm font-medium text-gray-700">
                 Confirm Password
               </label>
-              <div className="relative">
-                <input
-                  type={showConfirm ? "text" : "password"}
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="Confirm your password"
-                  className={`w-full mt-1 px-3 py-2 border ${
-                    errors.confirmPassword
-                      ? "border-red-500"
-                      : "border-gray-300"
-                  } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirm(!showConfirm)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                >
-                  {showConfirm ? <FaEyeSlash /> : <FaEye />}
-                </button>
-              </div>
+              <input
+                type={showConfirm ? "text" : "password"}
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirm password"
+                className={`w-full mt-1 px-3 py-2 border ${
+                  errors.confirmPassword ? "border-red-500" : "border-gray-300"
+                } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
+              />
+              <span
+                className="absolute right-3 top-9 cursor-pointer"
+                onClick={() => setShowConfirm((prev) => !prev)}
+              >
+                {showConfirm ? <FaEyeSlash /> : <FaEye />}
+              </span>
               {errors.confirmPassword && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors.confirmPassword}
@@ -327,27 +318,21 @@ export default function Register() {
               )}
             </div>
 
-            {/* Submit */}
-            <MotionDiv whileTap={{ scale: 0.97 }}>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-primary text-white py-3 rounded-md font-semibold hover:bg-secondary disabled:opacity-70 transition focus:ring-2 focus:ring-primary focus:outline-none"
-              >
-                {loading ? "Registering..." : "Register"}
-              </button>
-            </MotionDiv>
-          </form>
-
-          <p className="text-center mt-4 text-sm text-gray-600">
-            Already have an account?{" "}
-            <Link
-              href="/login"
-              className="text-secondary font-medium hover:underline"
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-2 px-4 bg-primary text-white rounded-md hover:bg-primary-dark transition"
             >
-              Login here
-            </Link>
-          </p>
+              {loading ? "Registering..." : "Register"}
+            </button>
+
+            <p className="text-sm text-center text-gray-500 mt-3">
+              Already have an account?{" "}
+              <Link href="/login" className="text-primary font-medium">
+                Login
+              </Link>
+            </p>
+          </form>
         </MotionDiv>
       </MotionDiv>
     </MotionDiv>
