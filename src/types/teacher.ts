@@ -1,24 +1,24 @@
-import { StaticImageData } from "next/image";
-import { GradeSubject } from "./gradeSubject";
+export interface TeacherDetails {
+  id: number;
+  userId: number;
+  bio: string;
+  experience: string;
+  availability: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Teacher {
   id: number;
-  name: string;
-  gender: string;
-  age: number;
-  contact: string;
+  fullName: string;
   email: string;
-  education: string;
-  teachingExperience: string;
-  city: string;
-  teacherSubject: {
-    id: number;
-    name: string;
-    slug: string;
-  };
-  rating: number;
+  role: string;
+  address: string;
+  phone: string | null;
+  gender: string | null;
+  birthYear: number | null;
   slug: string;
-  image: string|StaticImageData;
-  about: string;
-  grade: string[]; // optional, can keep or remove
-  gradeSubjects: GradeSubject[];  // NEW
+  createdAt: string;
+  updatedAt: string;
+  teacher: TeacherDetails;
 }

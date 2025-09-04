@@ -1,167 +1,54 @@
 "use client";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import SingleTeacherCard from "@/components/teacher/SingleTeacherCard";
-import { teachers } from "@/data/teacher";
-import { Grade as gradeOptions } from "@/data/grade";
+import teacherService, { Teacher } from "@/services/teacherServices";
 import { FiRefreshCw } from "react-icons/fi";
 
-const grades = ["All Grades", ...gradeOptions.map((g) => g.name)];
+export default function TeachersPage() {
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const [loading, setLoading] = useState(true);
 
-const subjects = [
-  "All Subjects",
-  "Mathematics",
-  "English",
-  "Physics",
-  "Communication Skills",
-];
-
-const qualifications = [
-  "All Qualifications",
-  "Bachelor's Degree",
-  "Master's Degree",
-  "PhD",
-  "Diploma",
-];
-
-export default function Teachers() {
-  const [selectedGrade, setSelectedGrade] = useState(grades[0]);
-  const [selectedSubject, setSelectedSubject] = useState(subjects[0]);
-  const [selectedQualification, setSelectedQualification] = useState(
-    qualifications[0]
-  );
-  const [selectedExperience, setSelectedExperience] = useState<string | null>(
-    null
-  );
-  const [selectedGender, setSelectedGender] = useState<string | null>(null);
-
-  const filteredTeachers = teachers.filter((teacher) => {
-    // Grade filter: check if teacher.grade array includes selectedGrade or if all selected
-    const matchGrade =
-      selectedGrade === "All Grades" || teacher.grade.includes(selectedGrade);
-
-    // Subject filter: check teacherSubject.name or all selected
-    const matchSubject =
-      selectedSubject === "All Subjects" ||
-      teacher.teacherSubject.name === selectedSubject;
-
-    // Qualification filter: substring match ignoring case or all selected
-    const matchQualification =
-      selectedQualification === "All Qualifications" ||
-      teacher.education.toLowerCase().includes(selectedQualification.toLowerCase());
-
-    // Gender filter
-    const matchGender = selectedGender ? teacher.gender === selectedGender : true;
-
-    // Experience filter: parse years from string and compare
-    const experienceYearsMatch = teacher.teachingExperience.match(/\d+/);
-    const experienceYears = experienceYearsMatch ? parseInt(experienceYearsMatch[0]) : 0;
-
-    const matchExperience = selectedExperience
-      ? experienceYears >= parseInt(selectedExperience)
-      : true;
-
-    return (
-      matchGrade &&
-      matchSubject &&
-      matchQualification &&
-      matchGender &&
-      matchExperience
-    );
-  });
-
-  const clearFilters = () => {
-    setSelectedGrade(grades[0]);
-    setSelectedSubject(subjects[0]);
-    setSelectedQualification(qualifications[0]);
-    setSelectedExperience(null);
-    setSelectedGender(null);
+  const fetchTeachers = async () => {
+    setLoading(true);
+    const data = await teacherService.getAllTeachers();
+    setTeachers(data);
+    setLoading(false);
   };
+
+  useEffect(() => {
+    fetchTeachers();
+  }, []);
 
   return (
     <section className="min-h-screen bg-white py-20 pb-36 w-full">
       <div className="container">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-start text-primary">
-            Teachers
-          </h1>
+          <h1 className="text-3xl font-bold text-start text-primary">Teachers</h1>
           <button
-            onClick={clearFilters}
+            onClick={fetchTeachers}
             className="flex justify-between items-center gap-2 px-4 py-2 rounded-lg border border-primary text-primary hover:bg-primary hover:text-white transition duration-300"
-            aria-label="Clear filters"
-            title="Clear filters"
+            aria-label="Refresh teachers"
+            title="Refresh teachers"
           >
             <span>Refresh</span>
             <FiRefreshCw className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-wrap gap-4 mb-4 justify-start">
-          {[
-            {
-              value: selectedGrade,
-              onChange: (e: React.ChangeEvent<HTMLSelectElement>) =>
-                setSelectedGrade(e.target.value),
-              options: grades,
-            },
-            {
-              value: selectedSubject,
-              onChange: (e: React.ChangeEvent<HTMLSelectElement>) =>
-                setSelectedSubject(e.target.value),
-              options: subjects,
-            },
-            {
-              value: selectedQualification,
-              onChange: (e: React.ChangeEvent<HTMLSelectElement>) =>
-                setSelectedQualification(e.target.value),
-              options: qualifications,
-            },
-            {
-              value: selectedExperience ?? "",
-              onChange: (e: React.ChangeEvent<HTMLSelectElement>) =>
-                setSelectedExperience(e.target.value || null),
-              options: ["", "0", "2", "5", "8", "10"],
-              labels: [
-                "All Experience",
-                "0+ Years",
-                "2+ Years",
-                "5+ Years",
-                "8+ Years",
-                "10+ Years",
-              ],
-            },
-            {
-              value: selectedGender ?? "",
-              onChange: (e: React.ChangeEvent<HTMLSelectElement>) =>
-                setSelectedGender(e.target.value || null),
-              options: ["", "Male", "Female"],
-              labels: ["All Genders", "Male", "Female"],
-            },
-          ].map(({ value, onChange, options, labels }, idx) => (
-            <select
-              key={idx}
-              className="border border-primary rounded-3xl px-4 py-2 text-primary font-medium hover:bg-primary/5 focus:outline-none focus:ring-1 focus:ring-primary focus:ring-opacity-50 transition"
-              value={value}
-              onChange={onChange}
-            >
-              {(labels ?? options).map((opt, i) => (
-                <option key={opt} value={options ? options[i] : opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-          ))}
-        </div>
-
         {/* Teacher Cards */}
         <div className="flex flex-col gap-8 items-center w-full rounded-lg">
-          {filteredTeachers.length ? (
-            filteredTeachers.map((teacher) => (
+          {loading ? (
+            <p className="text-gray-600 text-center font-semibold text-lg">
+              Loading teachers...
+            </p>
+          ) : teachers.length ? (
+            teachers.map((teacher) => (
               <SingleTeacherCard key={teacher.id} teacher={teacher} />
             ))
           ) : (
             <p className="text-red-500 text-center font-semibold text-lg">
-              No teachers match your filter criteria.
+              No teachers found.
             </p>
           )}
         </div>

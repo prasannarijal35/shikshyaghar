@@ -5,14 +5,16 @@ const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
 
 const gradeSubjectService = {
-  // Fetch subjects by grade slug
   getSubjectsByGradeSlug: async (slug: string): Promise<GradeSubject[]> => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/gradesubjects`);
-      if (response.data.status === 200 || response.data.message) {
-        return response.data.data;
-      }
-      throw new Error(response.data.message || "Failed to fetch grade-subjects");
+      const response = await axios.get(`${API_BASE_URL}/gradeSubjects`);
+      if (!response.data.data) throw new Error("No data returned");
+
+      // Filter gradeSubjects by slug
+      const filtered = response.data.data.filter(
+        (gs: GradeSubject) => gs.grade.name === slug
+      );
+      return filtered;
     } catch (error: any) {
       console.error("GradeSubjectService Error:", error);
       throw error;
