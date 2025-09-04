@@ -1,24 +1,27 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { HiOutlineMenuAlt2 } from "react-icons/hi";
-import logo from "@/assets/logo/Sg_logo.png";
 import { IoNotifications } from "react-icons/io5";
+import logo from "@/assets/logo/Sg_logo.png";
 import { FaSignOutAlt, FaUser } from "react-icons/fa";
 import Link from "next/link";
 
-export default function TeacherHeader({
-  toggleSidebar,
-  isSidebarOpen,
-}: {
-  toggleSidebar: () => void;
-  isSidebarOpen: boolean;
-}) {
+export default function StudentHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
+  function getCurrentDate() {
+    const today = new Date();
+    // Format: Month Day, Year (e.g., Sep 4, 2025)
+    return today.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  }
 
+  // Close dropdown when clicked outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -38,95 +41,96 @@ export default function TeacherHeader({
   }, [menuOpen]);
 
   return (
-    <header
-      className={`fixed top-0 right-0 left-0 h-16 bg-white border-b border-gray-200 shadow-sm flex items-center justify-between px-4 sm:px-6 z-10 transition-all duration-300 ${
-        isSidebarOpen ? "left-64" : "left-0"
-      }`}
-    >
-      {/* Left: Sidebar toggle + Search */}
-      <div className="flex items-center gap-4 flex-1 min-w-0">
-        <button
-          onClick={toggleSidebar}
-          aria-label="Toggle sidebar"
-          className="p-2 rounded-md bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-primary"
-        >
-          <HiOutlineMenuAlt2 className="h-6 w-6 text-gray-700" />
-        </button>
+    <header className="sticky top-0 z-30 h-16 bg-white border-b border-gray-200 shadow-sm flex items-center justify-between px-6">
+      {/* Left: Welcome message and date */}
+      <div className="flex flex-col">
+        <h1 className="text-xl font-semibold text-gray-800 hidden md:block">
+          Welcome, Amanda
+        </h1>
+        <p className="text-sm text-gray-500 hidden md:block">
+          {getCurrentDate()}
+        </p>
+      </div>
 
-        <div className="hidden sm:block flex-grow min-w-0">
+      {/* Right: Search + Notifications + Avatar */}
+      <div className="flex items-center gap-4">
+        {/* Search */}
+        <div className="relative">
           <input
             type="search"
-            placeholder="Search..."
-            className="w-auto px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+            placeholder="Search"
+            className="w-64 px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             aria-label="Search"
           />
         </div>
-      </div>
 
-      {/* Right: Notifications + Avatar + Dropdown */}
-      <div className="flex items-center gap-4 min-w-fit relative">
+        {/* Notifications */}
         <button
           aria-label="Notifications"
-          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
+          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 relative"
         >
-          <IoNotifications className="h-6 w-6 text-gray-700" />
+          <IoNotifications className="h-5 w-5 text-gray-600" />
+          <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
         </button>
 
+        {/* Avatar with dropdown */}
         <div className="relative" ref={menuRef}>
           <Image
             src={logo}
             alt="User Avatar"
-            width={36}
-            height={36}
-            className="w-9 h-9 rounded-full border border-gray-300 object-cover select-none cursor-pointer"
+            width={40}
+            height={40}
+            className="w-10 h-10 rounded-full border-2 border-gray-300 object-cover cursor-pointer hover:border-blue-400 transition-colors"
             onClick={toggleMenu}
           />
+
           {menuOpen && (
-            <div className="absolute right-0 top-11 mt-2 bg-white rounded-md border-[1px] border-gray-200 w-60 z-20">
+            <div className="absolute right-0 top-12 mt-2 bg-white rounded-lg border border-gray-200 shadow-lg w-60 z-50">
+              {/* Banner and Circular Image */}
               <div className="relative">
-                <div className="h-20 w-full bg-blue-100 rounded-t-md"></div>
-                <div className="absolute top-6 left-1/2 transform -translate-x-1/2">
+                <div className="h-16 w-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-t-lg"></div>
+                <div className="absolute top-8 left-1/2 transform -translate-x-1/2">
                   <Image
                     src={logo}
-                    alt="logo"
-                    height={100}
-                    width={100}
-                    quality={100}
-                    className="h-20 w-20 rounded-full border-4 border-white shadow-md object-cover"
+                    alt="Profile"
+                    height={60}
+                    width={60}
+                    className="h-15 w-15 rounded-full border-4 border-white shadow-md object-cover"
                   />
                 </div>
               </div>
 
-              <div className="mt-8 text-center border-b-[1px] border-gray-200 px-2 pb-3">
-                <h1 className="text-[14px] font-medium">Mr. Prasanna Rijal</h1>
-                <p className="text-[10px] font-normal text-gray-500">
-                  admin@lamo.com
-                </p>
+              {/* Name and Email */}
+              <div className="mt-8 text-center border-b border-gray-200 px-4 pb-4">
+                <h3 className="text-sm font-semibold text-gray-800">
+                  Mr. Prasanna Rijal
+                </h3>
+                <p className="text-xs text-gray-500 mt-1">admin@lamo.com</p>
               </div>
 
-              <ul className="space-y-2">
-                <li className="p-2 cursor-pointer">
-                  <div className="flex gap-2">
-                    <div className="bg-gray-100 rounded-md p-2 flex justify-center items-center">
-                      <FaUser className="text-primary" />
-                    </div>
-                    <Link href={"/teacher/profile"} className="flex flex-col">
-                      <p className="font-normal text-sm text-gray-700">
-                        Profile
-                      </p>
-                      <span className="font-normal text-gray-500 text-[10px]">
-                        View and update your profile.
-                      </span>
-                    </Link>
+              {/* Menu Items */}
+              <div className="p-2">
+                <Link
+                  href="/student/profile"
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <div className="bg-gray-100 rounded-lg p-2">
+                    <FaUser className="text-blue-600 w-4 h-4" />
                   </div>
-                </li>
+                  <div>
+                    <p className="font-medium text-sm text-gray-700">Profile</p>
+                    <p className="text-xs text-gray-500">
+                      View and update your profile
+                    </p>
+                  </div>
+                </Link>
 
-                <div className="p-2">
-                  <button className="flex items-center justify-center gap-2 p-2 w-full bg-primary text-white text-[14px] text-center rounded-md">
-                    <FaSignOutAlt /> Logout
-                  </button>
-                </div>
-              </ul>
+                <button className="w-full mt-2 flex items-center justify-center gap-2 p-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                  <FaSignOutAlt className="w-4 h-4" />
+                  Logout
+                </button>
+              </div>
             </div>
           )}
         </div>

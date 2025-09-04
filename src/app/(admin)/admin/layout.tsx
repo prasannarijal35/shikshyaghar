@@ -1,4 +1,5 @@
-import { AdminLayout } from "@/components/layouts/adminlayouts";
+import React from "react";
+import AdminLayout from "@/components/layouts/adminlayouts/AdminLayout";
 import "@/styles/globals.css";
 import { Poppins } from "next/font/google";
 
