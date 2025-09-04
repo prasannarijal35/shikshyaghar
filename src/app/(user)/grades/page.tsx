@@ -26,30 +26,17 @@ export default function GradesPage() {
     fetchGrades();
   }, []);
 
-  return (
-    <>
-      <Breadcrumb title="Grades" />
+  if (loading) return <p>Loading grades...</p>;
+  if (error) return <p>{error}</p>;
 
-      {loading ? (
-        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 p-4">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={i}
-              className="animate-pulse bg-gray-200 h-32 rounded-xl shadow"
-            ></div>
-          ))}
-        </div>
-      ) : error ? (
-        <p className="text-red-500 text-center mt-4">{error}</p>
-      ) : (
-        <div className="container py-20">
-          <div className=" grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 p-4">
-          {grades.map((grade) => (
-            <SingleGradeItem key={grade.id} grade={grade} />
-          ))}
-        </div>
-        </div>
-      )}
-    </>
+  return (
+    <div className="p-6">
+      <Breadcrumb title="All Grades" />
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-4">
+        {grades.map((grade) => (
+          <SingleGradeItem key={grade.id} grade={grade} />
+        ))}
+      </div>
+    </div>
   );
 }

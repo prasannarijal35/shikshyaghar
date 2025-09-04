@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { AiFillStar } from "react-icons/ai";
 import { Teacher } from "@/types/teacher";
 
 type Props = {
@@ -10,18 +9,14 @@ type Props = {
 };
 
 const SingleTeacherCard = ({ teacher }: Props) => {
-  // Extract unique subjects for summary display
-  const uniqueSubjects = Array.from(
-    new Set(teacher.gradeSubjects.map(gs => gs.subject.name))
-  );
-
   return (
     <div className="bg-white flex items-center p-5 rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow w-full">
       {/* Teacher Image */}
       <div className="w-32 h-32 relative rounded-lg overflow-hidden mr-5 flex-shrink-0 shadow-sm">
+        {/* Replace with a placeholder if teacher.image is not available */}
         <Image
-          src={teacher.image}
-          alt={teacher.name}
+          src="/placeholder-teacher.jpg"
+          alt={teacher.fullName}
           fill
           className="object-cover rounded-lg"
         />
@@ -29,35 +24,18 @@ const SingleTeacherCard = ({ teacher }: Props) => {
 
       {/* Info Section */}
       <div className="flex-1 space-y-1 text-sm">
-        <h3 className="font-semibold text-xl text-gray-900 flex items-center gap-2">
-          {teacher.name}
+        <h3 className="font-semibold text-xl text-gray-900">
+          {teacher.fullName}
         </h3>
+        <p className="text-gray-600">{teacher.role}</p>
+        <p className="text-gray-600">📍 {teacher.address}</p>
+        <p className="text-gray-600">💬 Bio: {teacher.teacher.bio}</p>
         <p className="text-gray-600">
-          {teacher.gender}, {teacher.age} years
+          🏫 Experience: {teacher.teacher.experience}
         </p>
-        <p className="text-gray-600">🎓 {teacher.education}</p>
-        <p className="text-gray-600">🏫 {teacher.teachingExperience} experience</p>
-
         <p className="text-gray-600">
-          📚 Subjects: {uniqueSubjects.join(", ")}
+          ⏰ Availability: {teacher.teacher.availability}
         </p>
-
-        {/* Optional: show grade-subject detail list */}
-        <div className="text-gray-600 mt-2">
-          <strong>Grades & Subjects:</strong>
-          <ul className="list-disc list-inside">
-            {teacher.gradeSubjects.map(({ grade, subject }, idx) => (
-              <li key={idx}>
-                {grade}: {subject.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="flex items-center gap-1 mt-2">
-          <AiFillStar className="text-yellow-400 text-base" />
-          <span className="font-semibold text-gray-900">{teacher.rating}</span>
-        </div>
       </div>
 
       {/* CTA Buttons */}
@@ -69,10 +47,10 @@ const SingleTeacherCard = ({ teacher }: Props) => {
           View Profile
         </Link>
         <button
-          onClick={() => alert(`Booking request sent to ${teacher.name}`)}
+          onClick={() => alert(`Booking request sent to ${teacher.fullName}`)}
           className="text-md border border-primary bg-primary text-white px-4 py-2 rounded-lg hover:text-primary hover:bg-white transition duration-300"
         >
-         Subscribe Now
+          Subscribe Now
         </button>
       </div>
     </div>

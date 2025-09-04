@@ -18,6 +18,9 @@ export default function SingleGradeSubjectItem({ gradeSubject }: SingleGradeSubj
         {gradeSubject.subject.name}
       </h2>
 
+      {/* Grade Info */}
+      <p className="text-sm text-gray-500 mt-1">Grade {gradeSubject.grade.name}</p>
+
       {/* Price */}
       <p className="text-sm font-medium text-primary mt-2">
         Price: Rs. {gradeSubject.price}
