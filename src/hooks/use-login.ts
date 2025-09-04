@@ -1,10 +1,10 @@
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { AxiosError } from "axios";
 import { login } from "@/services/authServices";
 import { LoginFormData } from "@/types/auth";
 import { setAccessToken, setUser } from "@/utils/localStorage";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { AxiosError } from "axios";
 
 interface LoginErrorResponse {
   message?: string;
@@ -14,10 +14,9 @@ interface LoginErrorResponse {
 export default function useLogin() {
   const router = useRouter();
 
-  const [formData, setFormData] = useState<LoginFormData>({
+  const [formData, setFormData] = useState<Omit<LoginFormData, "role">>({
     email: "",
     password: "",
-    role: "student",
   });
 
   const [loading, setLoading] = useState(false);
@@ -25,78 +24,62 @@ export default function useLogin() {
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const { email, password, role } = formData;
+  const validate = (): boolean => {
+    let valid = true;
+    if (!formData.email) {
+      setEmailError("Email is required");
+      valid = false;
+    } else setEmailError(null);
 
-  const validateEmail = () => {
-    setEmailError(!email ? "Email is required" : null);
-  };
+    if (!formData.password) {
+      setPasswordError("Password is required");
+      valid = false;
+    } else setPasswordError(null);
 
-  const validatePassword = () => {
-    setPasswordError(!password ? "Password is required" : null);
+    return valid;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    validateEmail();
-    validatePassword();
+    if (!validate()) return;
 
-    if (email && password && !emailError && !passwordError) {
-      try {
-        setLoading(true);
+    try {
+      setLoading(true);
 
-        // Login request
-        const response = await login(email, password);
-        const token = response.token;
-        await setAccessToken(token);
+      // Send only email + password
+      const response = await login(formData.email, formData.password);
 
-        const user = response.user;
-        await setUser(user);
+      await setAccessToken(response.token);
+      await setUser(response.user);
 
-        toast.success("Login successful");
-        router.push("/");
-      } catch (err) {
-        const error = err as AxiosError<LoginErrorResponse>;
+      toast.success("Login successful");
 
-        if (error.response && error.response.status < 500) {
-          const data = error.response.data;
-          const errors = data.errors;
-
-          if (errors) {
-            errors.forEach((errObj) => {
-              const key = Object.keys(errObj)[0];
-              const value = errObj[key];
-              if (key === "email") setEmailError(value);
-              if (key === "password") setPasswordError(value);
-            });
-          }
-
-          toast.error(data.message || "Login failed", { id: "toast" });
-        } else {
-          toast.error("Something went wrong", { id: "toast" });
-        }
-      } finally {
-        setLoading(false);
+      // redirect based on role
+      if (response.user.role === "teacher") router.push("/teacher/dashboard");
+      else router.push("/student/dashboard");
+    } catch (err) {
+      const error = err as AxiosError<LoginErrorResponse>;
+      if (error.response && error.response.data) {
+        const data = error.response.data;
+        toast.error(data.message || "Login failed");
+      } else {
+        toast.error("Something went wrong");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return {
-    email,
-    password,
-    role,
-    loading,
+    formData,
     emailError,
     passwordError,
+    loading,
     handleChange,
     handleSubmit,
-    validateEmail,
-    validatePassword,
   };
 }

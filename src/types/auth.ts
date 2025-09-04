@@ -11,17 +11,19 @@ export type RegisterPayload = {
   currentlyStudying?: "bachelor" | "master" | "phd" | "other" | "";
 };
 
-// Frontend form data (fullName optional initially for typing convenience)
 export type RegisterFormData = Omit<RegisterPayload, "fullName"> & {
   fullName?: string;
 };
 
-// Login types
-export type Login = {
+export type LoginPayload = {
   email: string;
   password: string;
+  role: "teacher" | "student";
 };
 
-export type LoginFormData = Login & {
-  role: "student" | "teacher";
+// Frontend form data
+export type LoginFormData = Partial<LoginPayload> & {
+  email: string;
+  password: string;
+  role: "teacher" | "student";
 };
