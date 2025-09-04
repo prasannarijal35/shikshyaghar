@@ -1,27 +1,22 @@
 "use client";
-import { Typewriter } from "react-simple-typewriter";
+
+import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Image from "next/image";
-import { FaFacebook, FaEye, FaEyeSlash } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
+import Link from "next/link";
+import { MotionDiv } from "../MotionDiv";
 import logo from "@/assets/logo/Sg_logo.png";
 import avatar1 from "@/assets/extraimages/avatar1.png";
-import Link from "next/link";
 import useLogin from "@/hooks/use-login";
-import { MotionDiv } from "../MotionDiv";
-import { useState } from "react";
 
 export default function Login() {
   const {
-    email,
-    password,
-    role,
-    loading,
+    formData,
     emailError,
     passwordError,
+    loading,
     handleChange,
     handleSubmit,
-    validateEmail,
-    validatePassword,
   } = useLogin();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -42,22 +37,9 @@ export default function Login() {
         {/* Left Banner */}
         <div className="flex-1 hidden md:flex flex-col justify-between px-8 py-10 bg-gradient-to-br from-primary to-secondary text-white rounded-l-3xl">
           <div>
-            <h1 className="text-3xl font-bold mb-4">Welcome to ShikshyaGhar</h1>
+            <h1 className="text-3xl font-bold mb-4">Welcome Back!</h1>
             <p className="text-lg min-h-[2.5rem]">
-              <Typewriter
-                words={[
-                  "A platform connecting students with the right teachers.",
-                  "Find your ideal tutor near you.",
-                  "Empowering education, one student at a time.",
-                  "Learn from top-rated teachers online or offline.",
-                ]}
-                loop={0}
-                cursor
-                cursorStyle="|"
-                typeSpeed={30}
-                deleteSpeed={40}
-                delaySpeed={2000}
-              />
+              Log in as a student or teacher and continue your learning journey.
             </p>
           </div>
           <MotionDiv
@@ -88,7 +70,8 @@ export default function Login() {
               <Image src={logo} alt="logo" width={60} height={60} />
             </Link>
           </div>
-          <h2 className="text-2xl font-bold text-center">
+
+          <h2 className="text-2xl font-bold text-center mb-2">
             Login to Your Account
           </h2>
           <p className="text-center text-gray-600 mb-6 text-sm">
@@ -103,145 +86,83 @@ export default function Login() {
               transition={{ delay: 0.2 }}
               className="flex gap-4 text-sm"
             >
-              <label className="flex items-center gap-2">
+              {/* <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   name="role"
                   value="student"
-                  checked={role === "student"}
+                  checked={formData.role === "student"}
                   onChange={handleChange}
                 />
                 Student
               </label>
-              <label className="flex items-center gap-2">
+              <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   name="role"
                   value="teacher"
-                  checked={role === "teacher"}
+                  checked={formData.role === "teacher"}
                   onChange={handleChange}
                 />
                 Teacher
-              </label>
+              </label> */}
             </MotionDiv>
 
             {/* Email */}
-            <MotionDiv
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
+            <div>
               <label className="text-sm font-medium text-gray-700">Email</label>
               <input
                 type="email"
                 name="email"
-                value={email}
-                onBlur={validateEmail}
-                onFocus={validateEmail}
+                value={formData.email}
                 onChange={handleChange}
                 placeholder="e.g. john@domain.com"
                 className={`w-full mt-1 px-3 py-2 border ${
                   emailError ? "border-red-500" : "border-gray-300"
                 } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
-                aria-label="Email"
               />
               {emailError && (
                 <p className="text-red-500 text-xs mt-1">{emailError}</p>
               )}
-            </MotionDiv>
+            </div>
 
             {/* Password */}
-            <MotionDiv
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
+            <div className="relative">
               <label className="text-sm font-medium text-gray-700">
                 Password
               </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={password}
-                  onBlur={validatePassword}
-                  onFocus={validatePassword}
-                  onChange={handleChange}
-                  placeholder="Your password"
-                  className={`w-full mt-1 px-3 py-2 border ${
-                    passwordError ? "border-red-500" : "border-gray-300"
-                  } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
-                  aria-label="Password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
-              </div>
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Your password"
+                className={`w-full mt-1 px-3 py-2 border ${
+                  passwordError ? "border-red-500" : "border-gray-300"
+                } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
+              />
+              <span
+                className="absolute right-3 top-9 cursor-pointer"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
               {passwordError && (
                 <p className="text-red-500 text-xs mt-1">{passwordError}</p>
               )}
-            </MotionDiv>
-
-            {/* Remember me + Forgot */}
-            <MotionDiv
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="flex justify-between items-center text-sm"
-            >
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name="rememberMe"
-                  onChange={handleChange}
-                />
-                Remember me
-              </label>
-              <Link href="/forgot-password" className="text-primary">
-                Forgot password?
-              </Link>
-            </MotionDiv>
+            </div>
 
             {/* Submit */}
-            <MotionDiv whileTap={{ scale: 0.97 }}>
-              <button
-                type="submit"
-                className="w-full py-2 rounded-md bg-primary text-white font-semibold hover:bg-secondary transition focus:ring-2 focus:ring-primary focus:outline-none"
-              >
-                {loading ? "Logging in..." : "Login"}
-              </button>
-            </MotionDiv>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-2 rounded-md bg-primary text-white font-semibold hover:bg-secondary transition focus:ring-2 focus:ring-primary focus:outline-none"
+            >
+              {loading ? "Logging in..." : "Login"}
+            </button>
           </form>
 
-          {/* Divider */}
-          <div className="my-6 flex items-center gap-4">
-            <hr className="flex-grow border-gray-300" />
-            <span className="text-gray-500 text-sm">OR</span>
-            <hr className="flex-grow border-gray-300" />
-          </div>
-
-          {/* Social Login */}
-          <div className="flex gap-4">
-            <MotionDiv whileTap={{ scale: 0.97 }} className="w-full">
-              <button className="w-full flex items-center justify-center gap-2 border border-gray-300 py-2 rounded-md bg-white shadow-sm hover:shadow transition">
-                <FcGoogle className="text-lg" />
-                Google
-              </button>
-            </MotionDiv>
-            <MotionDiv whileTap={{ scale: 0.97 }} className="w-full">
-              <button className="w-full flex items-center justify-center gap-2 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition shadow-sm">
-                <FaFacebook className="text-white text-lg" />
-                Facebook
-              </button>
-            </MotionDiv>
-          </div>
-
-          {/* Register */}
+          {/* Register link */}
           <p className="text-center text-sm text-gray-600 mt-6">
             Don’t have an account?{" "}
             <Link href="/register" className="text-secondary font-medium">
