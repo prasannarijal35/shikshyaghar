@@ -1,15 +1,10 @@
+"use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { AxiosError } from "axios";
 import { login } from "@/services/authServices";
 import { LoginFormData } from "@/types/auth";
 import { setAccessToken, setUser } from "@/utils/localStorage";
-
-interface LoginErrorResponse {
-  message?: string;
-  errors?: { [key: string]: string }[];
-}
 
 export default function useLogin() {
   const router = useRouter();
@@ -47,28 +42,27 @@ export default function useLogin() {
     e.preventDefault();
     if (!validate()) return;
 
-    try {
-      setLoading(true);
+    setLoading(true);
 
-      // Send only email + password
+    try {
       const response = await login(formData.email, formData.password);
 
-      await setAccessToken(response.token);
-      await setUser(response.user);
+      if (response.success) {
+        // save token and user
+        if (response.token) await setAccessToken(response.token);
+        if (response.user) await setUser(response.user);
 
-      toast.success("Login successful");
+        toast.success(response.message);
 
-      // redirect based on role
-      if (response.user.role === "teacher") router.push("/teacher/dashboard");
-      else router.push("/student/dashboard");
-    } catch (err) {
-      const error = err as AxiosError<LoginErrorResponse>;
-      if (error.response && error.response.data) {
-        const data = error.response.data;
-        toast.error(data.message || "Login failed");
+        if (response.user?.role === "teacher")
+          router.push("/teacher/dashboard");
+        else router.push("/student/dashboard");
       } else {
-        toast.error("Something went wrong");
+        toast.error(response.message);
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }

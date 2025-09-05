@@ -1,7 +1,8 @@
+"use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { AxiosError } from "axios";
 import { register } from "@/services/authServices";
 import { RegisterFormData, RegisterPayload } from "@/types/auth";
 
@@ -26,6 +27,7 @@ export default function useRegister() {
   >({});
   const [loading, setLoading] = useState(false);
 
+  // ---------------- Handle Form Changes ----------------
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -33,23 +35,16 @@ export default function useRegister() {
   ) => {
     const { name, value, type } = e.target;
 
-    // Convert number inputs
     const val =
       type === "number" || name === "phone" || name === "teachingExperience"
         ? Number(value)
         : value;
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: val,
-    }));
-
-    setErrors((prev) => ({
-      ...prev,
-      [name]: undefined,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: val }));
+    setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
+  // ---------------- Form Validation ----------------
   const validate = () => {
     let valid = true;
     const newErrors: Partial<Record<keyof RegisterFormData, string>> = {};
@@ -83,7 +78,6 @@ export default function useRegister() {
       valid = false;
     }
 
-    // Teacher-specific validations
     if (formData.role === "teacher") {
       if (!formData.phone || isNaN(Number(formData.phone))) {
         newErrors.phone = "Phone number is required and must be a number";
@@ -118,13 +112,13 @@ export default function useRegister() {
     return valid;
   };
 
+  // ---------------- Handle Form Submit ----------------
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
 
+    setLoading(true);
     try {
-      setLoading(true);
-
       const payload: RegisterPayload = {
         fullName: formData.fullName || "",
         email: formData.email || "",
@@ -142,17 +136,17 @@ export default function useRegister() {
           formData.role === "teacher" ? formData.teachingExperience : undefined,
       };
 
-      await register(payload);
+      const res = await register(payload);
 
-      toast.success("Registration successful! Please login.");
-      router.push("/login");
-    } catch (err) {
-      const error = err as AxiosError<{ message: string }>;
-      if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
+      if (res.success) {
+        toast.success(res.message);
+        router.push("/login");
       } else {
-        toast.error("Something went wrong during registration.");
+        toast.error(res.message);
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      toast.error("Something went wrong during registration.");
     } finally {
       setLoading(false);
     }
