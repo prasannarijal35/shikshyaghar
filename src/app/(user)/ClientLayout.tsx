@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Header } from "@/components/common/header";
 import { Footer } from "@/components/common/footer";
+import { ToasterWrapper } from "@/components/common";
 
 export default function ClientLayout({
   children,
@@ -17,6 +18,7 @@ export default function ClientLayout({
       {!isAuthPage && <Header />}
       <main>{children}</main>
       {!isAuthPage && <Footer />}
+      <ToasterWrapper />
     </>
   );
 }
