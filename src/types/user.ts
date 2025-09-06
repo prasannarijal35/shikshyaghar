@@ -23,7 +23,11 @@ export type User = {
     id: number;
     userId: number;
     bio?: string | null;
-    experience: number;
-    availability: string;
+    experience?: number;
+    availability?: string | null;
+    qualification?: string | null;
+    documentUrl?: string | null;
+    status?: "PENDING" | "APPROVED" | "REJECTED";
+    isProfileComplete?: boolean;
   };
 };
