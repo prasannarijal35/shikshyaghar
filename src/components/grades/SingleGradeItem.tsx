@@ -19,7 +19,7 @@ export default function SingleGradeItem({ grade }: SingleGradeItemProps) {
         href={`/grades/${grade.slug}`}
         className="inline-block text-sm text-white bg-primary px-4 py-2 rounded hover:bg-primary/90 transition"
       >
-        View Details
+        View Subjects
       </Link>
     </div>
   );

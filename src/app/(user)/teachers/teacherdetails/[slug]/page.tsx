@@ -1,18 +1,22 @@
-// app/(user)/teachers/teacherdetails/[slug]/page.tsx
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import TeacherDetails from "@/components/teacher/TeacherDetails";
 import teacherService from "@/services/teacherServices";
+import { Teacher } from "@/types/teacher";
 
 type PageProps = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>; // 👈 mark params as Promise
 };
 
 // Async metadata generation
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   try {
-    const teacher = await teacherService.getTeacherBySlug(params.slug);
-    if (!teacher) return { title: "Teacher Not Found", description: "No teacher found" };
+    const { slug } = await params; // 👈 await params
+    const teacher: Teacher | null = await teacherService.getTeacherBySlug(slug);
+
+    if (!teacher) {
+      return { title: "Teacher Not Found", description: "No teacher found" };
+    }
 
     return {
       title: `Shikshya Ghar | ${teacher.fullName}`,
@@ -24,19 +28,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function Page({ params }: PageProps) {
-  const slug = params?.slug;
+  const { slug } = await params; // 👈 also await here
   if (!slug) return notFound();
 
-  let teacher;
+  let teacher: Teacher | null = null;
   try {
     teacher = await teacherService.getTeacherBySlug(slug);
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching teacher by slug:", error);
   }
 
   if (!teacher) return notFound();
-
-  // Ensure placeholder image exists
 
   return <TeacherDetails teacher={teacher} />;
 }

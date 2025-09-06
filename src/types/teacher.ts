@@ -1,13 +1,3 @@
-export interface TeacherDetails {
-  id: number;
-  userId: number;
-  bio: string;
-  experience: string;
-  availability: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface Teacher {
   id: number;
   fullName: string;
@@ -21,4 +11,34 @@ export interface Teacher {
   createdAt: string;
   updatedAt: string;
   teacher: TeacherDetails;
+}
+
+export interface TeacherDetails {
+  id: number;
+  userId: number;
+  bio: string;
+  experience: string;
+  availability: string;
+  createdAt: string;
+  updatedAt: string;
+  teacherSubject: TeacherSubjectWithDetails[];
+}
+
+export interface TeacherSubjectWithDetails {
+  id: number;
+  gradeSubject: GradeSubjectWithSubject;
+}
+
+export interface GradeSubjectWithSubject {
+  id: number;
+  subject: Subject;
+  grade: Subject;
+}
+
+export interface Subject {
+  id: number;
+  name: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
 }

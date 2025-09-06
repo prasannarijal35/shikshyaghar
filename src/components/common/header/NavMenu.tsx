@@ -38,7 +38,7 @@ export default function NavMenu({ navbaropen }: NavMenuProps) {
       <ul className="flex flex-col p-2 text-white bg-white md:bg-transparent shadow:lg md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 w-full">
         <NavLink title="Home" link="/" />
         <NavLink title="About Us" link="/about-us" />
-        <NavLink title="Find a Teacher" link="/teachers" />
+        <NavLink title="Find Teachers" link="/teachers" />
 
         <NavLink
           title="Available Classes"
