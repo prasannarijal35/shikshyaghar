@@ -1,4 +1,5 @@
 "use client";
+
 import { MotionDiv } from "../MotionDiv";
 import Image from "next/image";
 import logo from "@/assets/logo/Sg_logo.png";
@@ -101,7 +102,7 @@ export default function Register() {
           </MotionDiv>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Full Name for both roles */}
+            {/* Full Name */}
             <div>
               <label className="text-sm font-medium text-gray-700">
                 Full Name
@@ -109,7 +110,7 @@ export default function Register() {
               <input
                 type="text"
                 name="fullName"
-                value={formData.fullName || ""}
+                value={formData.fullName}
                 onChange={handleChange}
                 placeholder="Your full name"
                 className={`w-full mt-1 px-3 py-2 border ${
@@ -120,131 +121,6 @@ export default function Register() {
                 <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>
               )}
             </div>
-
-            {/* Teacher-specific fields */}
-            {isTeacher && (
-              <>
-                {/* Phone */}
-                <div>
-                  <label className="text-sm font-medium text-gray-700">
-                    Phone Number
-                  </label>
-                  <input
-                    type="number"
-                    name="phone"
-                    value={formData.phone || ""}
-                    onChange={handleChange}
-                    placeholder="Your phone number"
-                    className={`w-full mt-1 px-3 py-2 border ${
-                      errors.phone ? "border-red-500" : "border-gray-300"
-                    } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
-                  />
-                  {errors.phone && (
-                    <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
-                  )}
-                </div>
-
-                {/* Gender */}
-                <div>
-                  <label className="text-sm font-medium text-gray-700">
-                    Gender
-                  </label>
-                  <select
-                    name="gender"
-                    value={formData.gender || ""}
-                    onChange={handleChange}
-                    className={`w-full mt-1 px-3 py-2 border ${
-                      errors.gender ? "border-red-500" : "border-gray-300"
-                    } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
-                  >
-                    <option value="">Select gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                  </select>
-                  {errors.gender && (
-                    <p className="text-red-500 text-xs mt-1">{errors.gender}</p>
-                  )}
-                </div>
-
-                {/* Birth Year */}
-                <div>
-                  <label className="text-sm font-medium text-gray-700">
-                    Birth Year
-                  </label>
-                  <input
-                    type="number"
-                    name="birthYear"
-                    value={formData.birthYear || ""}
-                    onChange={handleChange}
-                    placeholder="e.g. 1995"
-                    className={`w-full mt-1 px-3 py-2 border ${
-                      errors.birthYear ? "border-red-500" : "border-gray-300"
-                    } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
-                    min="1900"
-                    max={new Date().getFullYear()}
-                  />
-                  {errors.birthYear && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.birthYear}
-                    </p>
-                  )}
-                </div>
-
-                {/* Teaching Experience */}
-                <div>
-                  <label className="text-sm font-medium text-gray-700">
-                    Teaching Experience (years)
-                  </label>
-                  <input
-                    type="number"
-                    name="teachingExperience"
-                    value={formData.teachingExperience || ""}
-                    onChange={handleChange}
-                    placeholder="Number of years"
-                    className={`w-full mt-1 px-3 py-2 border ${
-                      errors.teachingExperience
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
-                    min={0}
-                  />
-                  {errors.teachingExperience && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.teachingExperience}
-                    </p>
-                  )}
-                </div>
-
-                {/* Currently Studying */}
-                <div>
-                  <label className="text-sm font-medium text-gray-700">
-                    Currently Studying
-                  </label>
-                  <select
-                    name="currentlyStudying"
-                    value={formData.currentlyStudying || ""}
-                    onChange={handleChange}
-                    className={`w-full mt-1 px-3 py-2 border ${
-                      errors.currentlyStudying
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
-                  >
-                    <option value="">Select your current study field</option>
-                    <option value="bachelor">Bachelor</option>
-                    <option value="master">Master</option>
-                    <option value="phd">PhD</option>
-                    <option value="other">Other</option>
-                  </select>
-                  {errors.currentlyStudying && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.currentlyStudying}
-                    </p>
-                  )}
-                </div>
-              </>
-            )}
 
             {/* Email */}
             <div>

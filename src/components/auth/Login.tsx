@@ -18,22 +18,11 @@ export default function Login() {
     handleChange,
     handleSubmit,
   } = useLogin();
-
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <MotionDiv
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="flex items-center justify-center bg-gray-100 min-h-screen p-6"
-    >
-      <MotionDiv
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.4, delay: 0.2 }}
-        className="bg-white shadow-xl rounded-3xl flex w-full max-w-5xl overflow-hidden"
-      >
+    <MotionDiv className="flex items-center justify-center bg-gray-100 min-h-screen p-6">
+      <MotionDiv className="bg-white shadow-xl rounded-3xl flex w-full max-w-5xl overflow-hidden">
         {/* Left Banner */}
         <div className="flex-1 hidden md:flex flex-col justify-between px-8 py-10 bg-gradient-to-br from-primary to-secondary text-white rounded-l-3xl">
           <div>
@@ -42,12 +31,7 @@ export default function Login() {
               Log in as a student or teacher and continue your learning journey.
             </p>
           </div>
-          <MotionDiv
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            whileHover={{ y: -5 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-          >
+          <MotionDiv>
             <Image
               src={avatar1}
               alt="avatar"
@@ -59,12 +43,7 @@ export default function Login() {
         </div>
 
         {/* Right Form */}
-        <MotionDiv
-          initial={{ x: 30, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex-1 px-8 py-10"
-        >
+        <MotionDiv className="flex-1 px-8 py-10">
           <div className="flex justify-center mb-4">
             <Link href={"/"}>
               <Image src={logo} alt="logo" width={60} height={60} />
@@ -79,35 +58,6 @@ export default function Login() {
           </p>
 
           <form className="space-y-5" onSubmit={handleSubmit}>
-            {/* Role selector */}
-            <MotionDiv
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="flex gap-4 text-sm"
-            >
-              {/* <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="role"
-                  value="student"
-                  checked={formData.role === "student"}
-                  onChange={handleChange}
-                />
-                Student
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="role"
-                  value="teacher"
-                  checked={formData.role === "teacher"}
-                  onChange={handleChange}
-                />
-                Teacher
-              </label> */}
-            </MotionDiv>
-
             {/* Email */}
             <div>
               <label className="text-sm font-medium text-gray-700">Email</label>

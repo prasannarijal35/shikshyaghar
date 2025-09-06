@@ -1,18 +1,5 @@
-import { User } from "@/types/user";
 import myAxios from "./apiServices";
-import { RegisterPayload } from "@/types/auth";
-
-interface RegisterResponse {
-  success: boolean;
-  message: string;
-}
-
-interface LoginResponse {
-  success: boolean;
-  message: string;
-  token?: string;
-  user?: User;
-}
+import { RegisterPayload, RegisterResponse, LoginResponse } from "@/types/auth";
 
 export const register = async (
   payload: RegisterPayload
@@ -22,7 +9,6 @@ export const register = async (
       isAuthRoute: false,
     });
     const data = response.data;
-
     return {
       success: true,
       message: data.message || "Registration successful",
@@ -37,7 +23,6 @@ export const register = async (
   }
 };
 
-// ------------------- Login -------------------
 export const login = async (
   email: string,
   password: string
@@ -52,9 +37,10 @@ export const login = async (
 
     return {
       success: true,
-      message: "Login successful",
+      message: data.message || "Login successful",
       token: data.token,
       user: data.user,
+      redirectToProfile: data.redirectToProfile, // backend flag for teacher profile
     };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {

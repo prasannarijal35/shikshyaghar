@@ -1,9 +1,10 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { login } from "@/services/authServices";
-import { LoginFormData } from "@/types/auth";
+import { LoginFormData, LoginResponse } from "@/types/auth";
 import { setAccessToken, setUser } from "@/utils/localStorage";
 
 export default function useLogin() {
@@ -45,14 +46,21 @@ export default function useLogin() {
     setLoading(true);
 
     try {
-      const response = await login(formData.email, formData.password);
+      const response: LoginResponse = await login(
+        formData.email,
+        formData.password
+      );
 
       if (response.success) {
+
         // Save token and user
+
+
         if (response.token) await setAccessToken(response.token);
         if (response.user) await setUser(response.user);
 
         toast.success(response.message);
+
 
         // Redirect based on role
         switch (response.user?.role) {
@@ -66,13 +74,21 @@ export default function useLogin() {
             router.push("/student/dashboard");
             break;
           default:
-            router.push("/");
+   
+         router.push("/");
+      if (response.user?.role === "teacher") {
+          if (response.redirectToProfile) {
+            router.push("/teacher/profile-setup");
+          } else {
+            router.push("/teacher/dashboard");
+          }
+        } else {
+          router.push("/student/dashboard");
         }
       } else {
         toast.error(response.message);
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
+    } catch {
       toast.error("Something went wrong");
     } finally {
       setLoading(false);

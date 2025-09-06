@@ -4,50 +4,40 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { register } from "@/services/authServices";
-import { RegisterFormData, RegisterPayload } from "@/types/auth";
+import { RegisterPayload } from "@/types/auth";
 
 export default function useRegister() {
   const router = useRouter();
 
-  const [formData, setFormData] = useState<RegisterFormData>({
-    role: "student",
+  const [formData, setFormData] = useState<RegisterPayload>({
     fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
-    phone: undefined,
-    gender: "",
-    birthYear: undefined,
-    currentlyStudying: "",
-    teachingExperience: undefined,
+    role: "student", // default role
   });
 
   const [errors, setErrors] = useState<
-    Partial<Record<keyof RegisterFormData, string>>
+    Partial<Record<keyof RegisterPayload, string>>
   >({});
   const [loading, setLoading] = useState(false);
 
-  // ---------------- Handle Form Changes ----------------
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value, type } = e.target;
-
-    const val =
-      type === "number" || name === "phone" || name === "teachingExperience"
-        ? Number(value)
-        : value;
-
-    setFormData((prev) => ({ ...prev, [name]: val }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
-  // ---------------- Form Validation ----------------
-  const validate = () => {
+  const validate = (): boolean => {
+    const newErrors: Partial<Record<keyof RegisterPayload, string>> = {};
     let valid = true;
-    const newErrors: Partial<Record<keyof RegisterFormData, string>> = {};
+
+    if (!formData.fullName) {
+      newErrors.fullName = "Full name is required";
+      valid = false;
+    }
 
     if (!formData.email) {
       newErrors.email = "Email is required";
@@ -73,46 +63,10 @@ export default function useRegister() {
       valid = false;
     }
 
-    if (!formData.fullName) {
-      newErrors.fullName = "Full name is required";
-      valid = false;
-    }
-
-    if (formData.role === "teacher") {
-      if (!formData.phone || isNaN(Number(formData.phone))) {
-        newErrors.phone = "Phone number is required and must be a number";
-        valid = false;
-      }
-      if (!formData.gender) {
-        newErrors.gender = "Gender is required";
-        valid = false;
-      }
-      if (
-        !formData.birthYear ||
-        formData.birthYear < 1900 ||
-        formData.birthYear > new Date().getFullYear()
-      ) {
-        newErrors.birthYear = "Enter a valid birth year";
-        valid = false;
-      }
-      if (!formData.currentlyStudying) {
-        newErrors.currentlyStudying = "Please select your current study field";
-        valid = false;
-      }
-      if (
-        formData.teachingExperience === undefined ||
-        formData.teachingExperience < 0
-      ) {
-        newErrors.teachingExperience = "Provide valid teaching experience";
-        valid = false;
-      }
-    }
-
     setErrors(newErrors);
     return valid;
   };
 
-  // ---------------- Handle Form Submit ----------------
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
@@ -120,20 +74,11 @@ export default function useRegister() {
     setLoading(true);
     try {
       const payload: RegisterPayload = {
-        fullName: formData.fullName || "",
-        email: formData.email || "",
-        password: formData.password || "",
-        confirmPassword: formData.confirmPassword || "",
-        role: formData.role,
-        phone: formData.phone,
-        gender: formData.gender || undefined,
-        birthYear: formData.birthYear,
-        currentlyStudying:
-          formData.role === "student"
-            ? formData.currentlyStudying || ""
-            : undefined,
-        teachingExperience:
-          formData.role === "teacher" ? formData.teachingExperience : undefined,
+        fullName: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+        role: formData.role, // keep user-selected role
       };
 
       const res = await register(payload);
@@ -144,8 +89,7 @@ export default function useRegister() {
       } else {
         toast.error(res.message);
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
+    } catch {
       toast.error("Something went wrong during registration.");
     } finally {
       setLoading(false);
