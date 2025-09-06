@@ -2,6 +2,7 @@ import React from "react";
 import AdminLayout from "@/components/layouts/adminlayouts/AdminLayout";
 import "@/styles/globals.css";
 import { Poppins } from "next/font/google";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata = {
   title: "Create Next App",
@@ -23,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.className} antialiased`}>
-        <AdminLayout>{children}</AdminLayout>
+        <AuthProvider>
+          <AdminLayout>{children}</AdminLayout>
+        </AuthProvider>
       </body>
     </html>
   );

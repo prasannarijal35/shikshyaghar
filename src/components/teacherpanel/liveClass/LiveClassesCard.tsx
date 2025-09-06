@@ -1,15 +1,15 @@
 "use client";
 
-import { ClassStatus, TeacherClass } from "@/types/teacher/class";
+import { ClassStatus, LiveClass } from "@/types/teacher/class";
 
 type Props = {
-  cls: TeacherClass;
-  onEdit: (cls: TeacherClass) => void;
+  cls: LiveClass;
+  onEdit: (cls: LiveClass) => void;
   onDelete: (id: number) => void;
 };
 
 export default function LiveClassCard({ cls, onEdit, onDelete }: Props) {
-  // Compute status dynamically based on startTime and duration
+  // Compute status dynamically
   const computeStatus = (): ClassStatus => {
     const start = new Date(cls.startTime);
     const end = new Date(start.getTime() + cls.duration * 60000); // duration in minutes
@@ -22,7 +22,6 @@ export default function LiveClassCard({ cls, onEdit, onDelete }: Props) {
 
   const status = computeStatus();
 
-  // Format date and time for display
   const startDate = new Date(cls.startTime);
   const dateStr = startDate.toLocaleDateString();
   const timeStr = startDate.toLocaleTimeString([], {
@@ -41,7 +40,7 @@ export default function LiveClassCard({ cls, onEdit, onDelete }: Props) {
           status === ClassStatus.Live
             ? "bg-green-100 text-green-700"
             : status === ClassStatus.Upcoming
-            ? "bg-blue-100 text-blue-700"
+            ? "bg-ablue-100 text-blue-700"
             : "bg-gray-200 text-gray-600"
         }`}
       >
@@ -50,7 +49,7 @@ export default function LiveClassCard({ cls, onEdit, onDelete }: Props) {
 
       <div className="flex gap-2 pt-2">
         <button
-          className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
+          className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 disabled:opacity-50"
           onClick={() =>
             cls.meetingLink && window.open(cls.meetingLink, "_blank")
           }

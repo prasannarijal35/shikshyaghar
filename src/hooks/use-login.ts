@@ -48,15 +48,26 @@ export default function useLogin() {
       const response = await login(formData.email, formData.password);
 
       if (response.success) {
-        // save token and user
+        // Save token and user
         if (response.token) await setAccessToken(response.token);
         if (response.user) await setUser(response.user);
 
         toast.success(response.message);
 
-        if (response.user?.role === "teacher")
-          router.push("/teacher/dashboard");
-        else router.push("/student/dashboard");
+        // Redirect based on role
+        switch (response.user?.role) {
+          case "admin":
+            router.push("/admin/dashboard");
+            break;
+          case "teacher":
+            router.push("/teacher/dashboard");
+            break;
+          case "student":
+            router.push("/student/dashboard");
+            break;
+          default:
+            router.push("/");
+        }
       } else {
         toast.error(response.message);
       }

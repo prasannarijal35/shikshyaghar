@@ -1,16 +1,24 @@
+// import { TeacherSubjectWithDetails } from "../teacherSubject";
 export enum ClassStatus {
   Upcoming = "Upcoming",
   Live = "Live",
   Completed = "Completed",
 }
 
-export type TeacherClass = {
-  id: number; // should be number, not string
-  title: string; // matches DB title
-  subject: string; // comes from teacherSubjectId → TeacherSubject.name
-  grade: string; // comes from teacherSubjectId → Grade.name
-  startTime: string; // ISO datetime
-  duration: number; // minutes, not "1h"
+export interface LiveClass {
+  id: number;
+  title: string;
+  grade: string;
+  subject: string;
+  teacherSubjectId: number;
+  startTime: string;
+  duration: number;
   status: ClassStatus;
   meetingLink?: string;
+}
+export type ClassData = {
+  teacherSubjectId: number;
+  startTime: string;
+  duration: number;
+  zoomLink?: string;
 };

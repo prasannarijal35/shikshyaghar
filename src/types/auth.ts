@@ -18,12 +18,12 @@ export type RegisterFormData = Omit<RegisterPayload, "fullName"> & {
 export type LoginPayload = {
   email: string;
   password: string;
-  role: "teacher" | "student";
+  role: "teacher" | "student" | "admin";
 };
 
 // Frontend form data
 export type LoginFormData = Partial<LoginPayload> & {
   email: string;
   password: string;
-  role: "teacher" | "student";
+  role: "teacher" | "student" | "admin";
 };
