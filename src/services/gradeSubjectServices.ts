@@ -15,6 +15,7 @@ const gradeSubjectService = {
         (gs: GradeSubject) => gs.grade.name === slug
       );
       return filtered;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("GradeSubjectService Error:", error);
       throw error;
