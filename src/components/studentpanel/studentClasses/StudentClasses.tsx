@@ -1,13 +1,33 @@
 "use client";
-
-import { useState } from "react";
-import { ClassStatus, TeacherClass } from "@/types/teacher/class";
-import dummyLiveClasses from "@/data/liveClass";
+import { useEffect, useState } from "react";
+import { LiveClass, ClassStatus } from "@/types/teacher/class";
+import { useAuth } from "@/context/AuthContext";
+import liveClassService from "@/services/liveClassServices";
 
 export default function StudentLiveClasses() {
-  const [classes] = useState<TeacherClass[]>(dummyLiveClasses);
+  const { token } = useAuth(); // get token from your useAuth hook
+  const [classes, setClasses] = useState<LiveClass[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const computeStatus = (cls: TeacherClass): ClassStatus => {
+  useEffect(() => {
+    if (!token) return;
+
+    const fetchClasses = async () => {
+      try {
+        setLoading(true);
+        const data = await liveClassService.getStudentLiveClasses(token);
+        setClasses(data);
+      } catch (err) {
+        console.error("Failed to fetch live classes:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchClasses();
+  }, [token]);
+
+  const computeStatus = (cls: LiveClass): ClassStatus => {
     const start = new Date(cls.startTime);
     const end = new Date(start.getTime() + cls.duration * 60000);
     const now = new Date();
@@ -15,6 +35,13 @@ export default function StudentLiveClasses() {
     if (now > end) return ClassStatus.Completed;
     return ClassStatus.Live;
   };
+
+  if (loading)
+    return (
+      <div className="h-screen w-screen flex justify-center items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    );
 
   if (!classes.length)
     return (

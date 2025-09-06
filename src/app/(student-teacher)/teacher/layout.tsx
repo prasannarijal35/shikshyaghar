@@ -1,6 +1,7 @@
 // app/layout.tsx (this stays a server component)
 
 import { TeacherLayout } from "@/components/layouts/teacherlayouts";
+import { AuthProvider } from "@/context/AuthContext";
 import "@/styles/globals.css";
 import { Poppins } from "next/font/google";
 
@@ -24,7 +25,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.className} antialiased`}>
-        <TeacherLayout>{children}</TeacherLayout>
+        <AuthProvider>
+          <TeacherLayout>{children}</TeacherLayout>
+        </AuthProvider>
       </body>
     </html>
   );

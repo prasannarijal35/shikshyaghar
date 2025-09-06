@@ -1,6 +1,6 @@
-import { ClassStatus, TeacherClass } from "@/types/teacher/class";
+import { ClassStatus, LiveClass } from "@/types/teacher/class";
 
-const dummyLiveClasses: TeacherClass[] = [
+const dummyLiveClasses: LiveClass[] = [
   {
     id: 1,
     title: "Grade 9 - Mathematics Live Class",
@@ -9,7 +9,7 @@ const dummyLiveClasses: TeacherClass[] = [
     startTime: "2025-09-03T14:00:00.000Z",
     duration: 60,
     status: ClassStatus.Upcoming,
-    meetingLink: "https://zoom.us/j/1234567890",
+    meetingLink: "https://zoom.us/j/1234567890", // fixed property name
   },
   {
     id: 2,

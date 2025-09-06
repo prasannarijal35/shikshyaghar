@@ -27,6 +27,17 @@ export type RegisterPayload = {
   fullName: string;
   email: string;
   password: string;
+
+  role: "teacher" | "student" | "admin";
+};
+
+// Frontend form data
+export type LoginFormData = Partial<LoginPayload> & {
+  email: string;
+  password: string;
+  role: "teacher" | "student" | "admin";
+};
+
   confirmPassword: string;
   role: Role;
   phone?: string;
@@ -49,3 +60,4 @@ export interface LoginResponse {
   user?: User;
   redirectToProfile?: boolean; // new flag for teacher profile setup
 }
+

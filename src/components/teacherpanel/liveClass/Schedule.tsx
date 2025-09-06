@@ -1,12 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
+import liveClassService from "@/services/liveClassServices";
 
-export type ClassData = {
+export interface ClassData {
+  teacherSubjectId: number;
+  startTime: string;
+  duration: number;
+  zoomLink?: string;
+}
+
+export type TeacherSubjectOption = {
+  id: number;
+  grade: string;
   subject: string;
-  date: string;
-  time: string;
-  duration: string;
 };
 
 export type ScheduleClassModalProps = {
@@ -22,22 +30,62 @@ const ScheduleClassModal: React.FC<ScheduleClassModalProps> = ({
   onSubmit,
   initialData,
 }) => {
+  const { token } = useAuth();
   const [formData, setFormData] = useState<ClassData>({
-    subject: "",
-    date: "",
-    time: "",
-    duration: "",
+    teacherSubjectId: 0,
+    startTime: "",
+    duration: 0,
+    zoomLink: "",
   });
+
+  const [subjects, setSubjects] = useState<TeacherSubjectOption[]>([]);
+  const [loadingSubjects, setLoadingSubjects] = useState(true);
 
   useEffect(() => {
     if (initialData) setFormData(initialData);
-    else setFormData({ subject: "", date: "", time: "", duration: "" });
+    else
+      setFormData({
+        teacherSubjectId: 0,
+        startTime: "",
+        duration: 0,
+        zoomLink: "",
+      });
   }, [initialData]);
+
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      if (!token) return;
+      try {
+        setLoadingSubjects(true);
+        const data = await liveClassService.getTeacherSubjects(token);
+        // Map to id, grade, subject
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const options = data.map((t: any) => ({
+          id: t.id,
+          grade: t.gradeSubject.grade.name,
+          subject: t.gradeSubject.subject.name,
+        }));
+        setSubjects(options);
+      } catch (err) {
+        console.error("Failed to fetch teacher subjects", err);
+      } finally {
+        setLoadingSubjects(false);
+      }
+    };
+    fetchSubjects();
+  }, [token]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]:
+        name === "teacherSubjectId" || name === "duration"
+          ? Number(value)
+          : value,
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -69,25 +117,31 @@ const ScheduleClassModal: React.FC<ScheduleClassModalProps> = ({
               Select Subject
             </label>
             <select
-              name="subject"
-              value={formData.subject}
+              name="teacherSubjectId"
+              value={formData.teacherSubjectId}
               onChange={handleChange}
               className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-blue-200"
               required
             >
-              <option value="">-- Choose Subject --</option>
-              <option value="Mathematics">Mathematics</option>
-              <option value="Science">Science</option>
-              <option value="English">English</option>
+              <option value={0}>-- Choose Subject --</option>
+              {loadingSubjects ? (
+                <option disabled>Loading subjects...</option>
+              ) : (
+                subjects.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.grade} - {s.subject}
+                  </option>
+                ))
+              )}
             </select>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Date</label>
+            <label className="block text-sm font-medium mb-1">Start Time</label>
             <input
-              type="date"
-              name="date"
-              value={formData.date}
+              type="datetime-local"
+              name="startTime"
+              value={formData.startTime}
               onChange={handleChange}
               className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-blue-200"
               required
@@ -95,31 +149,31 @@ const ScheduleClassModal: React.FC<ScheduleClassModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Time</label>
+            <label className="block text-sm font-medium mb-1">
+              Duration (minutes)
+            </label>
             <input
-              type="time"
-              name="time"
-              value={formData.time}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-blue-200"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Duration</label>
-            <select
+              type="number"
               name="duration"
               value={formData.duration}
               onChange={handleChange}
               className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-blue-200"
+              min={1}
               required
-            >
-              <option value="">-- Select Duration --</option>
-              <option value="30m">30 Minutes</option>
-              <option value="1h">1 Hour</option>
-              <option value="2h">2 Hours</option>
-            </select>
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Zoom Link (optional)
+            </label>
+            <input
+              type="url"
+              name="zoomLink"
+              value={formData.zoomLink}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-blue-200"
+            />
           </div>
 
           <button

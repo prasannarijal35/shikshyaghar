@@ -52,12 +52,31 @@ export default function useLogin() {
       );
 
       if (response.success) {
+
+        // Save token and user
+
+
         if (response.token) await setAccessToken(response.token);
         if (response.user) await setUser(response.user);
 
         toast.success(response.message);
 
-        if (response.user?.role === "teacher") {
+
+        // Redirect based on role
+        switch (response.user?.role) {
+          case "admin":
+            router.push("/admin/dashboard");
+            break;
+          case "teacher":
+            router.push("/teacher/dashboard");
+            break;
+          case "student":
+            router.push("/student/dashboard");
+            break;
+          default:
+   
+         router.push("/");
+      if (response.user?.role === "teacher") {
           if (response.redirectToProfile) {
             router.push("/teacher/profile-setup");
           } else {

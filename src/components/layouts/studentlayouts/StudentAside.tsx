@@ -15,6 +15,7 @@ import {
   MdSettings,
 } from "react-icons/md";
 import { FaSignOutAlt } from "react-icons/fa";
+import { useLogout } from "@/utils/logout";
 
 export const navItems = [
   { name: "Dashboard", href: "/student/dashboard", icon: MdDashboard },
@@ -29,6 +30,7 @@ export const navItems = [
 
 export default function StudentAside() {
   const pathname = usePathname();
+  const handleLogout = useLogout();
 
   return (
     <aside className="w-16 hover:w-64 bg-white border-r border-gray-200 h-screen fixed left-0 top-0 z-50 flex flex-col transition-all duration-300 ease-in-out group shadow-sm">
@@ -53,7 +55,6 @@ export default function StudentAside() {
         <ul className="space-y-2 px-2">
           {navItems.map(({ name, href, icon: Icon }) => {
             const isActive = pathname === href;
-
             return (
               <li key={name}>
                 <Link href={href}>
@@ -84,22 +85,15 @@ export default function StudentAside() {
         </ul>
       </nav>
 
-      {/* Bottom section - could add user info or additional links */}
       {/* Bottom section - Logout */}
       <div className="p-4 border-t border-gray-200 mt-auto">
         <button
-          onClick={() => {
-            // Add your logout logic here
-            console.log("Logging out...");
-          }}
+          onClick={handleLogout}
           className="flex items-center gap-3 px-3 py-2 w-full rounded-xl group hover:bg-red-50 transition-colors duration-200"
         >
-          {/* Icon */}
           <div className="bg-red-100 text-red-600 w-6 h-6 flex items-center justify-center rounded-full flex-shrink-0">
             <FaSignOutAlt className="w-4 h-4" />
           </div>
-
-          {/* Text - hidden until hover */}
           <span className="text-sm text-red-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
             Logout
           </span>

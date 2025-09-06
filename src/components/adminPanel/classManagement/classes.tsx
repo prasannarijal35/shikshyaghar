@@ -1,22 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { toast } from "react-hot-toast";
 import DeleteModal from "@/components/adminPanel/students/DeleteModal";
-import { TeacherClass, ClassStatus } from "@/types/teacher/class";
-import dummyLiveClasses from "@/data/liveClass";
+import { LiveClass, ClassStatus } from "@/types/teacher/class";
+import { useAuth } from "@/context/AuthContext";
+import liveClassService from "@/services/liveClassServices";
 
 type SortBy = "grade" | "startTime" | "status";
 
 export default function LiveClassTable() {
-  const [classes, setClasses] = useState<TeacherClass[]>(dummyLiveClasses);
+  const { token } = useAuth();
+  const [classes, setClasses] = useState<LiveClass[]>([]);
   const [sortBy, setSortBy] = useState<SortBy>("grade");
   const [filterGrade, setFilterGrade] = useState<string>("");
   const [filterStatus, setFilterStatus] = useState<ClassStatus | "">("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedClass, setSelectedClass] = useState<TeacherClass | null>(null);
+  const [selectedClass, setSelectedClass] = useState<LiveClass | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const computeStatus = (cls: TeacherClass): ClassStatus => {
+  const computeStatus = (cls: LiveClass): ClassStatus => {
     const start = new Date(cls.startTime);
     const end = new Date(start.getTime() + cls.duration * 60000);
     const now = new Date();
@@ -25,23 +28,46 @@ export default function LiveClassTable() {
     return ClassStatus.Live;
   };
 
-  const handleDelete = () => {
-    if (!selectedClass) return;
-    setClasses(classes.filter((c) => c.id !== selectedClass.id));
-    toast.success(`Deleted ${selectedClass.title}`);
-    setShowDeleteModal(false);
+  const fetchClasses = useCallback(async () => {
+    if (!token) return;
+    try {
+      setLoading(true);
+      const data = await liveClassService.getAllLiveClasses(token);
+      setClasses(data);
+    } catch (err) {
+      console.error("Failed to fetch classes", err);
+      toast.error("Failed to load classes");
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    fetchClasses();
+  }, [fetchClasses]);
+
+  const handleDelete = async () => {
+    if (!selectedClass || !token) return;
+    try {
+      await liveClassService.deleteLiveClass(token, selectedClass.id);
+      setClasses(classes.filter((c) => c.id !== selectedClass.id));
+      toast.success(`Deleted ${selectedClass.title}`);
+      setShowDeleteModal(false);
+    } catch (err) {
+      console.error("Failed to delete class", err);
+      toast.error("Failed to delete class");
+    }
   };
 
-  const handleStart = (cls: TeacherClass) => {
+  const handleStart = (cls: LiveClass) => {
     if (!cls.meetingLink) return toast.error("No meeting link!");
     window.open(cls.meetingLink, "_blank");
   };
 
-  const handleView = (cls: TeacherClass) => {
+  const handleView = (cls: LiveClass) => {
     toast(`Viewing ${cls.title}`);
   };
 
-  // Apply filters and sorting
   const filteredSortedClasses = [...classes]
     .filter((c) =>
       filterGrade ? c.grade.toLowerCase() === filterGrade.toLowerCase() : true
@@ -64,8 +90,14 @@ export default function LiveClassTable() {
       return 0;
     });
 
-  // Get unique grades for filter dropdown
   const grades = Array.from(new Set(classes.map((c) => c.grade)));
+
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    );
 
   return (
     <main className="min-h-screen p-6 bg-gray-50">
