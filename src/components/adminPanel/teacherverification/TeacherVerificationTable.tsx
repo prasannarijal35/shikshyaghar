@@ -33,12 +33,19 @@ export default function TeacherVerificationTable() {
         id: t.id,
         fullName: t.fullName,
         email: t.email,
-        profilePicture: t.teacher?.profilePicture,
-        qualification: t.teacher?.qualification,
+        phone: t.phone || "-",
+        gender: t.gender || "-",
+        birthYear: t.birthYear || "-",
+        profilePicture: t.teacher?.profilePicture || "/default-avatar.png",
+        qualification: t.teacher?.qualification || "-",
         status: t.teacher?.status || "PENDING",
         teacherId: t.teacher?.id,
-        bio: t.teacher?.bio,
-        documentUrl: t.teacher?.documentUrl,
+        bio: t.teacher?.bio || "-",
+        experience: t.teacher?.experience != null ? t.teacher.experience : "-",
+        availability: t.teacher?.availability || "-",
+        documentUrl: t.teacher?.documentUrl || null,
+        createdAt: t.createdAt,
+        updatedAt: t.updatedAt,
       }));
 
       setTeachers(flattened);
