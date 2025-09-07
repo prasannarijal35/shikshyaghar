@@ -17,8 +17,6 @@ export const removeAccessToken = (): void => {
   localStorage.removeItem("accessToken");
 };
 
-// ---------------- User Helpers ----------------
-
 // Old type: User
 export const getUser = (): User | null => {
   if (typeof window === "undefined") return null;
