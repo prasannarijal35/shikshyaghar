@@ -4,7 +4,7 @@ export interface Teacher {
   email: string;
   role: string;
   address: string;
-  phone: string | null;
+  phone: number | null; // phone is number in your API
   gender: string | null;
   birthYear: number | null;
   slug: string;
@@ -15,12 +15,12 @@ export interface Teacher {
 
 export interface TeacherDetails {
   id: number;
-  userId: number;
   bio: string;
-  contact:string;
-  gender:string;
-  experience: string;
+  experience: number; // number, not string
   availability: string;
+  qualification: string;
+  profilePicture: string | null;
+  status: string;
   createdAt: string;
   updatedAt: string;
   teacherSubjects: TeacherSubjectWithDetails[];
@@ -34,13 +34,15 @@ export interface TeacherSubjectWithDetails {
 export interface GradeSubjectWithSubject {
   id: number;
   subject: Subject;
-  grade: Subject;
+  grade: Grade;
 }
 
 export interface Subject {
   id: number;
   name: string;
-  slug: string;
-  createdAt: string;
-  updatedAt: string;
+}
+
+export interface Grade {
+  id: number;
+  name: string;
 }

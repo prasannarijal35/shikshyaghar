@@ -180,7 +180,7 @@ const TeacherRegistrationPage: React.FC = () => {
               name="teachingExperience"
               type="number"
               min={0}
-              value={formData.teachingExperience || ""}
+              value={formData.experience || ""}
               onChange={handleChange}
               error={errors.teachingExperience}
               placeholder="e.g., 5"
