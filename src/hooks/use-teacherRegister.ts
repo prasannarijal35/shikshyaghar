@@ -1,12 +1,7 @@
-<<<<<<< Updated upstream
-=======
-/* eslint-disable @typescript-eslint/no-explicit-any */
->>>>>>> Stashed changes
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-<<<<<<< Updated upstream
 import { registerTeacher } from "@/services/authServices";
 
 export type TeacherRegisterFormData = {
@@ -29,22 +24,6 @@ export type TeacherRegisterFormData = {
 
 type Errors = Record<string, string>;
 
-=======
-import toast from "react-hot-toast";
-import { register } from "@/services/authServices";
-import { TeacherRegisterPayload } from "@/types/auth";
-
-// Frontend form type includes confirmPassword and optional files
-type TeacherRegisterFormData = Omit<
-  TeacherRegisterPayload,
-  "profilePicture" | "document"
-> & {
-  confirmPassword: string;
-  profilePicture?: File | null;
-  document?: File | null;
-};
-
->>>>>>> Stashed changes
 export default function useTeacherRegister() {
   const router = useRouter();
 
@@ -53,23 +32,14 @@ export default function useTeacherRegister() {
     email: "",
     password: "",
     confirmPassword: "",
-<<<<<<< Updated upstream
     phone: "",
     address: "",
     gender: undefined,
     birthYear: undefined,
-=======
-    role: "teacher",
-    phone: undefined,
-    gender: "",
-    birthYear: undefined,
-    address: "",
->>>>>>> Stashed changes
     bio: "",
     availability: "",
     qualification: "",
     teachingExperience: undefined,
-<<<<<<< Updated upstream
     role: "teacher",
     profilePicture: undefined,
     document: undefined,
@@ -149,85 +119,12 @@ export default function useTeacherRegister() {
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
   ) => {
-=======
-    profilePicture: null,
-    document: null,
-  });
-
-  const [errors, setErrors] = useState<
-    Partial<Record<keyof TeacherRegisterFormData, string>>
-  >({});
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value, files } = e.target as any;
-    if (files) {
-      setFormData((prev) => ({ ...prev, [name]: files[0] || null }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-    setErrors((prev) => ({ ...prev, [name]: undefined }));
-  };
-
-  const validate = (): boolean => {
-    const newErrors: Partial<Record<keyof TeacherRegisterFormData, string>> =
-      {};
-    let valid = true;
-
-    if (!formData.fullName) {
-      newErrors.fullName = "Full name is required";
-      valid = false;
-    }
-
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-      valid = false;
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
-      valid = false;
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-      valid = false;
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-      valid = false;
-    }
-
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Confirm your password";
-      valid = false;
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-      valid = false;
-    }
-
-    if (!formData.profilePicture) {
-      newErrors.profilePicture = "Profile picture is required";
-      valid = false;
-    }
-
-    if (!formData.document) {
-      newErrors.document = "Document is required";
-      valid = false;
-    }
-
-    setErrors(newErrors);
-    return valid;
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
->>>>>>> Stashed changes
     e.preventDefault();
     if (!validate()) return;
 
     setLoading(true);
     try {
       const payload = new FormData();
-<<<<<<< Updated upstream
       payload.append("fullName", formData.fullName);
       payload.append("email", formData.email);
       payload.append("password", formData.password);
@@ -263,26 +160,6 @@ export default function useTeacherRegister() {
       }
     } catch {
       setToastMsg({ message: "Something went wrong", type: "error" });
-=======
-
-      Object.entries(formData).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          payload.append(key, value as any);
-        }
-      });
-
-      const res = await register(payload); // backend expects multipart/form-data
-
-      if (res.success) {
-        toast.success(res.message);
-        router.push("/login");
-      } else {
-        toast.error(res.message);
-      }
-    } catch (err) {
-      toast.error("Something went wrong during registration.");
-      console.error(err);
->>>>>>> Stashed changes
     } finally {
       setLoading(false);
     }
@@ -292,7 +169,6 @@ export default function useTeacherRegister() {
     formData,
     errors,
     loading,
-<<<<<<< Updated upstream
     profilePreview,
     toast: toastMsg,
     handleChange,
@@ -300,9 +176,5 @@ export default function useTeacherRegister() {
     handleDocumentChange,
     handleSubmit,
     setFormData,
-=======
-    handleChange,
-    handleSubmit,
->>>>>>> Stashed changes
   };
 }
