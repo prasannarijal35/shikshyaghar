@@ -16,7 +16,7 @@ export type TeacherRegisterFormData = {
   bio?: string;
   availability?: string;
   qualification?: string;
-  teachingExperience?: number;
+  experience?: number;
   role: "teacher";
   profilePicture?: File;
   document?: File;
@@ -39,7 +39,7 @@ export default function useTeacherRegister() {
     bio: "",
     availability: "",
     qualification: "",
-    teachingExperience: undefined,
+    experience: undefined,
     role: "teacher",
     profilePicture: undefined,
     document: undefined,
@@ -140,10 +140,10 @@ export default function useTeacherRegister() {
         payload.append("availability", formData.availability);
       if (formData.qualification)
         payload.append("qualification", formData.qualification);
-      if (formData.teachingExperience)
+      if (formData.experience)
         payload.append(
           "teachingExperience",
-          String(formData.teachingExperience)
+          String(formData.experience)
         );
       if (formData.profilePicture)
         payload.append("profilePicture", formData.profilePicture);
