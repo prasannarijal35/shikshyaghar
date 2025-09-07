@@ -3,18 +3,20 @@
 import { MotionDiv } from "../MotionDiv";
 import Image from "next/image";
 import logo from "@/assets/logo/Sg_logo.png";
-import Link from "next/link";
 import avatar1 from "@/assets/extraimages/avatar1.png";
+<<<<<<< Updated upstream
+import Link from "next/link";
+=======
 import avatar2 from "@/assets/extraimages/avatar2.png";
-import useRegister from "@/hooks/use-register";
+import useRegister from "@/hooks/use-teacherRegister";
+>>>>>>> Stashed changes
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import useStudentRegister from "@/hooks/use-studentRegister";
 
 export default function Register() {
-  const { formData, errors, loading, handleChange, handleSubmit } =
-    useRegister();
-  const isTeacher = formData.role === "teacher";
-
+  const { formData, handleChange, handleSubmit, loading } =
+    useStudentRegister();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -36,8 +38,7 @@ export default function Register() {
           <div>
             <h1 className="text-3xl font-bold mb-4">Join ShikshyaGhar</h1>
             <p className="text-lg min-h-[2.5rem]">
-              Create your account as a student or teacher and start learning or
-              teaching!
+              Create your account as a student and start learning!
             </p>
           </div>
           <MotionDiv
@@ -46,7 +47,7 @@ export default function Register() {
             transition={{ duration: 0.6 }}
           >
             <Image
-              src={isTeacher ? avatar2 : avatar1}
+              src={avatar1}
               alt="avatar"
               width={400}
               height={400}
@@ -72,35 +73,6 @@ export default function Register() {
             Register Your Account
           </h2>
 
-          {/* Role selection */}
-          <MotionDiv
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="flex justify-center gap-8 mb-6 text-sm"
-          >
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="role"
-                value="student"
-                checked={formData.role === "student"}
-                onChange={handleChange}
-              />
-              Student
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="role"
-                value="teacher"
-                checked={formData.role === "teacher"}
-                onChange={handleChange}
-              />
-              Teacher
-            </label>
-          </MotionDiv>
-
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Full Name */}
             <div>
@@ -113,13 +85,8 @@ export default function Register() {
                 value={formData.fullName}
                 onChange={handleChange}
                 placeholder="Your full name"
-                className={`w-full mt-1 px-3 py-2 border ${
-                  errors.fullName ? "border-red-500" : "border-gray-300"
-                } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
+                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary"
               />
-              {errors.fullName && (
-                <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>
-              )}
             </div>
 
             {/* Email */}
@@ -131,13 +98,8 @@ export default function Register() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="e.g. john@domain.com"
-                className={`w-full mt-1 px-3 py-2 border ${
-                  errors.email ? "border-red-500" : "border-gray-300"
-                } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
+                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary"
               />
-              {errors.email && (
-                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-              )}
             </div>
 
             {/* Password */}
@@ -151,9 +113,7 @@ export default function Register() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Enter password"
-                className={`w-full mt-1 px-3 py-2 border ${
-                  errors.password ? "border-red-500" : "border-gray-300"
-                } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
+                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary"
               />
               <span
                 className="absolute right-3 top-9 cursor-pointer"
@@ -161,9 +121,6 @@ export default function Register() {
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
-              {errors.password && (
-                <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-              )}
             </div>
 
             {/* Confirm Password */}
@@ -177,9 +134,7 @@ export default function Register() {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="Confirm password"
-                className={`w-full mt-1 px-3 py-2 border ${
-                  errors.confirmPassword ? "border-red-500" : "border-gray-300"
-                } rounded-md focus:ring-2 focus:ring-primary focus:border-primary`}
+                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary"
               />
               <span
                 className="absolute right-3 top-9 cursor-pointer"
@@ -187,11 +142,6 @@ export default function Register() {
               >
                 {showConfirm ? <FaEyeSlash /> : <FaEye />}
               </span>
-              {errors.confirmPassword && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.confirmPassword}
-                </p>
-              )}
             </div>
 
             <button

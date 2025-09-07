@@ -1,19 +1,32 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import myAxios from "./apiServices";
-import { RegisterPayload, RegisterResponse, LoginResponse } from "@/types/auth";
+import {
+  RegisterFormData,
+  StudentRegisterResponse,
+  TeacherRegisterResponse,
+  LoginFormData,
+  LoginResponse,
+} from "@/types/auth";
 
-export const register = async (
-  payload: RegisterPayload
-): Promise<RegisterResponse> => {
+// ---------------- Student Registration ---------------- //
+export const registerStudent = async (
+  payload: RegisterFormData
+): Promise<
+  | { success: true; message: string; data: any }
+  | { success: false; message: string }
+> => {
   try {
-    const response = await myAxios.post("/auth/register", payload, {
-      isAuthRoute: false,
-    });
-    const data = response.data;
+    const response = await myAxios.post<StudentRegisterResponse>(
+      "/auth/register",
+      payload,
+      { isAuthRoute: false }
+    );
+
     return {
       success: true,
-      message: data.message || "Registration successful",
+      message: response.data.message || "Registration successful",
+      data: response.data.data,
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     return {
       success: false,
@@ -23,26 +36,52 @@ export const register = async (
   }
 };
 
-export const login = async (
-  email: string,
-  password: string
-): Promise<LoginResponse> => {
+// ---------------- Teacher Registration ---------------- //
+export const registerTeacher = async (
+  payload: FormData
+): Promise<
+  | { success: true; message: string; data: any }
+  | { success: false; message: string }
+> => {
   try {
-    const response = await myAxios.post(
-      "/auth/login",
-      { email, password },
-      { isAuthRoute: false }
+    const response = await myAxios.post<TeacherRegisterResponse>(
+      "/teachers/register",
+      payload,
+      {
+        isAuthRoute: false,
+        headers: { "Content-Type": "multipart/form-data" },
+      }
     );
-    const data = response.data;
 
     return {
       success: true,
-      message: data.message || "Login successful",
-      token: data.token,
-      user: data.user,
-      redirectToProfile: data.redirectToProfile, // backend flag for teacher profile
+      message: response.data.message || "Registration successful",
+      data: response.data.data,
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    return {
+      success: false,
+      message:
+        err.response?.data?.message || err.message || "Registration failed",
+    };
+  }
+};
+
+// ---------------- Login ---------------- //
+export const login = async (
+  payload: LoginFormData
+): Promise<LoginResponse | { success: false; message: string }> => {
+  try {
+    const response = await myAxios.post<LoginResponse>("/auth/login", payload, {
+      isAuthRoute: false,
+    });
+
+    return {
+      success: true,
+      message: response.data.message || "Login successful",
+      token: response.data.token,
+      user: response.data.user,
+    };
   } catch (err: any) {
     return {
       success: false,

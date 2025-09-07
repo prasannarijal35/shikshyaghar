@@ -17,11 +17,13 @@ export interface TeacherDetails {
   id: number;
   userId: number;
   bio: string;
+  contact:string;
+  gender:string;
   experience: string;
   availability: string;
   createdAt: string;
   updatedAt: string;
-  teacherSubject: TeacherSubjectWithDetails[];
+  teacherSubjects: TeacherSubjectWithDetails[];
 }
 
 export interface TeacherSubjectWithDetails {

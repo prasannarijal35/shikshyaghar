@@ -5,13 +5,13 @@ import teacherService from "@/services/teacherServices";
 import { Teacher } from "@/types/teacher";
 
 type PageProps = {
-  params: Promise<{ slug: string }>; // 👈 mark params as Promise
+  params: Promise<{ slug: string }>;
 };
 
-// Async metadata generation
+// Async metadata for SEO
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   try {
-    const { slug } = await params; // 👈 await params
+    const { slug } = await params;
     const teacher: Teacher | null = await teacherService.getTeacherBySlug(slug);
 
     if (!teacher) {
@@ -27,18 +27,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
+// Teacher details page
 export default async function Page({ params }: PageProps) {
-  const { slug } = await params; // 👈 also await here
+  const { slug } = await params;
   if (!slug) return notFound();
 
-  let teacher: Teacher | null = null;
-  try {
-    teacher = await teacherService.getTeacherBySlug(slug);
-  } catch (error) {
-    console.error("Error fetching teacher by slug:", error);
-  }
-
+  const teacher: Teacher | null = await teacherService.getTeacherBySlug(slug);
   if (!teacher) return notFound();
 
+  // TeacherDetails now handles subjects internally
   return <TeacherDetails teacher={teacher} />;
 }
