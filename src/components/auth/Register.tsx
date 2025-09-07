@@ -6,7 +6,7 @@ import logo from "@/assets/logo/Sg_logo.png";
 import Link from "next/link";
 import avatar1 from "@/assets/extraimages/avatar1.png";
 import avatar2 from "@/assets/extraimages/avatar2.png";
-import useRegister from "@/hooks/use-register";
+import useRegister from "@/hooks/use-teacherRegister";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 

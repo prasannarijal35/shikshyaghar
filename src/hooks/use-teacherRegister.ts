@@ -1,37 +1,63 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { register } from "@/services/authServices";
-import { RegisterPayload } from "@/types/auth";
+import { TeacherRegisterPayload } from "@/types/auth";
 
-export default function useRegister() {
+// Frontend form type includes confirmPassword and optional files
+type TeacherRegisterFormData = Omit<
+  TeacherRegisterPayload,
+  "profilePicture" | "document"
+> & {
+  confirmPassword: string;
+  profilePicture?: File | null;
+  document?: File | null;
+};
+
+export default function useTeacherRegister() {
   const router = useRouter();
 
-  const [formData, setFormData] = useState<RegisterPayload>({
+  const [formData, setFormData] = useState<TeacherRegisterFormData>({
     fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
-    role: "student", // default role
+    role: "teacher",
+    phone: undefined,
+    gender: "",
+    birthYear: undefined,
+    address: "",
+    bio: "",
+    availability: "",
+    qualification: "",
+    teachingExperience: undefined,
+    profilePicture: null,
+    document: null,
   });
 
   const [errors, setErrors] = useState<
-    Partial<Record<keyof RegisterPayload, string>>
+    Partial<Record<keyof TeacherRegisterFormData, string>>
   >({});
   const [loading, setLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, files } = e.target as any;
+    if (files) {
+      setFormData((prev) => ({ ...prev, [name]: files[0] || null }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
     setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
   const validate = (): boolean => {
-    const newErrors: Partial<Record<keyof RegisterPayload, string>> = {};
+    const newErrors: Partial<Record<keyof TeacherRegisterFormData, string>> =
+      {};
     let valid = true;
 
     if (!formData.fullName) {
@@ -63,6 +89,16 @@ export default function useRegister() {
       valid = false;
     }
 
+    if (!formData.profilePicture) {
+      newErrors.profilePicture = "Profile picture is required";
+      valid = false;
+    }
+
+    if (!formData.document) {
+      newErrors.document = "Document is required";
+      valid = false;
+    }
+
     setErrors(newErrors);
     return valid;
   };
@@ -73,15 +109,15 @@ export default function useRegister() {
 
     setLoading(true);
     try {
-      const payload: RegisterPayload = {
-        fullName: formData.fullName,
-        email: formData.email,
-        password: formData.password,
-        confirmPassword: formData.confirmPassword,
-        role: formData.role, // keep user-selected role
-      };
+      const payload = new FormData();
 
-      const res = await register(payload);
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          payload.append(key, value as any);
+        }
+      });
+
+      const res = await register(payload); // backend expects multipart/form-data
 
       if (res.success) {
         toast.success(res.message);
@@ -89,8 +125,9 @@ export default function useRegister() {
       } else {
         toast.error(res.message);
       }
-    } catch {
+    } catch (err) {
       toast.error("Something went wrong during registration.");
+      console.error(err);
     } finally {
       setLoading(false);
     }

@@ -19,13 +19,13 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-8 px-6">
             {/* Text Content */}
             <div className="flex-1">
-              <h2 className="text-4xl font-semibold mb-16">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-6">
                 Need to talk with our Experts?
               </h2>
 
               <button
                 aria-label="Book an Appointment"
-                className="bg-primary text-[#eaeaf3] font-semibold px-6 py-2 rounded-md hover:bg-white hover:text-primary  transform transition duration-300"
+                className="bg-primary text-white font-semibold px-6 py-2 rounded-md hover:bg-white hover:text-primary transition duration-300"
               >
                 Book an Appointment
               </button>
@@ -44,11 +44,12 @@ export default function Footer() {
           </div>
         </div>
       </div>
+
       <div className="container bg-indigo-200 pt-[200px]">
         <div className="mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Logo and About */}
           <div className="space-y-4">
-            <div className="flex items-center gap-3 ">
+            <div className="flex items-center gap-3">
               <Image
                 src={logo}
                 alt="Shikshyaghar Logo"
@@ -57,17 +58,15 @@ export default function Footer() {
                 className="w-[110px]"
               />
             </div>
-            <div className="text-lg text-[#06034D] space-y-2">
+            <div className="text-base md:text-lg text-[#06034D] space-y-2">
               <p className="font-semibold">
                 Hunch Complex, Bagar, Pokhara, Nepal
               </p>
-
               <p>+977-1-000000000 / 40000</p>
-
               <p>
                 <Link
                   href="mailto:info@neemaacademy.com"
-                  className=" hover:text-[#06034D]"
+                  className="hover:text-[#06034D]"
                 >
                   info@shikshyaghar.com
                 </Link>
@@ -77,10 +76,10 @@ export default function Footer() {
 
           {/* Navigation */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-primary uppercase">
+            <h3 className="text-lg md:text-xl font-semibold mb-3 text-primary uppercase">
               Explore
             </h3>
-            <ul className="space-y-2 text-md text-[#06034D]">
+            <ul className="space-y-2 text-sm md:text-base text-[#06034D]">
               <li>
                 <Link href="/about-us" className="hover:text-secondary">
                   About Us
@@ -111,10 +110,10 @@ export default function Footer() {
 
           {/* Student Resources */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-primary uppercase">
+            <h3 className="text-lg md:text-xl font-semibold mb-3 text-primary uppercase">
               Students
             </h3>
-            <ul className="space-y-2 text-md text-[#06034D]">
+            <ul className="space-y-2 text-sm md:text-base text-[#06034D]">
               <li>
                 <Link href="/dashboard" className="hover:text-secondary">
                   Dashboard
@@ -140,10 +139,10 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-primary uppercase">
+            <h3 className="text-lg md:text-xl font-semibold mb-3 text-primary uppercase">
               Contact Us
             </h3>
-            <ul className="space-y-3 text-sm text-[#06034D]">
+            <ul className="space-y-3 text-sm md:text-base text-[#06034D]">
               <li className="flex items-center gap-2">
                 <MdOutlineMailOutline />{" "}
                 <Link href="mailto:support@shikshyaghar.com">
@@ -159,8 +158,9 @@ export default function Footer() {
             </ul>
           </div>
         </div>
+
         {/* Footer Bottom */}
-        <div className="mt-10 border-t-[1px] border-white/40 pt-6 pb-5 text-sm text-[#06034D]">
+        <div className="mt-10 border-t border-white/40 pt-6 pb-5 text-sm md:text-base text-[#06034D]">
           <div className="flex flex-col md:flex-row justify-between items-start gap-6">
             {/* Left Side Links & Copyright */}
             <div className="space-y-4">
@@ -186,26 +186,26 @@ export default function Footer() {
 
             {/* Social Icons */}
             <div>
-              <div className="text-primary text-[16px] font-semibold mb-2 text-right">
+              <div className="text-primary text-sm md:text-base font-semibold mb-2 text-right">
                 FOLLOW US ON
               </div>
-              <div className="flex gap-4 text-xl ">
-                <div className="text-[#1877F2] hover:text-white rounnd-full p-2 hover:bg-[#1877F2] rounded-full ">
+              <div className="flex gap-4 text-xl">
+                <div className="text-[#1877F2] hover:text-white p-2 hover:bg-[#1877F2] rounded-full">
                   <Link href="https://facebook.com" target="_blank">
                     <FaFacebookF />
                   </Link>
                 </div>
-                <div className="text-[#E1306C] hover:text-white rounnd-full p-2 hover:bg-[#E1306C] rounded-full">
+                <div className="text-[#E1306C] hover:text-white p-2 hover:bg-[#E1306C] rounded-full">
                   <Link href="https://instagram.com" target="_blank">
                     <FaInstagram />
                   </Link>
                 </div>
-                <div className="text-[#1DA1F2] hover:text-white rounnd-full p-2 hover:bg-[#1DA1F2] rounded-full">
+                <div className="text-[#1DA1F2] hover:text-white p-2 hover:bg-[#1DA1F2] rounded-full">
                   <Link href="https://twitter.com" target="_blank">
                     <FaTwitter />
                   </Link>
                 </div>
-                <div className="text-[#FF0000] hover:text-white rounnd-full p-2 hover:bg-[#FF0000] rounded-full">
+                <div className="text-[#FF0000] hover:text-white p-2 hover:bg-[#FF0000] rounded-full">
                   <Link href="https://youtube.com" target="_blank">
                     <FaYoutube />
                   </Link>

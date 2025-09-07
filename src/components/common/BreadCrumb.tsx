@@ -16,8 +16,8 @@ export default function Breadcrumb({
 }: BreadcrumbProps) {
   return (
     <section className="relative mt-16 py-12 md:py-5 overflow-hidden">
-      {/* Custom Background with your theme colors */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#08ade6] via-[#08ade6]/80 to-[#c72b32]/20">
+      {/* Background using primary & secondary */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/80 to-secondary/20">
         {/* Subtle pattern overlay */}
         <div className="absolute inset-0 opacity-10">
           <div
@@ -34,35 +34,38 @@ export default function Breadcrumb({
       </div>
 
       {/* Content Container */}
-      <div className="relative z-10 container mx-auto px-4">
+      <div className="relative  container mx-auto px-4">
         <div className="backdrop-blur-sm bg-white/10 border border-white/20 rounded-2xl p-6 md:p-10 shadow-lg">
           {/* Breadcrumb Navigation */}
           <nav
-            className="flex items-center justify-center space-x-3 text-sm mb-6 text-white/95"
+            className="flex items-center justify-center space-x-2 text-sm md:text-base mb-6 text-white/90"
             aria-label="Breadcrumb"
           >
+            {/* Home */}
             <Link
               href="/"
-              className="flex items-center hover:text-white transition-all duration-300 transform hover:scale-105 hover:bg-white/10 px-2 py-1 rounded"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-300 shadow-sm"
             >
-              <Home className="w-4 h-4 mr-1" />
-              Home
+              <Home className="w-4 h-4" />
+              <span>Home</span>
             </Link>
 
+            {/* Divider */}
             {subTitle && (
               <>
                 <ChevronRight className="w-4 h-4 text-white/70" />
                 <Link
                   href={subTitleLink || "#"}
-                  className="hover:text-white transition-all duration-300 transform hover:scale-105 hover:bg-white/10 px-2 py-1 rounded"
+                  className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/20 transition-all duration-300 shadow-sm"
                 >
                   {subTitle}
                 </Link>
               </>
             )}
 
+            {/* Divider + Current Page */}
             <ChevronRight className="w-4 h-4 text-white/70" />
-            <span className="text-white font-semibold bg-[#c72b32]/30 border border-[#c72b32]/40 px-3 py-1 rounded-full">
+            <span className="px-4 py-1.5 rounded-full font-semibold bg-secondary/30 border border-secondary/50 text-white shadow-md">
               {title}
             </span>
           </nav>
@@ -80,21 +83,21 @@ export default function Breadcrumb({
             )}
           </div>
 
-          {/* Decorative accent line with your secondary color */}
+          {/* Decorative accent line with secondary */}
           <div className="mt-6 flex justify-center">
-            <div className="w-20 h-1 bg-gradient-to-r from-transparent via-[#c72b32] to-transparent rounded-full opacity-80"></div>
+            <div className="w-20 h-1 bg-gradient-to-r from-transparent via-secondary to-transparent rounded-full opacity-80"></div>
           </div>
         </div>
       </div>
 
-      {/* Subtle floating accents using your theme colors */}
-      <div className="absolute top-1/4 left-1/6 w-3 h-3 bg-[#c72b32]/40 rounded-full blur-sm animate-bounce"></div>
+      {/* Floating accents */}
+      <div className="absolute top-1/4 left-1/6 w-3 h-3 bg-secondary/40 rounded-full blur-sm animate-bounce"></div>
       <div
         className="absolute top-1/2 right-1/4 w-2 h-2 bg-white/30 rounded-full blur-sm animate-bounce"
         style={{ animationDelay: "1s" }}
       ></div>
       <div
-        className="absolute bottom-1/3 left-1/3 w-1.5 h-1.5 bg-[#08ade6]/60 rounded-full blur-sm animate-bounce"
+        className="absolute bottom-1/3 left-1/3 w-1.5 h-1.5 bg-primary/60 rounded-full blur-sm animate-bounce"
         style={{ animationDelay: "2s" }}
       ></div>
     </section>

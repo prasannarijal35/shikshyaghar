@@ -56,7 +56,7 @@ const FAQ = () => {
             </span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Got questions? We've got answers. Here are the most common questions
+            Got questions? We&apost answers. Here are the most common questions
             from new teachers.
           </p>
         </div>
