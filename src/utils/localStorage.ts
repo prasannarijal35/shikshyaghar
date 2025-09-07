@@ -20,11 +20,11 @@ export const removeAccessToken = (): void => {
 // ---------------- User Helpers ----------------
 
 // Old type: User
-export const getUser = (): User | UserData | null => {
+export const getUser = (): User | null => {
   if (typeof window === "undefined") return null;
   try {
     const user = localStorage.getItem("user");
-    return user ? (JSON.parse(user) as User | UserData) : null;
+    return user ? (JSON.parse(user) as User) : null;
   } catch (err) {
     console.error("Failed to parse user from localStorage", err);
     return null;
