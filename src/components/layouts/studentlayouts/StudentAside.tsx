@@ -8,23 +8,21 @@ import {
   MdDashboard,
   MdPerson,
   MdClass,
-  MdAssignment,
   MdNotifications,
   MdHelp,
   MdFindReplace,
-  MdSettings,
 } from "react-icons/md";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useLogout } from "@/utils/logout";
+import { SubscriptIcon } from "lucide-react";
 
 export const navItems = [
   { name: "Dashboard", href: "/student/dashboard", icon: MdDashboard },
   { name: "My Profile", href: "/student/profile", icon: MdPerson },
+  { name: "Subscription", href: "/student/subscription", icon: SubscriptIcon },
   { name: "My Classes", href: "/student/class", icon: MdClass },
   { name: "Find Teachers", href: "/student/findteacher", icon: MdFindReplace },
-  { name: "My Schedule", href: "/student/schedule", icon: MdAssignment },
   { name: "Notifications", href: "/notifications", icon: MdNotifications },
-  { name: "Settings", href: "/student/settings", icon: MdSettings },
   { name: "Help & Support", href: "/support", icon: MdHelp },
 ];
 
