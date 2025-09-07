@@ -1,43 +1,47 @@
-// Get/set/remove token
 import { User } from "@/types/user";
 
-export const getAccessToken = async (): Promise<string | null> =>
-  localStorage.getItem("accessToken");
-export const setAccessToken = async (accessToken: string): Promise<void> =>
-  localStorage.setItem("accessToken", accessToken);
-export const removeAccessToken = async (): Promise<void> =>
-  localStorage.removeItem("accessToken");
-
-// Get/set/remove user
-
-
-// ------------------ Access Token ------------------
-export const getAccessToken = async (): Promise<string | null> =>
-  localStorage.getItem("accessToken");
-
-export const setAccessToken = async (token: string): Promise<void> =>
-  localStorage.setItem("accessToken", token);
-
-export const removeAccessToken = async (): Promise<void> =>
-  localStorage.removeItem("accessToken");
-
-// ------------------ User ------------------
-
-export const getUser = async (): Promise<User | null> => {
-  const user = localStorage.getItem("user");
-  return user ? JSON.parse(user) : null;
+// ✅ Access Token helpers
+export const getAccessToken = (): string | null => {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("accessToken");
 };
 
-export const setUser = async (user: User): Promise<void> =>
+export const setAccessToken = (accessToken: string): void => {
+  if (typeof window === "undefined") return;
+  localStorage.setItem("accessToken", accessToken);
+};
+
+export const removeAccessToken = (): void => {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem("accessToken");
+};
+
+// ✅ User helpers
+export const getUser = (): User | null => {
+  if (typeof window === "undefined") return null;
+  try {
+    const user = localStorage.getItem("user");
+    return user ? (JSON.parse(user) as User) : null;
+  } catch (err) {
+    console.error("Failed to parse user from localStorage", err);
+    return null;
+  }
+};
+
+export const setUser = (user: User): void => {
+  if (typeof window === "undefined") return;
   localStorage.setItem("user", JSON.stringify(user));
+};
 
-
-export const setUser = async (
-  user: User,
-  redirectToProfile = false
-): Promise<void> =>
-  localStorage.setItem("user", JSON.stringify({ ...user, redirectToProfile }));
-
-
-export const removeUser = async (): Promise<void> =>
+export const removeUser = (): void => {
+  if (typeof window === "undefined") return;
   localStorage.removeItem("user");
+};
+
+// ✅ Clear all storage items for logout
+export const clearStorage = (): void => {
+  if (typeof window === "undefined") return;
+  removeAccessToken();
+  removeUser();
+  // Add other keys to clear if needed
+};
