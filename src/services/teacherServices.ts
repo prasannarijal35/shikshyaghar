@@ -1,42 +1,25 @@
 // services/teacherService.ts
+import { Teacher } from "@/types/teacher";
 import axios from "axios";
 
-// TypeScript types
-export interface TeacherDetails {
-  id: number;
-  userId: number;
-  bio: string;
-  experience: string;
-  availability: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Teacher {
-  id: number;
-  fullName: string;
-  email: string;
-  role: string;
-  address: string;
-  phone: string | null;
-  gender: string | null;
-  birthYear: number | null;
-  slug: string;
-  createdAt: string;
-  updatedAt: string;
-  teacher: TeacherDetails;
-}
-
-// Base API URL
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
 
+interface TeacherFilters {
+  gender?: string;
+  experience?: number;
+  gradeId?: number;
+  subjectId?: number;
+}
+
 const teacherService = {
-  // Fetch all teachers
-  getAllTeachers: async (): Promise<Teacher[]> => {
+  // Fetch all teachers with optional filters
+  getAllTeachers: async (filters: TeacherFilters = {}): Promise<Teacher[]> => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/teachers`);
-      return response.data.data; // your backend wraps the array in "data"
+      const response = await axios.get(`${API_BASE_URL}/teachers`, {
+        params: filters, // send filters as query params
+      });
+      return response.data.data;
     } catch (error) {
       console.error("Error fetching teachers:", error);
       return [];

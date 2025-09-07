@@ -1,15 +1,5 @@
 // types/teacherSubject.ts
 
-export interface TeacherSubject {
-  teacherSubjectId: number; // maps to TeacherSubject.id
-  teacherId: number;
-  gradeSubjectId: number;
-  price: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-// Optional: If you want to include related grade and subject info
 export interface Grade {
   id: number;
   name: string;
@@ -22,13 +12,32 @@ export interface Subject {
   slug?: string;
 }
 
+export interface GradeSubjectWithDetails {
+  id: number;
+  gradeId: number;
+  subjectId: number;
+  price?: number;
+  createdAt: string;
+  updatedAt: string;
+  grade: Grade;
+  subject: Subject;
+}
+
 export interface TeacherSubjectWithDetails {
-  teacherSubjectId: number;
+  teacherSubjectId: number; // maps to id
   teacherId: number;
   gradeSubjectId: number;
   price: number;
-  grade: Grade;
-  subject: Subject;
   createdAt: string;
   updatedAt: string;
+  teacher: {
+    id: number;
+    userId: number;
+    bio: string;
+    experience: string;
+    availability: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  gradeSubject: GradeSubjectWithDetails;
 }

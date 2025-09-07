@@ -4,7 +4,12 @@ import { MotionDiv } from "../MotionDiv";
 import Image from "next/image";
 import logo from "@/assets/logo/Sg_logo.png";
 import avatar1 from "@/assets/extraimages/avatar1.png";
+<<<<<<< Updated upstream
 import Link from "next/link";
+=======
+import avatar2 from "@/assets/extraimages/avatar2.png";
+import useRegister from "@/hooks/use-teacherRegister";
+>>>>>>> Stashed changes
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import useStudentRegister from "@/hooks/use-studentRegister";
