@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { register } from "@/services/authServices";
+import { registerStudent } from "@/services/authServices";
 import { RegisterFormData } from "@/types/auth";
 
 export default function useStudentRegister() {
@@ -38,7 +38,7 @@ export default function useStudentRegister() {
       return;
     }
 
-    const response = await register(formData);
+    const response = await registerStudent(formData);
 
     if (response.success) {
       toast.success(response.message);
