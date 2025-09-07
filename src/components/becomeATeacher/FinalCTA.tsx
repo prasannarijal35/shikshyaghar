@@ -1,4 +1,5 @@
 import { Zap, TrendingUp, Lock } from "lucide-react";
+import Link from "next/link";
 
 const FinalCTA = () => {
   return (
@@ -41,9 +42,12 @@ const FinalCTA = () => {
                 <p className="opacity-80">No hidden fees, no commitment</p>
               </div>
             </div>
-            <button className="bg-white text-blue-600 px-12 py-4 rounded-full text-xl font-bold hover:bg-gray-100 transition-colors animate-[pulse_2s_ease-in-out_infinite] hover-lift">
+            <Link
+              href="/teacherRegister"
+              className="bg-white text-blue-600 px-12 py-4 rounded-full text-xl font-bold hover:bg-gray-100 transition-colors animate-[pulse_2s_ease-in-out_infinite] hover-lift"
+            >
               Join EduConnect Today
-            </button>
+            </Link>
           </div>
         </div>
       </div>
