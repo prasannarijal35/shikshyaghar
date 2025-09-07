@@ -23,6 +23,7 @@ type AuthContextType = {
   token: string | null;
   user: User | null;
   role: UserRole | null;
+  authLoaded: boolean; // ✅ Track when auth is loaded
   login: (token: string, user: User) => Promise<void>;
   logout: () => Promise<void>;
 };
@@ -33,28 +34,51 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUserState] = useState<User | null>(null);
   const [role, setRole] = useState<UserRole | null>(null);
+  const [authLoaded, setAuthLoaded] = useState(false);
 
   useEffect(() => {
-    // Load token and user from localStorage on mount
     const loadAuth = async () => {
       const storedToken = await getAccessToken();
       const storedUser = await getUser();
-      if (storedToken && storedUser) {
+
+      // ✅ Type guard: ensure storedUser has all required User fields
+      if (
+        storedToken &&
+        storedUser &&
+        "createdAt" in storedUser &&
+        "updatedAt" in storedUser &&
+        "slug" in storedUser &&
+        "role" in storedUser
+      ) {
         setToken(storedToken);
-        setUserState(storedUser);
+        setUserState(storedUser as User);
         setRole(storedUser.role as UserRole);
       }
+
+      setAuthLoaded(true); // Auth loading complete
     };
+
     loadAuth();
   }, []);
 
   const login = async (newToken: string, newUser: User) => {
-    setToken(newToken);
-    setUserState(newUser);
-    setRole(newUser.role as UserRole);
+    // ✅ Type guard before setting
+    if (
+      newUser &&
+      "createdAt" in newUser &&
+      "updatedAt" in newUser &&
+      "slug" in newUser &&
+      "role" in newUser
+    ) {
+      setToken(newToken);
+      setUserState(newUser);
+      setRole(newUser.role as UserRole);
 
-    await setAccessToken(newToken);
-    await setUser(newUser);
+      await setAccessToken(newToken);
+      await setUser(newUser);
+    } else {
+      throw new Error("Invalid user object provided to login");
+    }
   };
 
   const logout = async () => {
@@ -67,7 +91,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, role, login, logout }}>
+    <AuthContext.Provider
+      value={{ token, user, role, authLoaded, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
