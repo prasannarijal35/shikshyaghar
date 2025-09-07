@@ -10,7 +10,7 @@ import { setAccessToken, setUser } from "@/utils/localStorage";
 export default function useLogin() {
   const router = useRouter();
 
-  const [formData, setFormData] = useState<Omit<LoginFormData, "role">>({
+  const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
   });
@@ -26,6 +26,7 @@ export default function useLogin() {
 
   const validate = (): boolean => {
     let valid = true;
+
     if (!formData.email) {
       setEmailError("Email is required");
       valid = false;
@@ -46,23 +47,19 @@ export default function useLogin() {
     setLoading(true);
 
     try {
-      const response: LoginResponse = await login(
-        formData.email,
-        formData.password
-      );
+      const response: LoginResponse | { success: false; message: string } =
+        await login(formData);
 
       if (response.success) {
+        // Save token and user in localStorage
         if (response.token) await setAccessToken(response.token);
         if (response.user) await setUser(response.user);
 
         toast.success(response.message);
 
+        // Redirect based on role
         if (response.user?.role === "teacher") {
-          if (response.redirectToProfile) {
-            router.push("/teacher/profile-setup");
-          } else {
-            router.push("/teacher/dashboard");
-          }
+          router.push("/teacher/dashboard");
         } else {
           router.push("/student/dashboard");
         }

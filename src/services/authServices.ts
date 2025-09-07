@@ -1,31 +1,62 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import myAxios from "./apiServices";
 import {
-  StudentRegisterPayload,
-  TeacherRegisterPayload,
+  RegisterFormData,
+  StudentRegisterResponse,
+  TeacherRegisterResponse,
+  LoginFormData,
   LoginResponse,
-  LoginPayload,
 } from "@/types/auth";
 
-// Union type for registration payloads
-export type RegisterPayload = StudentRegisterPayload | TeacherRegisterPayload;
-
-// ---------------- Registration ---------------- //
-export const register = async (payload: any) => {
+// ---------------- Student Registration ---------------- //
+export const registerStudent = async (
+  payload: RegisterFormData
+): Promise<
+  | { success: true; message: string; data: any }
+  | { success: false; message: string }
+> => {
   try {
-    const response = await myAxios.post("/auth/register", payload, {
-      isAuthRoute: false,
-      headers:
-        payload.role === "teacher"
-          ? { "Content-Type": "multipart/form-data" }
-          : {},
-    });
+    const response = await myAxios.post<StudentRegisterResponse>(
+      "/auth/register",
+      payload,
+      { isAuthRoute: false }
+    );
 
-    const data = response.data;
     return {
       success: true,
-      message: data.message || "Registration successful",
-      data: data.data,
+      message: response.data.message || "Registration successful",
+      data: response.data.data,
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      message:
+        err.response?.data?.message || err.message || "Registration failed",
+    };
+  }
+};
+
+// ---------------- Teacher Registration ---------------- //
+export const registerTeacher = async (
+  payload: FormData
+): Promise<
+  | { success: true; message: string; data: any }
+  | { success: false; message: string }
+> => {
+  try {
+    const response = await myAxios.post<TeacherRegisterResponse>(
+      "/teachers/register",
+      payload,
+      {
+        isAuthRoute: false,
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
+
+    return {
+      success: true,
+      message: response.data.message || "Registration successful",
+      data: response.data.data,
     };
   } catch (err: any) {
     return {
@@ -37,19 +68,19 @@ export const register = async (payload: any) => {
 };
 
 // ---------------- Login ---------------- //
-export const login = async (payload: LoginPayload): Promise<LoginResponse> => {
+export const login = async (
+  payload: LoginFormData
+): Promise<LoginResponse | { success: false; message: string }> => {
   try {
-    const response = await myAxios.post("/auth/login", payload, {
+    const response = await myAxios.post<LoginResponse>("/auth/login", payload, {
       isAuthRoute: false,
     });
 
-    const data = response.data;
     return {
       success: true,
-      message: data.message || "Login successful",
-      token: data.token,
-      user: data.user,
-      redirectToProfile: data.redirectToProfile,
+      message: response.data.message || "Login successful",
+      token: response.data.token,
+      user: response.data.user,
     };
   } catch (err: any) {
     return {
