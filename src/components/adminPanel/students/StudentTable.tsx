@@ -1,111 +1,129 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
+import myAxios from "@/services/apiServices";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { FiEye, FiTrash2 } from "react-icons/fi";
+import ViewStudentModal from "./ViewStudentModal";
+import DeleteConfirmModal from "./DeleteConfirmModal";
 
-import { useState } from "react";
+export default function StudentManagementTable() {
+  const [students, setStudents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-import { mockStudents } from "@/data/students";
-import { Student } from "@/types/students";
-import { toast } from "react-hot-toast";
-import Image from "next/image";
-import { FaBan, FaTrashAlt, FaEye } from "react-icons/fa";
-import DeleteModal from "@/components/adminPanel/students/DeleteModal";
+  const [viewStudent, setViewStudent] = useState<any | null>(null);
+  const [deleteStudentId, setDeleteStudentId] = useState<number | null>(null);
+  const [deleteStudentName, setDeleteStudentName] = useState<string>("");
 
-export default function StudentTable() {
-  const [students, setStudents] = useState<Student[]>(mockStudents);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-
-  const handleDelete = () => {
-    if (!selectedStudent) return;
-    setStudents(students.filter((s) => s.id !== selectedStudent.id));
-    toast.success(`Deleted ${selectedStudent.name}`);
-    setShowDeleteModal(false);
+  const fetchStudents = async () => {
+    try {
+      setLoading(true);
+      const res = await myAxios.get("/admin/students");
+      setStudents(res.data.data || []);
+    } catch (error) {
+      toast.error("Failed to fetch students");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleBlock = (student: Student) => {
-    toast(`Blocked ${student.name}`);
-  };
+  useEffect(() => {
+    fetchStudents();
+  }, []);
 
-  const handleView = (student: Student) => {
-    toast(`Viewing ${student.name}`);
-    // You can navigate to a detailed page or open a modal here.
+  const handleDelete = async () => {
+    if (!deleteStudentId) return;
+    try {
+      await myAxios.delete(`/admin/students/${deleteStudentId}`);
+      toast.success("Student deleted successfully");
+      setDeleteStudentId(null);
+      fetchStudents();
+    } catch (error) {
+      toast.error("Failed to delete student");
+    }
   };
 
   return (
-        <>
-        <main className="min-h-screen p-6 bg-gray-50">
-      <h1 className="text-3xl font-bold text-primary mb-8">
-        Student Management
-      </h1>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white rounded-lg overflow-hidden">
-          <thead className="bg-gray-100">
+    <div className="overflow-x-auto">
+      <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="px-6 py-3 text-left">Name</th>
+            <th className="px-6 py-3 text-left">Email</th>
+            <th className="px-6 py-3 text-left">Phone</th>
+            <th className="px-6 py-3 text-left">Gender</th>
+            <th className="px-6 py-3 text-left">Birth Year</th>
+            <th className="px-6 py-3 text-left">Created At</th>
+            <th className="px-6 py-3 text-left">Updated At</th>
+            <th className="px-6 py-3 text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {loading ? (
             <tr>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">ID</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Photo</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Name</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Email</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Course</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Actions</th>
+              <td colSpan={8} className="text-center py-6">
+                Loading...
+              </td>
             </tr>
-          </thead>
-          <tbody className="text-base">
-            {students.map((student) => (
-              <tr key={student.id} className="border-t hover:bg-primary/10">
-                <td className="py-5 px-4">{student.id}</td>
-                <td className="py-5 px-4">
-                  <Image
-                    src={student.image || "/default-avatar.png"}
-                    alt={student.name}
-                    width={48}
-                    height={48}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                </td>
-                <td className="py-5 px-4">{student.name}</td>
-                <td className="py-5 px-4">{student.email}</td>
-                <td className="py-5 px-4">{student.course}</td>
-                <td className="py-5 px-4">
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => handleView(student)}
-                      className="p-2 rounded-md text-gray-600 hover:text-white hover:bg-gray-600 transition-colors duration-200"
-                      title="View"
-                    >
-                      <FaEye size={16} />
-                    </button>
-                    <button
-                      onClick={() => handleBlock(student)}
-                      className="p-2 rounded-md text-primary hover:text-white hover:bg-primary transition-colors duration-200"
-                      title="Block"
-                    >
-                      <FaBan size={16} />
-                    </button>
-                    <button
-                      onClick={() => {
-                        setSelectedStudent(student);
-                        setShowDeleteModal(true);
-                      }}
-                      className="p-2 rounded-md text-red-600 hover:text-white hover:bg-red-600 transition-colors duration-200"
-                      title="Delete"
-                    >
-                      <FaTrashAlt size={16} />
-                    </button>
-                  </div>
+          ) : students.length === 0 ? (
+            <tr>
+              <td colSpan={8} className="text-center py-6 text-gray-500">
+                No students found
+              </td>
+            </tr>
+          ) : (
+            students.map((student: any) => (
+              <tr
+                key={student.id}
+                className="border-t hover:bg-gray-50 transition"
+              >
+                <td className="px-6 py-4">{student.fullName}</td>
+                <td className="px-6 py-4">{student.email}</td>
+                <td className="px-6 py-4">{student.phone || "-"}</td>
+                <td className="px-6 py-4">{student.gender || "-"}</td>
+                <td className="px-6 py-4">{student.birthYear || "-"}</td>
+                <td className="px-6 py-4">{student.createdAt}</td>
+                <td className="px-6 py-4">{student.updatedAt}</td>
+                <td className="px-6 py-4 flex justify-center gap-3">
+                  {/* View */}
+                  <button
+                    onClick={() => setViewStudent(student)}
+                    className="text-blue-600 hover:text-blue-800"
+                  >
+                    <FiEye size={18} />
+                  </button>
+
+                  {/* Delete */}
+                  <button
+                    onClick={() => {
+                      setDeleteStudentId(student.id);
+                      setDeleteStudentName(student.fullName);
+                    }}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    <FiTrash2 size={18} />
+                  </button>
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            ))
+          )}
+        </tbody>
+      </table>
 
-      <DeleteModal
-        isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-        title="Confirm Deletion"
-        description={`Are you sure you want to delete ${selectedStudent?.name}? This action cannot be undone.`}
-        onConfirm={handleDelete}
+      {/* View Modal */}
+      <ViewStudentModal
+        isOpen={!!viewStudent}
+        onClose={() => setViewStudent(null)}
+        student={viewStudent}
       />
-    </main>
-    </>
+
+      {/* Delete Modal */}
+      <DeleteConfirmModal
+        isOpen={!!deleteStudentId}
+        onClose={() => setDeleteStudentId(null)}
+        onConfirm={handleDelete}
+        studentName={deleteStudentName}
+      />
+    </div>
   );
 }
