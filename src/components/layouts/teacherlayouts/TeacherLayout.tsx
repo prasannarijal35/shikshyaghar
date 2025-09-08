@@ -19,10 +19,13 @@ export default function Layout({ children }: { children: ReactNode }) {
         <TeacherHeader />
 
         {/* Main Content */}
-        <main className="min-h-[calc(100vh-4rem)] p-6">
-          <div className="max-w-full">{children}</div>
+        <div className="flex flex-col flex-1">
+          <main className="flex-1 p-6 bg-white">
+            <div className="max-w-full">{children}</div>
+          </main>
+
           <TeacherFooter />
-        </main>
+        </div>
       </div>
     </div>
   );

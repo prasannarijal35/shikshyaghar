@@ -1,43 +1,68 @@
-// types/teacherSubject.ts
+export interface User {
+  id: number;
+  fullName: string;
+  email: string;
+  role: string;
+  slug: string;
+}
+
+export interface Teacher {
+  id: number;
+  userId: number;
+  bio: string;
+  experience?: string | null;
+  availability: string;
+  qualification: string;
+  documentUrl: string;
+  profilePicture: string;
+  status: string;
+  user: User;
+}
 
 export interface Grade {
   id: number;
   name: string;
-  slug?: string;
 }
 
 export interface Subject {
   id: number;
   name: string;
-  slug?: string;
 }
 
-export interface GradeSubjectWithDetails {
+export interface GradeSubject {
   id: number;
   gradeId: number;
   subjectId: number;
-  price?: number;
-  createdAt: string;
-  updatedAt: string;
+  price: number;
   grade: Grade;
   subject: Subject;
 }
 
-export interface TeacherSubjectWithDetails {
-  teacherSubjectId: number; // maps to id
+export interface TeacherSubjectAssignment {
+  id: number;
   teacherId: number;
   gradeSubjectId: number;
+  startTime: string;
+  duration: number;
+  meetinglink: string;
+  description?: string;
   price: number;
-  createdAt: string;
-  updatedAt: string;
-  teacher: {
-    id: number;
-    userId: number;
-    bio: string;
-    experience: string;
-    availability: string;
-    createdAt: string;
-    updatedAt: string;
-  };
-  gradeSubject: GradeSubjectWithDetails;
+  teacher: Teacher;
+  gradeSubject: GradeSubject;
+}
+
+export interface TeacherSubjectsResponse {
+  status: number;
+  message: string;
+  data: TeacherSubjectAssignment[];
+  errors?: string[];
+}
+
+export interface CreateClassForm {
+  gradeSubjectId: string;
+  startTime: string;
+  duration: string;
+  price: string;
+  meetinglink: string;
+  description: string;
 }

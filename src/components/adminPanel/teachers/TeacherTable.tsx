@@ -75,13 +75,13 @@ export default function TeacherTable() {
                 <td className="py-5 px-4">
                   <Image
                     src={
-                      typeof teacher.image === "string"
-                        ? teacher.image
-                        : isStaticImageData(teacher.image)
-                        ? teacher.image.src
+                      typeof teacher.teacher.profilePicture === "string"
+                        ? teacher.teacher.profilePicture
+                        : isStaticImageData(teacher.teacher.profilePicture)
+                        ? teacher.teacher.profilePicture.src
                         : "/default-avatar.png"
                     }
-                    alt={teacher.name}
+                    alt={teacher.fullName}
                     width={48}
                     height={48}
                     className="w-12 h-12 rounded-full object-cover"

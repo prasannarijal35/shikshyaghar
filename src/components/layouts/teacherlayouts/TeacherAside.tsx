@@ -16,11 +16,12 @@ import {
   MdGroup,
 } from "react-icons/md";
 import { FaSignOutAlt } from "react-icons/fa";
-import { useLogout } from "@/utils/logout"; // ✅ import your centralized logout
+import { useLogout } from "@/utils/logout";
 
 export const navItems = [
   { name: "Dashboard", href: "/teacher/dashboard", icon: MdDashboard },
   { name: "My Profile", href: "/teacher/profile", icon: MdPerson },
+  { name: "Add Classes", href: "/teacher/teacherSubject", icon: MdClass },
   { name: "My Courses", href: "/teacher/mycourses", icon: MdClass },
   { name: "Requests", href: "/teacher/requests", icon: MdAssignment },
   { name: "Live Classes", href: "/teacher/class", icon: MdEvent },
@@ -51,7 +52,7 @@ export default function StudentAside() {
             className="w-8 h-8 flex-shrink-0"
           />
           <span className="font-bold text-lg text-gray-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
-            SG Coaching
+            ShikshaGhar
           </span>
         </div>
       </div>

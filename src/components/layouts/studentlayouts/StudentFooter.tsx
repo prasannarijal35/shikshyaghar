@@ -6,7 +6,7 @@ export default function StudentFooter() {
       <div className="flex flex-col md:flex-row justify-between items-center gap-4">
         {/* Left side - Copyright */}
         <div className="text-sm text-gray-500">
-          &copy; {new Date().getFullYear()} SG Coaching. All rights reserved.
+          &copy; {new Date().getFullYear()} ShikshaGhar. All rights reserved.
         </div>
 
         {/* Right side - Links */}
