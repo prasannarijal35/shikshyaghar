@@ -177,12 +177,12 @@ const TeacherRegistrationPage: React.FC = () => {
             />
             <InputField
               label="Teaching Experience (Years)"
-              name="teachingExperience"
+              name="experience"
               type="number"
               min={0}
               value={formData.experience || ""}
               onChange={handleChange}
-              error={errors.teachingExperience}
+              error={errors.experience}
               placeholder="e.g., 5"
               icon={<BookOpen size={20} />}
             />

@@ -57,8 +57,10 @@ export default function useLogin() {
 
         toast.success(response.message);
 
-        // Redirect based on role
-        if (response.user?.role === "teacher") {
+        // 🔹 Redirect based on role
+        if (response.user?.role === "admin") {
+          router.push("/admin/dashboard");
+        } else if (response.user?.role === "teacher") {
           router.push("/teacher/dashboard");
         } else {
           router.push("/student/dashboard");
