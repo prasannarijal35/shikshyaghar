@@ -43,7 +43,7 @@ export default function StudentAside() {
             className="w-8 h-8 flex-shrink-0"
           />
           <span className="font-bold text-lg text-gray-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
-            SG Coaching
+            ShikshaGhar
           </span>
         </div>
       </div>

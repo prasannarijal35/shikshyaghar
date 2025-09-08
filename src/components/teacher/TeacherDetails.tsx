@@ -11,10 +11,6 @@ import {
   FaUserTie,
   FaTransgender,
   FaBirthdayCake,
-  FaIdCard,
-  FaClock,
-  FaCheckCircle,
-  FaCalendarAlt,
 } from "react-icons/fa";
 
 interface Props {
@@ -26,7 +22,10 @@ export default function TeacherDetails({ teacher }: Props) {
 
   // Fallback for profile picture
   const profilePicture = t?.profilePicture
-    ? `${process.env.NEXT_PUBLIC_API_URL}/${t.profilePicture.replace(/^undefined\//, "")}`
+    ? `${process.env.NEXT_PUBLIC_API_URL}/${t.profilePicture.replace(
+        /^undefined\//,
+        ""
+      )}`
     : "/placeholder-teacher.jpg";
 
   return (
@@ -50,7 +49,9 @@ export default function TeacherDetails({ teacher }: Props) {
               <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                 {teacher.fullName}
               </h1>
-              <p className="text-gray-600 dark:text-gray-400">Role: {teacher.role}</p>
+              <p className="text-gray-600 dark:text-gray-400">
+                Role: {teacher.role}
+              </p>
               <div className="flex justify-center md:justify-start items-center mt-2 text-yellow-400 text-xl sm:text-2xl">
                 ★★★★★
               </div>
@@ -72,13 +73,16 @@ export default function TeacherDetails({ teacher }: Props) {
                   {t?.experience ?? "Not provided"} years
                 </p>
                 <p>
-                  <strong className="block mb-1">Bio:</strong> {t?.bio || "No bio provided."}
+                  <strong className="block mb-1">Bio:</strong>{" "}
+                  {t?.bio || "No bio provided."}
                 </p>
                 <p>
-                  <strong>Availability:</strong> {t?.availability || "Not specified"}
+                  <strong>Availability:</strong>{" "}
+                  {t?.availability || "Not specified"}
                 </p>
                 <p>
-                  <strong>Qualification:</strong> {t?.qualification || "Not specified"}
+                  <strong>Qualification:</strong>{" "}
+                  {t?.qualification || "Not specified"}
                 </p>
                 <p>
                   <strong>Status:</strong> {t?.status}

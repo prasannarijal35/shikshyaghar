@@ -1,56 +1,76 @@
-import axios from "axios";
-import { TeacherSubjectWithDetails } from "@/types/teacherSubject";
+import myAxios from "./apiServices";
+import { TeacherSubjectsResponse } from "@/types/teacherSubject";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
+interface CreateAssignmentInput {
+  teacherId: number;
+  assignments: {
+    gradeSubjectId: number;
+    price?: number;
+    startTime: string;
+    duration: number;
+    meetinglink: string;
+    description?: string;
+  }[];
+}
+
+interface UpdateAssignmentInput {
+  teacherId: number;
+  assignments: {
+    gradeSubjectId: number;
+    price?: number;
+    startTime: string;
+    duration: number;
+    meetinglink: string;
+    description?: string;
+  }[];
+}
 
 const teacherSubjectService = {
-  // ✅ Fetch all teacher-subjects
-  getAllTeacherSubjects: async () => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/teacherSubjects`);
-
-      return response.data.data.map((item: any) => ({
-        id: item.id, // keep it consistent with TeacherDetails usage
-        teacherId: item.teacherId,
-        gradeSubjectId: item.gradeSubjectId,
-        price: item.price,
-        createdAt: item.createdAt,
-        updatedAt: item.updatedAt,
-        teacher: item.teacher,
-        gradeSubject: item.gradeSubject,
-      }));
-    } catch (error) {
-      console.error("Error fetching teacher subjects:", error);
-      return [];
-    }
+  // Create multiple teacher subjects
+  create: async (
+    data: CreateAssignmentInput
+  ): Promise<TeacherSubjectsResponse> => {
+    const response = await myAxios.post("/teacherSubjects", data);
+    return response.data;
   },
 
-  // ✅ Fetch subjects for a single teacher
+  // Get all teacher subjects
+  getAll: async (): Promise<TeacherSubjectsResponse> => {
+    const response = await myAxios.get("/teacherSubjects");
+    return response.data;
+  },
+
+  // Get teacher subjects by teacherId with details
   getByTeacherId: async (
     teacherId: number
-  ): Promise<TeacherSubjectWithDetails[]> => {
-    try {
-      const response = await axios.get(
-        `${API_BASE_URL}/teacherSubject/teacher/${teacherId}`
-      );
+  ): Promise<TeacherSubjectsResponse> => {
+    const response = await myAxios.get(
+      `/teacherSubjects/teacher/${teacherId}/details`
+    );
+    return response.data;
+  },
 
-      return response.data.data.map((item: any) => ({
-        id: item.id,
-        teacherId: item.teacherId,
-        gradeSubjectId: item.gradeSubjectId,
-        price: item.price,
-        createdAt: item.createdAt,
-        updatedAt: item.updatedAt,
-        teacher: item.teacher,
-        gradeSubject: item.gradeSubject,
-      }));
-    } catch (error) {
-      console.error(`Error fetching subjects for teacher ${teacherId}:`, error);
-      return [];
-    }
+  // Update teacher subjects
+  update: async (
+    teacherSubjectId: number,
+    data: UpdateAssignmentInput
+  ): Promise<TeacherSubjectsResponse> => {
+    const response = await myAxios.put(
+      `/teacherSubjects/${teacherSubjectId}`,
+      data
+    );
+    return response.data;
+  },
+
+  // Delete a teacher subject
+  remove: async (
+    teacherSubjectId: number
+  ): Promise<TeacherSubjectsResponse> => {
+    const response = await myAxios.delete(
+      `/teacherSubjects/${teacherSubjectId}`
+    );
+    return response.data;
   },
 };
 
 export default teacherSubjectService;
-export type { TeacherSubjectWithDetails };
