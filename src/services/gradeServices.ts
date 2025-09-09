@@ -12,7 +12,6 @@ const gradeService = {
         return response.data.data;
       }
       throw new Error(response.data.message || "Failed to fetch grades");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("GradeService Error:", error);
       throw error;

@@ -4,22 +4,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { Teacher } from "@/types/teacher";
 
-type Props = {
+interface Props {
   teacher: Teacher;
-};
+}
 
 const SingleTeacherCard = ({ teacher }: Props) => {
-  const t = teacher.teacher;
-
-  // Fallback if profilePicture is null/undefined or invalid
-  const profilePicture = t?.profilePicture
-    ? `${process.env.NEXT_PUBLIC_API_URL}/${t.profilePicture.replace(/^undefined\//, "")}`
-    : "/placeholder-teacher.jpg"; // <-- make sure you have this in /public folder
+  const profilePicture = teacher.profilePicture
+    ? teacher.profilePicture
+    : "/placeholder-teacher.jpg";
 
   return (
     <div className="bg-white flex flex-col md:flex-row items-center p-5 rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow w-full gap-5">
-      
-      {/* Teacher Image */}
       <div className="relative w-32 h-32 md:w-40 md:h-40 flex-shrink-0 rounded-lg overflow-hidden shadow-sm">
         <Image
           src={profilePicture}
@@ -29,22 +24,30 @@ const SingleTeacherCard = ({ teacher }: Props) => {
         />
       </div>
 
-      {/* Teacher Info */}
       <div className="flex-1 space-y-1 text-sm">
-        <h3 className="font-semibold text-xl text-gray-900">{teacher.fullName}</h3>
+        <h3 className="font-semibold text-xl text-gray-900">
+          {teacher.fullName}
+        </h3>
         <p className="text-gray-600">📍 {teacher.address || "Not provided"}</p>
-        <p className="text-gray-600">💬 Bio: {t?.bio || "No bio provided"}</p>
-        <p className="text-gray-600">🏫 Experience: {t?.experience ?? 0} years</p>
-        <p className="text-gray-600">👤 Gender: {teacher.gender || "Not specified"}</p>
+        <p className="text-gray-600">
+          💬 Bio: {teacher.bio || "No bio provided"}
+        </p>
+        <p className="text-gray-600">
+          🏫 Experience: {teacher.experience ?? 0} years
+        </p>
+        <p className="text-gray-600">
+          👤 Gender: {teacher.gender || "Not specified"}
+        </p>
 
-        {t?.teacherSubjects?.length > 0 ? (
+        {teacher.subjects?.length ? (
           <ul className="flex flex-wrap text-gray-600 mt-2 gap-2">
-            {t.teacherSubjects.map((s) => (
+            {teacher.subjects.map((s, idx) => (
               <li
-                key={s.id}
+                key={idx}
                 className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium"
               >
-                {s.gradeSubject.subject.name} - Grade {s.gradeSubject.grade.name}
+                {s.subject} - Grade {s.grade}
+                {s.price !== undefined && ` • ₹${s.price}`}
               </li>
             ))}
           </ul>
@@ -53,7 +56,6 @@ const SingleTeacherCard = ({ teacher }: Props) => {
         )}
       </div>
 
-      {/* Actions */}
       <div className="flex flex-col gap-3 md:ml-5">
         <Link
           href={`/teachers/teacherdetails/${teacher.slug}`}
@@ -61,12 +63,6 @@ const SingleTeacherCard = ({ teacher }: Props) => {
         >
           View Profile
         </Link>
-        <button
-          onClick={() => alert(`Booking request sent to ${teacher.fullName}`)}
-          className="text-md border border-primary bg-primary text-white px-4 py-2 rounded-lg transition duration-300 font-semibold
-           hover:bg-white hover:text-primary">
-          Subscribe Now
-        </button>
       </div>
     </div>
   );

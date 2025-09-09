@@ -18,22 +18,15 @@ interface Props {
 }
 
 export default function TeacherDetails({ teacher }: Props) {
-  const t = teacher.teacher;
-
-  // Fallback for profile picture
-  const profilePicture = t?.profilePicture
-    ? `${process.env.NEXT_PUBLIC_API_URL}/${t.profilePicture.replace(
-        /^undefined\//,
-        ""
-      )}`
+  const profilePicture = teacher.profilePicture
+    ? teacher.profilePicture
     : "/placeholder-teacher.jpg";
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 min-h-screen py-32">
       <div className="container mx-auto px-4 max-w-5xl">
-        {/* Main Profile Card */}
+        {/* Profile Card */}
         <div className="relative bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 md:p-12 mb-8">
-          {/* Profile Image & Info */}
           <div className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left">
             <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden shadow-lg border-4 border-white dark:border-gray-700 -mt-24 md:-mt-12 md:mr-8">
               <Image
@@ -50,7 +43,7 @@ export default function TeacherDetails({ teacher }: Props) {
                 {teacher.fullName}
               </h1>
               <p className="text-gray-600 dark:text-gray-400">
-                Role: {teacher.role}
+                Role: {teacher.role || "Teacher"}
               </p>
               <div className="flex justify-center md:justify-start items-center mt-2 text-yellow-400 text-xl sm:text-2xl">
                 ★★★★★
@@ -58,43 +51,40 @@ export default function TeacherDetails({ teacher }: Props) {
             </div>
           </div>
 
-          {/* Grid Info */}
+          {/* About & Contact */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
-            {/* About */}
             <div className="bg-gray-100 dark:bg-gray-700 p-6 rounded-xl shadow-inner">
               <h2 className="flex items-center text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
-                <FaUserTie className="mr-2 text-primary" />
-                About
+                <FaUserTie className="mr-2 text-primary" /> About
               </h2>
               <div className="space-y-3 text-gray-700 dark:text-gray-300">
                 <p className="flex items-center">
                   <FaBriefcase className="mr-2 text-primary" />
                   <strong className="mr-2">Experience:</strong>{" "}
-                  {t?.experience ?? "Not provided"} years
+                  {teacher.experience ?? "Not provided"} years
                 </p>
                 <p>
                   <strong className="block mb-1">Bio:</strong>{" "}
-                  {t?.bio || "No bio provided."}
+                  {teacher.bio || "No bio provided."}
                 </p>
                 <p>
                   <strong>Availability:</strong>{" "}
-                  {t?.availability || "Not specified"}
+                  {teacher.availability || "Not specified"}
                 </p>
                 <p>
                   <strong>Qualification:</strong>{" "}
-                  {t?.qualification || "Not specified"}
+                  {teacher.qualification || "Not specified"}
                 </p>
                 <p>
-                  <strong>Status:</strong> {t?.status}
+                  <strong>Status:</strong> {teacher.status || "PENDING"}
                 </p>
               </div>
             </div>
 
-            {/* Contact & Personal */}
             <div className="bg-gray-100 dark:bg-gray-700 p-6 rounded-xl shadow-inner">
               <h2 className="flex items-center text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
-                <FaMapMarkerAlt className="mr-2 text-primary" />
-                Contact & Personal Info
+                <FaMapMarkerAlt className="mr-2 text-primary" /> Contact &
+                Personal
               </h2>
               <div className="space-y-3 text-gray-700 dark:text-gray-300">
                 <p className="flex items-center">
@@ -117,7 +107,7 @@ export default function TeacherDetails({ teacher }: Props) {
                   {teacher.birthYear || "Not provided"}
                 </p>
                 <p>
-                  <strong>Address:</strong> {teacher.address}
+                  <strong>Address:</strong> {teacher.address || "-"}
                 </p>
               </div>
             </div>
@@ -128,25 +118,50 @@ export default function TeacherDetails({ teacher }: Props) {
             <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
               Subjects Taught
             </h2>
-            <div className="flex flex-wrap justify-center gap-3">
-              {t?.teacherSubjects?.length > 0 ? (
-                t.teacherSubjects.map((s) => (
-                  <span
-                    key={s.id}
-                    className="px-4 py-1 bg-green-200 dark:bg-green-700 text-green-800 dark:text-green-200 rounded-full font-medium text-sm transition-transform transform hover:scale-105"
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
+              {(teacher.subjects ?? []).length > 0 ? (
+                (teacher.subjects ?? []).map((s, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-gradient-to-r from-green-200 to-green-300 dark:from-green-800 dark:to-green-700 rounded-2xl p-6 shadow-2xl flex flex-col justify-between transform transition-transform hover:scale-105 hover:shadow-3xl"
                   >
-                    {s.gradeSubject.subject.name} - Grade{" "}
-                    {s.gradeSubject.grade.name}
-                  </span>
+                    <div>
+                      <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-gray-100">
+                        {s.subject}
+                      </h3>
+                      <p className="text-md mb-1 text-gray-700 dark:text-gray-300">
+                        Grade: <span className="font-semibold">{s.grade}</span>
+                      </p>
+                      {s.price !== undefined && (
+                        <p className="text-md font-semibold text-gray-800 dark:text-gray-200">
+                          Price: ₹{s.price}
+                        </p>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={() =>
+                        alert(
+                          `Subscription requested for ${s.subject} - Grade ${
+                            s.grade
+                          } at ₹${s.price ?? 0}`
+                        )
+                      }
+                      className="mt-4 w-full py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-colors shadow-md"
+                    >
+                      Subscribe
+                    </button>
+                  </div>
                 ))
               ) : (
-                <p className="text-gray-500 italic">No subjects assigned</p>
+                <p className="text-gray-500 italic col-span-full text-center">
+                  No subjects assigned
+                </p>
               )}
             </div>
           </div>
         </div>
 
-        {/* Call-to-Action */}
         <div className="text-center mt-8">
           <Link
             href="/subscribe"

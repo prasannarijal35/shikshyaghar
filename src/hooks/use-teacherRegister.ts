@@ -141,10 +141,7 @@ export default function useTeacherRegister() {
       if (formData.qualification)
         payload.append("qualification", formData.qualification);
       if (formData.experience)
-        payload.append(
-          "teachingExperience",
-          String(formData.experience)
-        );
+        payload.append("teachingExperience", String(formData.experience));
       if (formData.profilePicture)
         payload.append("profilePicture", formData.profilePicture);
       if (formData.document) payload.append("document", formData.document);
@@ -154,7 +151,7 @@ export default function useTeacherRegister() {
 
       if (response.success) {
         setToastMsg({ message: response.message, type: "success" });
-        router.push("/teacher/dashboard");
+        router.push("/login");
       } else {
         setToastMsg({ message: response.message, type: "error" });
       }
