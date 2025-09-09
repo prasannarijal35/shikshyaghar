@@ -8,6 +8,11 @@ type Props = {
 };
 
 const BlogCard = ({ blog }: Props) => {
+  const imageUrl =
+    blog.image?.startsWith("http") || blog.image?.startsWith("/")
+      ? blog.image
+      : `${process.env.NEXT_PUBLIC_API_URL}/${blog.image}`;
+
   return (
     <MotionDiv
       className="bg-white rounded-2xl shadow-md w-full max-w-sm hover:shadow-lg transition-shadow duration-200"
@@ -18,7 +23,7 @@ const BlogCard = ({ blog }: Props) => {
       whileTap={{ scale: 0.98 }}
     >
       <Image
-        src={blog.image}
+        src={imageUrl || "/default-blog.png"} 
         alt={blog.title}
         height={3000}
         width={3000}

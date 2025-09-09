@@ -1,10 +1,35 @@
+"use client";
+
 import Link from "next/link";
 import BlogCard from "@/components/blogs/SingleBlogCart";
-import { blogs } from "@/data/blog";
+import blogService from "@/services/blogServices";
+import { useEffect, useState } from "react";
+import { Blog } from "@/types/blogs";
 
 const BlogPreviewPage = () => {
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const data = await blogService.getAllBlogs();
+        setBlogs(data);
+      } catch (err: any) {
+        console.error("Failed to fetch blogs:", err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  if (loading) return <p className="text-center py-10">Loading blogs...</p>;
+  if (blogs.length === 0) return <p className="text-center py-10">No blogs found.</p>;
+
   return (
-    <section className="container max-w-6xl mx-auto py-20 pb-36  ">
+    <section className="container max-w-6xl mx-auto py-20 pb-36">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Latest Blogs</h1>
         <Link

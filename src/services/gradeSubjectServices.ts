@@ -1,20 +1,46 @@
 // services/gradeSubjectService.ts
-import axios from "axios";
+import myAxios from "./apiServices";
 import { GradeSubject } from "@/types/gradeSubject";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
-
 const gradeSubjectService = {
+  // Get all grade-subject records
   getAllGradeSubjects: async (): Promise<GradeSubject[]> => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/gradeSubjects`);
-      if (!response.data.data) throw new Error("No data returned");
-      return response.data.data;
-    } catch (error: any) {
-      console.error("GradeSubjectService Error:", error);
-      throw error;
-    }
+    const response = await myAxios.get("/gradeSubjects");
+    if (!response.data.data) throw new Error("No data returned");
+    return response.data.data;
+  },
+
+  // Get a single grade-subject by ID
+  getGradeSubjectById: async (id: number): Promise<GradeSubject> => {
+    const response = await myAxios.get(`/gradeSubjects/${id}`);
+    if (!response.data.data) throw new Error("Record not found");
+    return response.data.data;
+  },
+
+  // Assign a subject to a grade
+  assignGradeSubject: async (payload: {
+    gradeId: number;
+    subjectId: number;
+    price: number;
+  }): Promise<GradeSubject> => {
+    const response = await myAxios.post("/gradeSubjects", payload);
+    return response.data.data;
+  },
+
+  // Update a grade-subject record
+  updateGradeSubject: async (id: number, payload: {
+    gradeId?: number;
+    subjectId?: number;
+    price?: number;
+  }): Promise<GradeSubject> => {
+    const response = await myAxios.put(`/gradeSubjects/${id}`, payload);
+    return response.data.data;
+  },
+
+  // Remove a subject from a grade
+  removeGradeSubject: async (id: number): Promise<GradeSubject> => {
+    const response = await myAxios.delete(`/gradeSubjects/${id}`);
+    return response.data.data; // return deleted record
   },
 };
 
