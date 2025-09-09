@@ -40,9 +40,9 @@ export default function StudentAside() {
             alt="SG Coaching Logo"
             width={32}
             height={32}
-            className="w-8 h-8 flex-shrink-0"
+            className="w-15 h-15 flex-shrink-0"
           />
-          <span className="font-bold text-lg text-gray-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
+          <span className="font-semibold text-lg text-gray-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
             ShikshaGhar
           </span>
         </div>

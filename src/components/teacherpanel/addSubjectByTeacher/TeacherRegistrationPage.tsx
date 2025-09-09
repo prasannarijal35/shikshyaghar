@@ -1,297 +1,262 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Calendar, Clock, Link as LinkIcon, Check } from "lucide-react";
+import { useState, useEffect } from "react";
+import { X, PlusCircle, Trash2 } from "lucide-react";
 import InputField from "./InputField";
 import TextArea from "./TextArea";
-import Toast from "./Toast";
-import { useCreateTeacherSubject } from "@/hooks/use-teacherSubject";
-import { GradeSubject, TeacherSubjectAssignment } from "@/types/teacherSubject";
-import myAxios from "@/services/apiServices";
-import { getAccessToken } from "@/utils/localStorage";
-
-interface CreateClassForm {
-  gradeSubjectId: string;
-  startTime: string;
-  duration: string;
-  price: string;
-  meetinglink: string;
-  description: string;
-}
+import SelectDropdown from "./SelectDropdown";
+import toast from "react-hot-toast";
+import teacherSubjectService from "@/services/teacherSubjectServices";
+import { CreateClassForm } from "@/types/teacherSubject";
 
 interface CreateClassModalProps {
-  isOpen: boolean;
   onClose: () => void;
-  initialData?: TeacherSubjectAssignment | null;
+  onSuccess?: () => void;
+  isOpen: boolean;
+  initialData?: CreateClassForm | null; // for edit
 }
+
+const dummyGradeSubjects = [
+  { value: "1", label: "10 - Algebra - Rs 1400" },
+  { value: "2", label: "11 - Physics - Rs 1500" },
+  { value: "3", label: "12 - Chemistry - Rs 1600" },
+];
 
 const CreateClassModal: React.FC<CreateClassModalProps> = ({
   isOpen,
   onClose,
-  initialData = null,
+  onSuccess,
+  initialData,
 }) => {
-  const { createTeacherSubject, updateTeacherSubject, isLoading, error } =
-    useCreateTeacherSubject();
-  const [teacherId, setTeacherId] = useState<number | null>(null);
-  const [gradeSubjects, setGradeSubjects] = useState<GradeSubject[]>([]);
-  const [formData, setFormData] = useState<CreateClassForm>({
-    gradeSubjectId: "",
-    startTime: "",
-    duration: "",
-    price: "",
-    meetinglink: "",
-    description: "",
-  });
+  const [visible, setVisible] = useState(isOpen);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [toast, setToast] = useState<{
-    message: string;
-    type: "success" | "error";
-  } | null>(null);
+  const [assignments, setAssignments] = useState<CreateClassForm[]>([
+    {
+      gradeSubjectId: 0,
+      price: 0,
+      startTime: "",
+      duration: 0,
+      meetinglink: "",
+      description: "",
+    },
+  ]);
 
-  // Fetch logged-in teacher info
+  // Animate mount/unmount
   useEffect(() => {
-    const fetchTeacher = async () => {
-      try {
-        const token = await getAccessToken();
-        if (!token) return;
+    if (isOpen) setVisible(true);
+  }, [isOpen]);
 
-        const res = await myAxios.get("/teachers/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setTeacherId(res.data.id);
-      } catch (err) {
-        console.error("Failed to get teacher info:", err);
-      }
-    };
-    fetchTeacher();
-  }, []);
-
-  // Dummy gradeSubjects
-  useEffect(() => {
-    const dummyGradeSubjects: GradeSubject[] = [
-      {
-        id: 1,
-        gradeId: 1,
-        subjectId: 1,
-        price: 500,
-        grade: { id: 1, name: "Grade 1" },
-        subject: { id: 1, name: "Math" },
-      },
-      {
-        id: 2,
-        gradeId: 2,
-        subjectId: 2,
-        price: 600,
-        grade: { id: 2, name: "Grade 2" },
-        subject: { id: 2, name: "Science" },
-      },
-    ];
-    setGradeSubjects(dummyGradeSubjects);
-  }, []);
-
-  // Pre-fill form if initialData exists (edit mode)
+  // Fill modal for edit
   useEffect(() => {
     if (initialData) {
-      setFormData({
-        gradeSubjectId: String(initialData.gradeSubjectId),
-        startTime: initialData.startTime,
-        duration: String(initialData.duration),
-        price: String(initialData.price),
-        meetinglink: initialData.meetinglink,
-        description: initialData.description || "",
-      });
+      setAssignments([initialData]);
     }
   }, [initialData]);
 
-  const handleChange = (name: keyof CreateClassForm, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const handleClose = () => {
+    setVisible(false);
+    setTimeout(() => onClose(), 300);
   };
 
-  const validateForm = () => {
-    if (!formData.gradeSubjectId) return "Grade & Subject is required.";
-    if (!formData.startTime) return "Start time is required.";
-    if (Number(formData.duration) <= 0) return "Duration must be positive.";
-    if (!formData.meetinglink.startsWith("http"))
-      return "Meeting link must be a valid URL.";
-    return null;
+  const handleChange = (
+    index: number,
+    field: keyof CreateClassForm,
+    value: string | number
+  ) => {
+    const updated = [...assignments];
+    if (["price", "duration", "gradeSubjectId"].includes(field)) {
+      const numVal = Number(value);
+      (updated[index][field] as number) = numVal < 0 ? 0 : numVal;
+    } else {
+      (updated[index][field] as string) = value as string;
+    }
+    setAssignments(updated);
+  };
+
+  const handleAddAssignment = () => {
+    setAssignments([
+      ...assignments,
+      {
+        gradeSubjectId: 0,
+        price: 0,
+        startTime: "",
+        duration: 0,
+        meetinglink: "",
+        description: "",
+      },
+    ]);
+  };
+
+  const handleRemoveAssignment = (index: number) => {
+    if (assignments.length > 1) {
+      setAssignments(assignments.filter((_, i) => i !== index));
+    }
   };
 
   const handleSubmit = async () => {
-    if (!teacherId) {
-      setToast({
-        message: "You must be logged in as a teacher.",
-        type: "error",
-      });
-      return;
-    }
-
-    const validationError = validateForm();
-    if (validationError) {
-      setToast({ message: validationError, type: "error" });
-      return;
-    }
-
-    const payload = {
-      teacherId,
-      assignments: [
-        {
-          gradeSubjectId: Number(formData.gradeSubjectId),
-          startTime: formData.startTime,
-          duration: Number(formData.duration),
-          price: Number(formData.price),
-          meetinglink: formData.meetinglink,
-          description: formData.description || undefined,
-        },
-      ],
-    };
-
-    let res;
-    if (initialData) {
-      // Edit mode
-      res = await updateTeacherSubject(initialData.id, payload);
-    } else {
-      // Create mode
-      res = await createTeacherSubject(payload);
-    }
-
-    if (res && res.data) {
-      setToast({
-        message: initialData
+    try {
+      setIsLoading(true);
+      for (const assignment of assignments) {
+        if (initialData && "id" in initialData) {
+          // Type guard to ensure id is a number
+          const assignmentId = Number((initialData as any).id);
+          if (isNaN(assignmentId)) {
+            toast.error("Invalid class ID");
+            return;
+          }
+          // Update existing class
+          await teacherSubjectService.updateAssignment(
+            assignmentId,
+            assignment
+          );
+        } else {
+          // Create new class
+          await teacherSubjectService.createAssignments(1, [assignment]); // replace 1 with teacherId
+        }
+      }
+      toast.success(
+        initialData
           ? "Class updated successfully!"
-          : "Class created successfully!",
-        type: "success",
-      });
-      setFormData({
-        gradeSubjectId: "",
-        startTime: "",
-        duration: "",
-        price: "",
-        meetinglink: "",
-        description: "",
-      });
-      onClose(); // Close modal after success
-    } else {
-      setToast({
-        message: res?.errors?.join(", ") || error || "Failed to save class",
-        type: "error",
-      });
+          : "Class created successfully!"
+      );
+      onSuccess?.();
+      handleClose();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to save class");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen && !visible) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-3xl relative">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 font-bold text-xl"
-        >
-          &times;
-        </button>
-
-        {toast && (
-          <Toast
-            message={toast.message}
-            type={toast.type}
-            onClose={() => setToast(null)}
-          />
-        )}
-
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          {initialData ? "Edit Class" : "Create a Class"}
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Grade & Subject
-            </label>
-            <select
-              name="gradeSubjectId"
-              value={formData.gradeSubjectId}
-              onChange={(e) => handleChange("gradeSubjectId", e.target.value)}
-              className="w-full border border-gray-300 rounded-lg p-2 focus:ring-primary focus:border-primary"
-            >
-              <option value="">Select Grade & Subject</option>
-              {gradeSubjects.map((gs) => (
-                <option key={gs.id} value={gs.id}>
-                  {gs.grade.name} - {gs.subject.name} (Base: {gs.price})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <InputField
-            label="Start Time"
-            name="startTime"
-            type="datetime-local"
-            value={formData.startTime}
-            onChange={handleChange}
-            required
-            icon={<Calendar size={20} />}
-          />
-
-          <InputField
-            label="Duration (minutes)"
-            name="duration"
-            type="number"
-            value={formData.duration}
-            onChange={handleChange}
-            required
-            placeholder="e.g., 60"
-            icon={<Clock size={20} />}
-          />
-
-          <InputField
-            label="Price"
-            name="price"
-            type="number"
-            value={formData.price}
-            onChange={handleChange}
-            required
-            placeholder="e.g., 500"
-            icon={<span className="text-lg font-semibold">₨</span>}
-          />
-
-          <InputField
-            label="Meeting Link"
-            name="meetinglink"
-            value={formData.meetinglink}
-            onChange={handleChange}
-            required
-            placeholder="Paste Zoom/Meet link"
-            icon={<LinkIcon size={20} />}
-          />
-
-          <TextArea
-            label="Description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Briefly describe the class..."
-            rows={4}
-          />
+    <div
+      className={`fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
+        isOpen ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <div
+        className={`bg-white rounded-2xl shadow-xl w-full max-w-3xl h-[90vh] flex flex-col relative transform transition-all duration-300 ${
+          isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        }`}
+      >
+        {/* Header */}
+        <div className="flex justify-between items-center p-4 border-b">
+          <h2 className="text-xl font-semibold">
+            {initialData ? "Edit Class" : "Create Class"}
+          </h2>
+          <button
+            onClick={handleClose}
+            type="button"
+            aria-label="Close modal"
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <X className="w-6 h-6" />
+          </button>
         </div>
 
-        <div className="flex justify-center mt-6">
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-8">
+          {assignments.map((assignment, index) => (
+            <div
+              key={index}
+              className="border rounded-xl p-4 relative shadow-sm bg-gray-50"
+            >
+              <h3 className="text-lg font-semibold mb-4">
+                Assignment {index + 1}
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <SelectDropdown
+                  label="Grade Subject"
+                  name="gradeSubjectId"
+                  value={assignment.gradeSubjectId.toString()}
+                  onChange={(_, val) =>
+                    handleChange(index, "gradeSubjectId", Number(val))
+                  }
+                  options={dummyGradeSubjects}
+                  required
+                />
+                <InputField
+                  label="Price"
+                  name="price"
+                  type="number"
+                  value={assignment.price?.toString() || ""}
+                  onChange={(_, val) =>
+                    handleChange(index, "price", Number(val))
+                  }
+                  required
+                />
+                <InputField
+                  label="Start Time"
+                  name="startTime"
+                  type="datetime-local"
+                  value={assignment.startTime}
+                  onChange={(_, val) => handleChange(index, "startTime", val)}
+                  required
+                />
+                <InputField
+                  label="Duration (minutes)"
+                  name="duration"
+                  type="number"
+                  value={assignment.duration?.toString() || ""}
+                  onChange={(_, val) =>
+                    handleChange(index, "duration", Number(val))
+                  }
+                  required
+                />
+                <InputField
+                  label="Meeting Link"
+                  name="meetinglink"
+                  type="text"
+                  value={assignment.meetinglink}
+                  onChange={(_, val) => handleChange(index, "meetinglink", val)}
+                  required
+                />
+              </div>
+              <TextArea
+                label="Description"
+                name="description"
+                value={assignment.description || ""}
+                onChange={(field, val) => handleChange(index, field, val)}
+                placeholder="Enter description..."
+              />
+
+              {assignments.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => handleRemoveAssignment(index)}
+                  className="absolute top-3 right-3 text-red-500 hover:text-red-700"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="flex justify-between items-center p-4 border-t">
           <button
             type="button"
+            onClick={handleAddAssignment}
+            className="flex items-center px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
+          >
+            <PlusCircle className="w-5 h-5 mr-2" /> Add Assignment
+          </button>
+          <button
             onClick={handleSubmit}
             disabled={isLoading}
-            className="bg-primary text-white font-semibold py-3 px-8 rounded-lg flex items-center justify-center hover:bg-white hover:text-primary hover:border-primary border border-transparent min-w-[200px]"
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
-            {isLoading ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                <span>Saving...</span>
-              </>
-            ) : (
-              <>
-                <Check size={20} className="mr-2" />
-                <span>{initialData ? "Update Class" : "Create Class"}</span>
-              </>
-            )}
+            {isLoading
+              ? initialData
+                ? "Updating..."
+                : "Creating..."
+              : initialData
+              ? "Update Class"
+              : "Create Class"}
           </button>
         </div>
       </div>

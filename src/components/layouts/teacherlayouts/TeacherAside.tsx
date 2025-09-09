@@ -48,10 +48,10 @@ export default function StudentAside() {
             src={logo}
             alt="SG Coaching Logo"
             width={32}
-            height={32}
-            className="w-8 h-8 flex-shrink-0"
+            height={30}
+            className="w-15 h-15 flex-shrink-0"
           />
-          <span className="font-bold text-lg text-gray-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
+          <span className="font-bold text-xl text-gray-800 transform -translate-y-2 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out whitespace-nowrap overflow-hidden">
             ShikshaGhar
           </span>
         </div>
@@ -95,7 +95,7 @@ export default function StudentAside() {
       {/* Bottom section - Logout */}
       <div className="p-4 border-t border-gray-200 mt-auto">
         <button
-          onClick={handleLogout} // ✅ centralized logout
+          onClick={handleLogout}
           className="flex items-center gap-3 px-3 py-2 w-full rounded-xl group hover:bg-red-50 transition-colors duration-200"
         >
           <div className="bg-red-100 text-red-600 w-6 h-6 flex items-center justify-center rounded-full flex-shrink-0">

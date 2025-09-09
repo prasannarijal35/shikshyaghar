@@ -29,6 +29,7 @@ const InputField: React.FC<InputFieldProps> = ({
   placeholder,
   icon,
   hint,
+  min: minValue,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const isPasswordField = type === "password";
@@ -36,10 +37,7 @@ const InputField: React.FC<InputFieldProps> = ({
 
   return (
     <div className="mb-4">
-      <label
-        htmlFor={name}
-        className="block text-sm font-medium text-gray-700 mb-2"
-      >
+      <label className="block text-sm font-medium text-gray-700 mb-2">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
@@ -50,24 +48,22 @@ const InputField: React.FC<InputFieldProps> = ({
           </div>
         )}
         <input
-          id={name}
-          name={name}
           type={inputType}
           value={value}
           onChange={(e) => onChange(name, e.target.value)}
           placeholder={placeholder}
           required={required}
-          min={type === "number" ? undefined : undefined}
-          aria-invalid={error ? "true" : "false"}
+          min={type === "number" ? minValue : undefined}
+          aria-invalid={!!error}
           aria-describedby={
             error ? `${name}-error` : hint ? `${name}-hint` : undefined
           }
           className={`w-full ${icon ? "pl-10" : "pl-4"} ${
             isPasswordField ? "pr-12" : "pr-4"
-          } py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+          } py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
             error
               ? "border-red-500 bg-red-50"
-              : "bg-white hover:border-gray-400"
+              : "border-gray-300 bg-white hover:border-gray-400"
           }`}
         />
         {isPasswordField && (

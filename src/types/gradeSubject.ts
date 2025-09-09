@@ -3,11 +3,11 @@ export interface GradeSubject {
   price: number;
   grade: {
     id: number;
-    name: string;   // e.g. "8"
+    name: string;
   };
   subject: {
     id: number;
-    name: string;   // e.g. "Science"
+    name: string;
   };
   createdAt: string;
   updatedAt: string;
