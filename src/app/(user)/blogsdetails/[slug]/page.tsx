@@ -1,17 +1,17 @@
 import BlogDetails from "@/components/blogs/BlogDetails";
-import { blogs } from "@/data/blog";
+import blogService from "@/services/blogServices";
 import { notFound } from "next/navigation";
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params; // <-- await params here
+interface PageProps {
+  params: { slug: string | string[] };
+}
+
+export default async function Page({ params }: PageProps) {
+  const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
 
   let blog;
   try {
-    blog = blogs.find((b) => b.slug === slug);
+    blog = await blogService.getBlogBySlug(slug);
   } catch (error) {
     console.error("Error fetching blog:", error);
     return notFound();

@@ -1,5 +1,5 @@
 export type Grade= {
-  id?: number;
+  id: number;
   name: string;
   slug: string;
   createdAt?: Date;

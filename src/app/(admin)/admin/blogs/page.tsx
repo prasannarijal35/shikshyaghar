@@ -1,7 +1,6 @@
-
-import { BlogManagerTable } from "@/components/adminPanel/blogmanager";
 import React from "react";
+import BlogManagerTable from "@/components/adminPanel/blogmanager/BlogManagerTable";
 
-export default function page() {
+export default function Page() {
   return <BlogManagerTable />;
 }

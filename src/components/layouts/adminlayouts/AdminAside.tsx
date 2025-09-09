@@ -25,6 +25,11 @@ export const navItems = [
     icon: MdVerified,
   },
   { name: "Class Management", href: "/admin/classes", icon: MdGroup },
+  { name: "Subject Management", href: "/admin/subjects", icon: MdGroup },
+  { name: "Grade Management", href: "/admin/grades", icon: MdGroup },
+  { name: "Grade-Subject Management", href: "/admin/gradeSubjects", icon: MdGroup },
+  { name: " Teacher-Subject Management", href: "/admin/teacherSubjects", icon: MdGroup },
+
   { name: "Announcements", href: "/admin/announcements", icon: MdCampaign },
   { name: "Blog Manager", href: "/admin/blogs", icon: MdEditNote },
   { name: "Settings", href: "/admin/settings", icon: MdSettings },

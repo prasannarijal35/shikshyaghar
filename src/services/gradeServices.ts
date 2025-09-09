@@ -1,11 +1,18 @@
-import axios from "axios";
-import { Grade } from "@/types/grade";
+import myAxios from "./apiServices";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
+
+export interface Grade {
+  id: number;
+  name: string;
+  slug?: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const gradeService = {
+  // Fetch all grades
   getAllGrades: async (): Promise<Grade[]> => {
+<<<<<<< Updated upstream
     try {
       const response = await axios.get(`${API_BASE_URL}/grades`);
       if (response.data.status === 200 || response.data.message) {
@@ -16,8 +23,28 @@ const gradeService = {
       console.error("GradeService Error:", error);
       throw error;
     }
+=======
+    const response = await myAxios.get("/grades");
+    return response.data.data;
+  },
+
+  // Create a new grade
+  createGrade: async (name: string): Promise<Grade> => {
+    const response = await myAxios.post("/grades", { name });
+    return response.data.data;
+  },
+
+  // Update a grade
+  updateGrade: async (id: number, name: string): Promise<Grade> => {
+    const response = await myAxios.put(`/grades/${id}`, { name });
+    return response.data.data;
+  },
+
+  // Delete a grade
+  deleteGrade: async (id: number): Promise<void> => {
+    await myAxios.delete(`/grades/${id}`);
+>>>>>>> Stashed changes
   },
 };
 
 export default gradeService;
-export type { Grade };
