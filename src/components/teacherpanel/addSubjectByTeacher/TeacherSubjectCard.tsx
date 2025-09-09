@@ -2,30 +2,26 @@
 
 import React, { useState } from "react";
 import { TeacherSubjectAssignment } from "@/types/teacherSubject";
-import teacherSubjectService from "@/services/teacherSubjectServices";
 import toast from "react-hot-toast";
+import teacherSubjectService from "@/services/teacherSubjectServices";
 
-type Props = {
+interface Props {
   cls: TeacherSubjectAssignment;
   onEdit: (cls: TeacherSubjectAssignment) => void;
   onDeleted?: () => void;
-};
+}
 
-export default function TeacherSubjectCard({ cls, onEdit, onDeleted }: Props) {
+const TeacherSubjectCard: React.FC<Props> = ({ cls, onEdit, onDeleted }) => {
   const [loadingDelete, setLoadingDelete] = useState(false);
 
-  // Compute status dynamically
-  const computeStatus = () => {
+  const status = (() => {
     const start = new Date(cls.startTime);
     const end = new Date(start.getTime() + cls.duration * 60000);
     const now = new Date();
-
     if (now < start) return "Upcoming";
     if (now > end) return "Completed";
     return "Live";
-  };
-
-  const status = computeStatus();
+  })();
 
   const startDate = new Date(cls.startTime);
   const dateStr = startDate.toLocaleDateString();
@@ -34,22 +30,20 @@ export default function TeacherSubjectCard({ cls, onEdit, onDeleted }: Props) {
     minute: "2-digit",
   });
 
-  // Handle delete API call
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this class?")) return;
     setLoadingDelete(true);
     try {
-      await teacherSubjectService.remove(cls.id);
+      await teacherSubjectService.deleteAssignment(cls.id);
       toast.success("Class deleted successfully");
-      if (onDeleted) onDeleted(); // Refresh parent list
+      onDeleted?.();
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to delete class");
+      toast.error(err?.message || "Failed to delete class");
     } finally {
       setLoadingDelete(false);
     }
   };
 
-  // Open meeting link
   const handleStart = () => {
     if (cls.meetinglink) window.open(cls.meetinglink, "_blank");
     else toast.error("No meeting link available");
@@ -65,7 +59,6 @@ export default function TeacherSubjectCard({ cls, onEdit, onDeleted }: Props) {
         {dateStr} • {timeStr} • {cls.duration} min
       </p>
       <p className="text-sm text-gray-600 font-medium">Price: Rs {cls.price}</p>
-
       <span
         className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${
           status === "Live"
@@ -77,29 +70,30 @@ export default function TeacherSubjectCard({ cls, onEdit, onDeleted }: Props) {
       >
         {status}
       </span>
-
       <div className="flex gap-2 pt-2">
         <button
-          className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 disabled:opacity-50"
           onClick={handleStart}
           disabled={!cls.meetinglink}
+          className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 disabled:opacity-50"
         >
           Start
         </button>
         <button
-          className="px-3 py-1 bg-yellow-500 text-white text-sm rounded hover:bg-yellow-600"
           onClick={() => onEdit(cls)}
+          className="px-3 py-1 bg-yellow-500 text-white text-sm rounded hover:bg-yellow-600"
         >
           Edit
         </button>
         <button
-          className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 disabled:opacity-50"
           onClick={handleDelete}
           disabled={loadingDelete}
+          className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 disabled:opacity-50"
         >
           {loadingDelete ? "Deleting..." : "Delete"}
         </button>
       </div>
     </article>
   );
-}
+};
+
+export default TeacherSubjectCard;

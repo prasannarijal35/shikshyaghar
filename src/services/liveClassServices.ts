@@ -1,6 +1,6 @@
 import axios from "axios";
 import { LiveClass } from "@/types/teacher/class";
-import { TeacherSubjectWithDetails } from "@/types/teacherSubject";
+import { TeacherSubjectWithDetails } from "@/types/teacher/subject";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";

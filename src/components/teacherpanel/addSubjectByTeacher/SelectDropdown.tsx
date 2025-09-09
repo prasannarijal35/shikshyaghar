@@ -29,10 +29,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
 }) => {
   return (
     <div className="mb-4">
-      <label
-        htmlFor={name}
-        className="block text-sm font-medium text-gray-700 mb-2"
-      >
+      <label className="block text-sm font-medium text-gray-700 mb-2">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
@@ -43,27 +40,25 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
           </div>
         )}
         <select
-          id={name}
-          name={name}
           value={value}
           onChange={(e) => onChange(name, e.target.value)}
           required={required}
-          aria-invalid={error ? "true" : "false"}
+          aria-invalid={!!error}
           aria-describedby={
             error ? `${name}-error` : hint ? `${name}-hint` : undefined
           }
           className={`w-full ${
             icon ? "pl-10" : "pl-4"
-          } pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+          } pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
             error
               ? "border-red-500 bg-red-50"
-              : "bg-white hover:border-gray-400"
+              : "border-gray-300 bg-white hover:border-gray-400"
           }`}
         >
           <option value="">Select an option</option>
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
+          {options.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
             </option>
           ))}
         </select>
