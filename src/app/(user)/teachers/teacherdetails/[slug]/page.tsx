@@ -1,40 +1,34 @@
-import { notFound } from "next/navigation";
-import { Metadata } from "next";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { Teacher } from "@/types/teacher";
+import toast from "react-hot-toast";
 import TeacherDetails from "@/components/teacher/TeacherDetails";
 import teacherService from "@/services/teacherServices";
-import { Teacher } from "@/types/teacher";
 
-type PageProps = {
-  params: Promise<{ slug: string }>;
-};
+export default function TeacherDetailsPage() {
+  const { slug } = useParams();
+  const [teacher, setTeacher] = useState<Teacher | null>(null);
+  const [loading, setLoading] = useState(true);
 
-// Async metadata for SEO
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  try {
-    const { slug } = await params;
-    const teacher: Teacher | null = await teacherService.getTeacherBySlug(slug);
+  useEffect(() => {
+    if (!slug) return;
 
-    if (!teacher) {
-      return { title: "Teacher Not Found", description: "No teacher found" };
-    }
+    const teacherSlug = Array.isArray(slug) ? slug[0] : slug;
 
-    return {
-      title: `Shikshya Ghar | ${teacher.fullName}`,
-      description: `Detailed view of ${teacher.fullName}'s profile`,
-    };
-  } catch {
-    return { title: "Teacher Not Found", description: "No teacher found" };
-  }
-}
+    teacherService
+      .getTeacherBySlug(teacherSlug)
+      .then((data) => setTeacher(data))
+      .catch((err: any) => {
+        if (err.response?.status === 404) toast.error("Teacher not found");
+        else toast.error("Failed to fetch teacher details");
+      })
+      .finally(() => setLoading(false));
+  }, [slug]);
 
-// Teacher details page
-export default async function Page({ params }: PageProps) {
-  const { slug } = await params;
-  if (!slug) return notFound();
+  if (loading) return <p className="text-center mt-20">Loading...</p>;
+  if (!teacher) return <p className="text-center mt-20">Teacher not found</p>;
 
-  const teacher: Teacher | null = await teacherService.getTeacherBySlug(slug);
-  if (!teacher) return notFound();
-
-  // TeacherDetails now handles subjects internally
   return <TeacherDetails teacher={teacher} />;
 }

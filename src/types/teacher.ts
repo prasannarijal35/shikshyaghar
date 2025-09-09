@@ -1,48 +1,29 @@
+export interface TeacherSubjectData {
+  grade: string;
+  subject: string;
+  price?: number; // add price
+}
+
 export interface Teacher {
   id: number;
+  slug: string; // added slug
   fullName: string;
   email: string;
-  role: string;
-  address: string;
-  phone: number | null; // phone is number in your API
-  gender: string | null;
-  birthYear: number | null;
-  slug: string;
-  createdAt: string;
-  updatedAt: string;
-  teacher: TeacherDetails;
-}
+  phone?: string;
+  gender?: string;
+  birthYear?: number;
+  address?: string;
+  role?: string;
 
-export interface TeacherDetails {
-  id: number;
-  bio: string;
-  experience: number; // number, not string
-  availability: string;
-  qualification: string;
-  profilePicture: string | null;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-  teacherSubjects: TeacherSubjectWithDetails[];
-}
+  bio?: string;
+  experience?: number;
+  availability?: string;
+  qualification?: string;
+  profilePicture?: string;
+  documentUrl?: string;
+  status?: string;
+  createdAt?: string;
+  updatedAt?: string;
 
-export interface TeacherSubjectWithDetails {
-  id: number;
-  gradeSubject: GradeSubjectWithSubject;
-}
-
-export interface GradeSubjectWithSubject {
-  id: number;
-  subject: Subject;
-  grade: Grade;
-}
-
-export interface Subject {
-  id: number;
-  name: string;
-}
-
-export interface Grade {
-  id: number;
-  name: string;
+  subjects?: TeacherSubjectData[]; // update type here
 }
