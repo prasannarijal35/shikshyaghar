@@ -141,7 +141,7 @@ export default function useTeacherRegister() {
       if (formData.qualification)
         payload.append("qualification", formData.qualification);
       if (formData.experience)
-        payload.append("teachingExperience", String(formData.experience));
+        payload.append("experience", String(formData.experience));
       if (formData.profilePicture)
         payload.append("profilePicture", formData.profilePicture);
       if (formData.document) payload.append("document", formData.document);

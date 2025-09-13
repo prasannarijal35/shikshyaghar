@@ -27,8 +27,16 @@ export const navItems = [
   { name: "Class Management", href: "/admin/classes", icon: MdGroup },
   { name: "Subject Management", href: "/admin/subjects", icon: MdGroup },
   { name: "Grade Management", href: "/admin/grades", icon: MdGroup },
-  { name: "Grade-Subject Management", href: "/admin/gradeSubjects", icon: MdGroup },
-  { name: " Teacher-Subject Management", href: "/admin/teacherSubjects", icon: MdGroup },
+  {
+    name: "Grade-Subject Management",
+    href: "/admin/gradeSubjects",
+    icon: MdGroup,
+  },
+  {
+    name: " Teacher-Subject Management",
+    href: "/admin/teacherSubjects",
+    icon: MdGroup,
+  },
 
   { name: "Announcements", href: "/admin/announcements", icon: MdCampaign },
   { name: "Review Management", href: "/admin/reviews", icon: MdSettings },
@@ -59,7 +67,7 @@ export default function AdminAside() {
       </div>
 
       {/* Navigation Menu */}
-      <nav className="flex-1 py-6">
+      <nav className="flex-1 py-6 overflow-y-auto hide-scrollbar">
         <ul className="space-y-2 px-2">
           {navItems.map(({ name, href, icon: Icon }) => {
             const isActive = pathname === href;
