@@ -31,6 +31,7 @@ export const navItems = [
   { name: " Teacher-Subject Management", href: "/admin/teacherSubjects", icon: MdGroup },
 
   { name: "Announcements", href: "/admin/announcements", icon: MdCampaign },
+  { name: "Review Management", href: "/admin/reviews", icon: MdSettings },
   { name: "Blog Manager", href: "/admin/blogs", icon: MdEditNote },
   { name: "Settings", href: "/admin/settings", icon: MdSettings },
 ];

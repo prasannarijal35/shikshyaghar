@@ -27,6 +27,8 @@ export const navItems = [
   { name: "Live Classes", href: "/teacher/class", icon: MdEvent },
   { name: "Messages", href: "/teacher/messages", icon: MdMessage },
   { name: "Students", href: "/teacher/students", icon: MdGroup },
+  { name: "Post Reviews", href: "/teacher/review", icon: MdGroup },
+
   {
     name: "Notifications",
     href: "/teacher/notifications",

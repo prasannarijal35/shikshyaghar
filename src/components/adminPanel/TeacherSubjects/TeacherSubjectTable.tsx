@@ -1,17 +1,23 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
-import teacherSubjectService, { TeacherSubjectWithDetails } from "@/services/teacherSubjectServices";
+import TeacherSubjectService from "@/services/teacherSubjectServices";
+import { TeacherSubjectAssignment, TeacherSubjectsResponse } from "@/types/teacherSubject";
 
 export default function TeacherSubjectTable() {
-  const [teacherSubjects, setTeacherSubjects] = useState<TeacherSubjectWithDetails[]>([]);
+  const [teacherSubjects, setTeacherSubjects] = useState<TeacherSubjectAssignment[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
     try {
       setLoading(true);
-      const teacherSubjectsData = await teacherSubjectService.getAllTeacherSubjects();
-      setTeacherSubjects(teacherSubjectsData);
+
+      // Fetch all teacher subjects
+      const response: TeacherSubjectsResponse = await TeacherSubjectService.getAllAssignments();
+
+      // Set data
+      setTeacherSubjects(response.data || []);
     } catch (error) {
       toast.error("Failed to fetch teacher-subject data");
       console.error(error);
@@ -44,8 +50,8 @@ export default function TeacherSubjectTable() {
           </thead>
           <tbody className="text-base">
             {teacherSubjects.map((ts, index) => (
-              <tr key={ts.teacherSubjectId} className="border-t hover:bg-primary/10">
-                <td className="py-4 px-4">{index + 1}</td> {/* Serial Number */}
+              <tr key={ts.id} className="border-t hover:bg-primary/10">
+                <td className="py-4 px-4">{index + 1}</td>
                 <td className="py-4 px-4">{ts.teacher?.user?.fullName || "N/A"}</td>
                 <td className="py-4 px-4">
                   Grade {ts.gradeSubject?.grade?.name} - {ts.gradeSubject?.subject?.name}
