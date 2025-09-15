@@ -1,11 +1,12 @@
-// services/gradeSubjectService.ts
 import myAxios from "./apiServices";
 import { GradeSubject } from "@/types/gradeSubject";
 
 const gradeSubjectService = {
+  getAllGradeSubjects: async (search?: string): Promise<GradeSubject[]> => {
+    const response = await myAxios.get("/gradeSubjects", {
+      params: search ? { search } : {},
+    });
 
-  getAllGradeSubjects: async (): Promise<GradeSubject[]> => {
-    const response = await myAxios.get("/gradeSubjects");
     if (!response.data.data) throw new Error("No data returned");
     return response.data.data;
   },
@@ -17,8 +18,8 @@ const gradeSubjectService = {
   },
 
   getSubjectsByGradeSlug: async (slug: string): Promise<GradeSubject[]> => {
-  const response = await myAxios.get(`/grades/slug/${slug}/subjects`);
-  return response.data.data;
+    const response = await myAxios.get(`/grades/slug/${slug}/subjects`);
+    return response.data.data;
   },
 
   assignGradeSubject: async (payload: {
@@ -30,11 +31,14 @@ const gradeSubjectService = {
     return response.data.data;
   },
 
-  updateGradeSubject: async (id: number, payload: {
-    gradeId?: number;
-    subjectId?: number;
-    price?: number;
-  }): Promise<GradeSubject> => {
+  updateGradeSubject: async (
+    id: number,
+    payload: {
+      gradeId?: number;
+      subjectId?: number;
+      price?: number;
+    }
+  ): Promise<GradeSubject> => {
     const response = await myAxios.put(`/gradeSubjects/${id}`, payload);
     return response.data.data;
   },

@@ -35,6 +35,18 @@ const InputField: React.FC<InputFieldProps> = ({
   const isPasswordField = type === "password";
   const inputType = isPasswordField && showPassword ? "text" : type;
 
+  const handleChange = (val: string) => {
+    if (type === "number") {
+      let num = Number(val);
+      if (minValue !== undefined && num < minValue) {
+        num = minValue;
+      }
+      onChange(name, num.toString());
+    } else {
+      onChange(name, val);
+    }
+  };
+
   return (
     <div className="mb-4">
       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -50,7 +62,7 @@ const InputField: React.FC<InputFieldProps> = ({
         <input
           type={inputType}
           value={value}
-          onChange={(e) => onChange(name, e.target.value)}
+          onChange={(e) => handleChange(e.target.value)}
           placeholder={placeholder}
           required={required}
           min={type === "number" ? minValue : undefined}

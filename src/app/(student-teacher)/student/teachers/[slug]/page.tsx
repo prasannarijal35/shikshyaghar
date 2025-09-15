@@ -1,11 +1,11 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Teacher } from "@/types/teacher";
 import toast from "react-hot-toast";
-import TeacherDetails from "@/components/teacher/TeacherDetails";
+
 import teacherService from "@/services/teacherServices";
+import { TeacherDetails } from "@/components/studentpanel/teacher";
 
 export default function TeacherDetailsPage() {
   const { slug } = useParams();
@@ -30,5 +30,5 @@ export default function TeacherDetailsPage() {
   if (loading) return <p className="text-center mt-20">Loading...</p>;
   if (!teacher) return <p className="text-center mt-20">Teacher not found</p>;
 
-  return <TeacherDetails teacher={teacher} />;
+  return <TeacherDetails />;
 }

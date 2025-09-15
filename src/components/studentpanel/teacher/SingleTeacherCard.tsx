@@ -58,7 +58,7 @@ const SingleTeacherCard = ({ teacher }: Props) => {
 
       <div className="flex flex-col gap-3 md:ml-5">
         <Link
-          href={`/teachers/${teacher.slug}`}
+          href={`/student/teachers/${teacher.slug}`}
           className="text-md border border-primary text-primary px-4 py-2 rounded-lg hover:bg-primary hover:text-white transition duration-300 text-center font-semibold"
         >
           View Profile

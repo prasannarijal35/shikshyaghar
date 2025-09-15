@@ -1,19 +1,15 @@
 "use client";
-
 import { SubscriptionType } from "@/types/subscription";
 import myAxios from "./apiServices";
-
 const useSubscriptionService = () => {
   const getAll = async (): Promise<SubscriptionType[]> => {
     const { data } = await myAxios.get("/subscriptions");
     return data;
   };
-
   const getById = async (id: number): Promise<SubscriptionType> => {
     const { data } = await myAxios.get(`/subscriptions/${id}`);
     return data;
   };
-
   const getByStudentId = async (
     status?: string
   ): Promise<SubscriptionType[]> => {
@@ -22,10 +18,11 @@ const useSubscriptionService = () => {
     });
     return response.data.data ?? [];
   };
-
-  const create = async (payload: FormData): Promise<SubscriptionType> => {
+  const create = async (
+    payload: FormData | Partial<SubscriptionType>
+  ): Promise<SubscriptionType> => {
     const { data } = await myAxios.post("/subscriptions", payload);
-    return data;
+    return data.subscription;
   };
 
   const update = async (
@@ -35,12 +32,9 @@ const useSubscriptionService = () => {
     const { data } = await myAxios.put(`/subscriptions/${id}`, payload);
     return data;
   };
-
   const remove = async (id: number): Promise<void> => {
     await myAxios.delete(`/subscriptions/${id}`);
   };
-
   return { getAll, getById, getByStudentId, create, update, remove };
 };
-
 export default useSubscriptionService;
