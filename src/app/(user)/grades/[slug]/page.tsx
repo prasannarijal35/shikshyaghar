@@ -48,7 +48,7 @@ export default function GradeSubjectPage() {
       ) : error ? (
         <p className="text-red-500 text-center mt-4">{error}</p>
       ) : gradeSubjects.length === 0 ? (
-        <div className="flex flex-col items-center justify-center mt-16 text-center">
+        <div className="flex flex-col items-center justify-center my-16 text-center">
           {/* Icon */}
           <svg
             className="w-20 h-20 text-gray-300 mb-4"
