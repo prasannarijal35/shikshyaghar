@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-
 import myAxios from "@/services/apiServices";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FiEye, FiTrash2 } from "react-icons/fi";
 import ViewTeacherModal from "../teacherverification/ViewTeacherModel";
-import DeleteConfirmModal from "./DeleteConfirmModal";
+import { DeleteConfirmationModal } from "@/components/common";
 
 export default function TeacherManagementTable() {
   const [teachers, setTeachers] = useState<any[]>([]);
@@ -114,11 +113,12 @@ export default function TeacherManagementTable() {
       />
 
       {/* Delete Modal */}
-      <DeleteConfirmModal
+      <DeleteConfirmationModal
         isOpen={!!deleteTeacherId}
         onClose={() => setDeleteTeacherId(null)}
         onConfirm={handleDelete}
-        teacherName={deleteTeacherName}
+        title="Delete Teacher"
+        description={`Are you sure you want to delete ${deleteTeacherName}?`}
       />
     </div>
   );

@@ -1,92 +1,54 @@
-// src/components/adminPanel/subjects/AddSubjectModal.tsx
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 
-interface AddSubjectModalProps {
+interface SubjectModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title: string;
+  title: string; // "Add Subject" or "Edit Subject"
+  initialName?: string;
   onConfirm: (name: string) => Promise<void>;
 }
 
-export default function AddSubjectModal({
+export default function SubjectModal({
   isOpen,
   onClose,
   title,
+  initialName = "",
   onConfirm,
-}: AddSubjectModalProps) {
-  const [subjectName, setSubjectName] = useState("");
+}: SubjectModalProps) {
+  const [name, setName] = useState(initialName);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const modalRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const lastFocusedElement = useRef<HTMLElement | null>(null);
-
-  // Focus trap & Escape key
   useEffect(() => {
-    if (isOpen) {
-      lastFocusedElement.current = document.activeElement as HTMLElement;
-      setTimeout(() => inputRef.current?.focus(), 50);
-
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === "Escape") onClose();
-
-        if (e.key === "Tab" && modalRef.current) {
-          const focusable = modalRef.current.querySelectorAll<
-            HTMLButtonElement | HTMLInputElement
-          >("button, input, [tabindex]:not([tabindex='-1'])");
-
-          const first = focusable[0];
-          const last = focusable[focusable.length - 1];
-
-          if (e.shiftKey && document.activeElement === first) {
-            e.preventDefault();
-            (last as HTMLElement).focus();
-          } else if (!e.shiftKey && document.activeElement === last) {
-            e.preventDefault();
-            (first as HTMLElement).focus();
-          }
-        }
-      };
-
-      document.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden";
-
-      return () => {
-        document.removeEventListener("keydown", handleKeyDown);
-        document.body.style.overflow = "auto";
-      };
-    } else {
-      lastFocusedElement.current?.focus();
-    }
-  }, [isOpen, onClose]);
+    setName(initialName); // reset when modal opens with new subject
+    setErrorMessage(null);
+  }, [initialName, isOpen]);
 
   if (!isOpen) return null;
 
   const handleConfirm = async () => {
-    if (!subjectName.trim()) return;
+    if (!name.trim()) return;
     setLoading(true);
     setErrorMessage(null);
-
     try {
-      await onConfirm(subjectName.trim());
-      setSuccessMessage("Subject added successfully!");
-      setSubjectName("");
-
-      // Auto-close after brief delay
+      await onConfirm(name.trim());
+      setSuccessMessage(
+        title.includes("Edit") ? "Subject updated!" : "Subject added!"
+      );
+      setName("");
       setTimeout(() => {
         setSuccessMessage(null);
         onClose();
       }, 1000);
     } catch (err: any) {
       setErrorMessage(
-        err?.errors?.[0]?.msg ||
-          err?.message ||
-          "An unexpected error occurred while adding the subject."
+        err?.response?.data?.errors?.[0]?.msg ||
+          err?.response?.data?.message ||
+          "An unexpected error occurred."
       );
     } finally {
       setLoading(false);
@@ -96,42 +58,30 @@ export default function AddSubjectModal({
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 z-40 bg-black/30 backdrop-brightness-95" />
+      <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm" />
 
       {/* Modal */}
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="add-subject-title"
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      >
-        <div
-          ref={modalRef}
-          className="relative w-full max-w-md bg-white rounded-xl shadow-lg"
-        >
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="relative w-full max-w-md bg-white rounded-xl shadow-lg">
           {/* Header */}
           <div className="flex justify-between items-center p-4 border-b">
-            <h2 id="add-subject-title" className="text-xl font-semibold">
-              {title}
-            </h2>
+            <h2 className="text-xl font-semibold">{title}</h2>
             <button
               onClick={onClose}
-              aria-label="Close modal"
-              className="focus:outline-none hover:scale-110 transition-transform"
+              className="focus:outline-none hover:scale-110 transition-transform text-gray-600 hover:text-red-600 text-2xl"
             >
-              <IoMdCloseCircleOutline className="text-2xl text-gray-600 hover:text-red-600" />
+              <IoMdCloseCircleOutline />
             </button>
           </div>
 
           {/* Body */}
           <div className="p-6">
             <input
-              ref={inputRef}
               type="text"
               placeholder="Enter subject name"
-              value={subjectName}
+              value={name}
               onChange={(e) => {
-                setSubjectName(e.target.value);
+                setName(e.target.value);
                 if (errorMessage) setErrorMessage(null);
               }}
               disabled={loading}
@@ -139,11 +89,10 @@ export default function AddSubjectModal({
             />
 
             {errorMessage && (
-              <p className="text-sm text-red-600 mb-3">{errorMessage}</p>
+              <p className="text-sm text-red-600 mb-2">{errorMessage}</p>
             )}
-
             {successMessage && (
-              <p className="text-sm text-green-600 mb-3">{successMessage}</p>
+              <p className="text-sm text-green-600 mb-2">{successMessage}</p>
             )}
 
             <div className="flex justify-end gap-3 mt-4">
@@ -154,12 +103,23 @@ export default function AddSubjectModal({
               >
                 Cancel
               </button>
+
               <button
                 onClick={handleConfirm}
                 disabled={loading}
-                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/80 disabled:opacity-50"
+                className={`px-4 py-2 text-white rounded-md transition-colors ${
+                  title.includes("Edit")
+                    ? "bg-green-600 hover:bg-green-700"
+                    : "bg-blue-600 hover:bg-blue-700"
+                } disabled:opacity-50`}
               >
-                {loading ? "Adding..." : "Add"}
+                {loading
+                  ? title.includes("Edit")
+                    ? "Updating..."
+                    : "Adding..."
+                  : title.includes("Edit")
+                  ? "Save Changes"
+                  : "Add Subject"}
               </button>
             </div>
           </div>

@@ -31,5 +31,4 @@ const gradeService = {
     await myAxios.delete(`/grades/${id}`);
   },
 };
-
 export default gradeService;

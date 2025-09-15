@@ -11,7 +11,6 @@ import {
   MdAssignment,
   MdNotifications,
   MdHelp,
-  MdEvent,
   MdMessage,
   MdGroup,
 } from "react-icons/md";
@@ -21,10 +20,8 @@ import { useLogout } from "@/utils/logout";
 export const navItems = [
   { name: "Dashboard", href: "/teacher/dashboard", icon: MdDashboard },
   { name: "My Profile", href: "/teacher/profile", icon: MdPerson },
-  { name: "Add Classes", href: "/teacher/teacherSubject", icon: MdClass },
-  { name: "My Courses", href: "/teacher/mycourses", icon: MdClass },
+  { name: "My Classes", href: "/teacher/teacherSubject", icon: MdClass },
   { name: "Requests", href: "/teacher/requests", icon: MdAssignment },
-  { name: "Live Classes", href: "/teacher/class", icon: MdEvent },
   { name: "Messages", href: "/teacher/messages", icon: MdMessage },
   { name: "Students", href: "/teacher/students", icon: MdGroup },
   { name: "Post Reviews", href: "/teacher/review", icon: MdGroup },
@@ -59,11 +56,11 @@ export default function StudentAside() {
         </div>
       </div>
 
-      {/* Navigation Menu */}
-      <nav className="flex-1 py-6">
+      <nav className="flex-1 py-6 overflow-y-auto hide-scrollbar">
         <ul className="space-y-2 px-2">
           {navItems.map(({ name, href, icon: Icon }) => {
             const isActive = pathname === href;
+
             return (
               <li key={name}>
                 <Link href={href}>

@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
-import toast from 'react-hot-toast';
-import blogService from '@/services/blogServices';
-import AddBlogModal from './AddBlogModal';
-import DeleteModal from './DeleteModal';
-import { Blog } from '@/types/blogs';
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import toast from "react-hot-toast";
+import blogService from "@/services/blogServices";
+import AddBlogModal from "./AddBlogModal";
+import { Blog } from "@/types/blogs";
+import { DeleteConfirmationModal } from "@/components/common";
+import { FiTrash2 } from "react-icons/fi";
 
 export default function BlogManagerTable() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -15,7 +15,8 @@ export default function BlogManagerTable() {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedBlog, setSelectedBlog] = useState<Blog | undefined>(undefined);
-  const [selectedBlogForDelete, setSelectedBlogForDelete] = useState<Blog | null>(null);
+  const [selectedBlogForDelete, setSelectedBlogForDelete] =
+    useState<Blog | null>(null);
 
   // Fetch blogs
   const fetchBlogs = async () => {
@@ -24,7 +25,7 @@ export default function BlogManagerTable() {
       const data = await blogService.getAllBlogs();
       setBlogs(data);
     } catch (err: any) {
-      toast.error(err?.message || 'Failed to fetch blogs');
+      toast.error(err?.message || "Failed to fetch blogs");
     } finally {
       setLoading(false);
     }
@@ -45,9 +46,9 @@ export default function BlogManagerTable() {
   };
 
   const handleSave = (blog: Blog) => {
-    setBlogs(prev =>
-      prev.some(b => b.id === blog.id)
-        ? prev.map(b => (b.id === blog.id ? blog : b))
+    setBlogs((prev) =>
+      prev.some((b) => b.id === blog.id)
+        ? prev.map((b) => (b.id === blog.id ? blog : b))
         : [blog, ...prev]
     );
     toast.success(`Saved blog "${blog.title}"`);
@@ -64,12 +65,12 @@ export default function BlogManagerTable() {
     if (!selectedBlogForDelete) return;
     try {
       await blogService.deleteBlog(selectedBlogForDelete.id);
-      setBlogs(prev => prev.filter(b => b.id !== selectedBlogForDelete.id));
+      setBlogs((prev) => prev.filter((b) => b.id !== selectedBlogForDelete.id));
       toast.success(`Deleted "${selectedBlogForDelete.title}"`);
       setSelectedBlogForDelete(null);
       setShowDeleteModal(false);
     } catch (err: any) {
-      toast.error(err?.message || 'Failed to delete blog');
+      toast.error(err?.message || "Failed to delete blog");
     }
   };
 
@@ -79,36 +80,53 @@ export default function BlogManagerTable() {
         <h1 className="text-2xl text-primary font-semibold">Blog Manager</h1>
         <button
           onClick={handleAdd}
-          className="bg-primary text-white px-4 py-2 rounded hover:bg-white hover:text-primary border border-primary transition"
+          className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/80 transition"
         >
           Add Blog
         </button>
       </div>
 
       {loading ? (
-        <p>Loading blogs...</p>
+        <p className="p-6 text-gray-500">Loading blogs...</p>
       ) : blogs.length === 0 ? (
-        <p>No blogs available.</p>
+        <p className="p-6 text-gray-500">No blogs available.</p>
       ) : (
-        <div className="overflow-x-auto rounded-lg shadow">
-          <table className="min-w-full bg-white rounded-lg overflow-hidden">
+        <div className="overflow-x-auto rounded-lg shadow-md bg-white">
+          <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-100">
               <tr>
-                <th className="py-4 px-4 text-left text-[15px] font-medium">ID</th>
-                <th className="py-4 px-4 text-left text-[15px] font-medium">Image</th>
-                <th className="py-4 px-4 text-left text-[15px] font-medium">Title</th>
-                <th className="py-4 px-4 text-left text-[15px] font-medium">Category</th>
-                <th className="py-4 px-4 text-left text-[15px] font-medium">Actions</th>
+                <th className="py-4 px-6 text-left font-semibold text-gray-700">
+                  ID
+                </th>
+                <th className="py-4 px-6 text-center font-semibold text-gray-700">
+                  Image
+                </th>
+                <th className="py-4 px-6 text-center font-semibold text-gray-700">
+                  Title
+                </th>
+                <th className="py-4 px-6 text-center font-semibold text-gray-700">
+                  Category
+                </th>
+                <th className="py-4 px-6 text-right font-semibold text-gray-700">
+                  Actions
+                </th>
               </tr>
             </thead>
-            <tbody className="text-base">
+            <tbody className="divide-y divide-gray-200 text-gray-700">
               {blogs.map((blog, idx) => (
-                <tr key={blog.id} className="border-t hover:bg-primary/10">
-                  <td className="py-5 px-4">{idx + 1}</td>
-                  <td className="py-5 px-4">
+                <tr
+                  key={blog.id}
+                  className="hover:bg-primary/10 transition-colors"
+                >
+                  <td className="py-5 px-6 text-left">{idx + 1}</td>
+                  <td className="py-5 px-6 text-center">
                     {blog.image ? (
                       <Image
-                        src={blog.image.startsWith('http') ? blog.image : `/${blog.image}`}
+                        src={
+                          blog.image.startsWith("http")
+                            ? blog.image
+                            : `/${blog.image}`
+                        }
                         alt={blog.title}
                         width={48}
                         height={48}
@@ -120,22 +138,22 @@ export default function BlogManagerTable() {
                       </div>
                     )}
                   </td>
-                  <td className="py-5 px-4">{blog.title}</td>
-                  <td className="py-5 px-4">{blog.category}</td>
-                  <td className="py-5 px-4 flex gap-2">
+                  <td className="py-5 px-6 text-center">{blog.title}</td>
+                  <td className="py-5 px-6 text-center">{blog.category}</td>
+                  <td className="py-5 px-6 text-right flex justify-end gap-2">
                     <button
                       onClick={() => handleEdit(blog)}
-                      className="p-2 rounded-md text-primary hover:bg-primary/20 hover:text-primary-dark transition"
+                      className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
                       title="Edit"
                     >
-                      <FaEdit size={16} />
+                      Edit
                     </button>
                     <button
                       onClick={() => handleDeleteClick(blog)}
-                      className="p-2 rounded-md text-red-600 hover:bg-red-600 hover:text-white transition"
+                      className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
                       title="Delete"
                     >
-                      <FaTrashAlt size={16} />
+                      <FiTrash2 size={18} />
                     </button>
                   </td>
                 </tr>
@@ -154,7 +172,7 @@ export default function BlogManagerTable() {
       )}
 
       {showDeleteModal && (
-        <DeleteModal
+        <DeleteConfirmationModal
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           title="Confirm Deletion"

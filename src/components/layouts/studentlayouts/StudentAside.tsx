@@ -48,11 +48,11 @@ export default function StudentAside() {
         </div>
       </div>
 
-      {/* Navigation Menu */}
-      <nav className="flex-1 py-6">
+      <nav className="flex-1 py-6 overflow-y-auto hide-scrollbar">
         <ul className="space-y-2 px-2">
           {navItems.map(({ name, href, icon: Icon }) => {
             const isActive = pathname === href;
+
             return (
               <li key={name}>
                 <Link href={href}>

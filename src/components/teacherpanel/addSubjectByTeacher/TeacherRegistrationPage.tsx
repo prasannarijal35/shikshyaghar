@@ -1,129 +1,149 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { X, PlusCircle, Trash2 } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { X } from "lucide-react";
 import InputField from "./InputField";
 import TextArea from "./TextArea";
 import SelectDropdown from "./SelectDropdown";
-import toast from "react-hot-toast";
-import teacherSubjectService from "@/services/teacherSubjectServices";
+import TeacherSubjectService from "@/services/teacherSubjectServices";
+import gradeSubjectService, {
+  GradeSubject,
+} from "@/services/gradeSubjectServices";
 import { CreateClassForm } from "@/types/teacherSubject";
+import { getUser } from "@/utils/localStorage";
+import toast from "react-hot-toast";
 
-interface CreateClassModalProps {
-  onClose: () => void;
-  onSuccess?: () => void;
+interface Props {
   isOpen: boolean;
-  initialData?: CreateClassForm | null; // for edit
+  onClose: () => void;
+  initialData?: CreateClassForm | null;
 }
 
-const dummyGradeSubjects = [
-  { value: "1", label: "10 - Algebra - Rs 1400" },
-  { value: "2", label: "11 - Physics - Rs 1500" },
-  { value: "3", label: "12 - Chemistry - Rs 1600" },
-];
-
-const CreateClassModal: React.FC<CreateClassModalProps> = ({
+const CreateClassModal: React.FC<Props> = ({
   isOpen,
   onClose,
-  onSuccess,
   initialData,
 }) => {
   const [visible, setVisible] = useState(isOpen);
   const [isLoading, setIsLoading] = useState(false);
+  const [gradeSubjects, setGradeSubjects] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [assignment, setAssignment] = useState<CreateClassForm>({
+    gradeSubjectId: 0,
+    price: 0,
+    startTime: "",
+    duration: 0,
+    meetingLink: "",
+    description: "",
+  });
 
-  const [assignments, setAssignments] = useState<CreateClassForm[]>([
-    {
-      gradeSubjectId: 0,
-      price: 0,
-      startTime: "",
-      duration: 0,
-      meetinglink: "",
-      description: "",
-    },
-  ]);
-
-  // Animate mount/unmount
   useEffect(() => {
     if (isOpen) setVisible(true);
   }, [isOpen]);
 
-  // Fill modal for edit
+  // Fetch grade-subjects
+  useEffect(() => {
+    if (isOpen) {
+      const fetchGradeSubjects = async () => {
+        try {
+          const data: GradeSubject[] =
+            await gradeSubjectService.getAllGradeSubjects();
+          setGradeSubjects(
+            data.map((gs) => ({
+              value: gs.id.toString(),
+              label: `${gs.grade?.name} - ${gs.subject?.name} - Rs ${
+                gs.price ?? 0
+              }`,
+            }))
+          );
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (err) {
+          toast.error("Failed to fetch grade-subjects");
+        }
+      };
+      fetchGradeSubjects();
+    }
+  }, [isOpen]);
+
+  // Load initial data for edit
   useEffect(() => {
     if (initialData) {
-      setAssignments([initialData]);
+      setAssignment({
+        ...initialData,
+        startTime:
+          initialData.startTime.length === 5
+            ? initialData.startTime + ":00"
+            : initialData.startTime,
+      });
     }
   }, [initialData]);
 
-  const handleClose = () => {
-    setVisible(false);
-    setTimeout(() => onClose(), 300);
-  };
-
   const handleChange = (
-    index: number,
     field: keyof CreateClassForm,
     value: string | number
   ) => {
-    const updated = [...assignments];
-    if (["price", "duration", "gradeSubjectId"].includes(field)) {
-      const numVal = Number(value);
-      (updated[index][field] as number) = numVal < 0 ? 0 : numVal;
-    } else {
-      (updated[index][field] as string) = value as string;
-    }
-    setAssignments(updated);
+    setAssignment((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleAddAssignment = () => {
-    setAssignments([
-      ...assignments,
-      {
-        gradeSubjectId: 0,
-        price: 0,
-        startTime: "",
-        duration: 0,
-        meetinglink: "",
-        description: "",
-      },
-    ]);
-  };
-
-  const handleRemoveAssignment = (index: number) => {
-    if (assignments.length > 1) {
-      setAssignments(assignments.filter((_, i) => i !== index));
-    }
+  const handleClose = () => {
+    setVisible(false);
+    setTimeout(onClose, 300);
   };
 
   const handleSubmit = async () => {
+    if (!assignment.gradeSubjectId)
+      return toast.error("Please select a grade subject");
+    if ((assignment.price ?? 0) < 0)
+      return toast.error("Price cannot be negative");
+    if (assignment.duration <= 0)
+      return toast.error("Duration must be greater than 0");
+    if (!assignment.startTime) return toast.error("Please select a start time");
+
+    setIsLoading(true);
     try {
-      setIsLoading(true);
-      for (const assignment of assignments) {
-        if (initialData && "id" in initialData) {
-          // Type guard to ensure id is a number
-          const assignmentId = Number((initialData as any).id);
-          if (isNaN(assignmentId)) {
-            toast.error("Invalid class ID");
-            return;
-          }
-          // Update existing class
-          await teacherSubjectService.updateAssignment(
-            assignmentId,
-            assignment
-          );
-        } else {
-          // Create new class
-          await teacherSubjectService.createAssignments(1, [assignment]); // replace 1 with teacherId
+      const teacherId = getUser()?.teacher?.id;
+      if (!teacherId) {
+        toast.error("Teacher not authenticated.");
+        setIsLoading(false);
+        return;
+      }
+      const meetingLink = assignment.meetingLink?.trim();
+      if (meetingLink) {
+        try {
+          new URL(meetingLink); // throws if invalid
+        } catch {
+          toast.error("Meeting link must be a valid URL");
+          setIsLoading(false);
+          return;
         }
       }
-      toast.success(
-        initialData
-          ? "Class updated successfully!"
-          : "Class created successfully!"
-      );
-      onSuccess?.();
+
+      const payload: CreateClassForm = {
+        ...assignment,
+        startTime:
+          assignment.startTime.length === 5
+            ? assignment.startTime + ":00"
+            : assignment.startTime,
+        teacherId,
+        meetingLink,
+        description: assignment.description?.trim() || "",
+      };
+
+      if (initialData?.id) {
+        await TeacherSubjectService.updateAssignment(initialData.id, payload);
+        toast.success("Class updated successfully");
+      } else {
+        await TeacherSubjectService.createAssignment(payload);
+        toast.success("Class created successfully");
+      }
+
       handleClose();
     } catch (err: any) {
-      toast.error(err?.message || "Failed to save class");
+      console.error("Failed to save class:", err);
+      toast.error(
+        err?.response?.data?.message || err?.message || "Failed to save class"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -142,109 +162,75 @@ const CreateClassModal: React.FC<CreateClassModalProps> = ({
           isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
         }`}
       >
-        {/* Header */}
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-xl font-semibold">
             {initialData ? "Edit Class" : "Create Class"}
           </h2>
           <button
             onClick={handleClose}
-            type="button"
-            aria-label="Close modal"
             className="text-gray-500 hover:text-gray-700"
           >
             <X className="w-6 h-6" />
           </button>
         </div>
 
-        {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-8">
-          {assignments.map((assignment, index) => (
-            <div
-              key={index}
-              className="border rounded-xl p-4 relative shadow-sm bg-gray-50"
-            >
-              <h3 className="text-lg font-semibold mb-4">
-                Assignment {index + 1}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <SelectDropdown
-                  label="Grade Subject"
-                  name="gradeSubjectId"
-                  value={assignment.gradeSubjectId.toString()}
-                  onChange={(_, val) =>
-                    handleChange(index, "gradeSubjectId", Number(val))
-                  }
-                  options={dummyGradeSubjects}
-                  required
-                />
-                <InputField
-                  label="Price"
-                  name="price"
-                  type="number"
-                  value={assignment.price?.toString() || ""}
-                  onChange={(_, val) =>
-                    handleChange(index, "price", Number(val))
-                  }
-                  required
-                />
-                <InputField
-                  label="Start Time"
-                  name="startTime"
-                  type="datetime-local"
-                  value={assignment.startTime}
-                  onChange={(_, val) => handleChange(index, "startTime", val)}
-                  required
-                />
-                <InputField
-                  label="Duration (minutes)"
-                  name="duration"
-                  type="number"
-                  value={assignment.duration?.toString() || ""}
-                  onChange={(_, val) =>
-                    handleChange(index, "duration", Number(val))
-                  }
-                  required
-                />
-                <InputField
-                  label="Meeting Link"
-                  name="meetinglink"
-                  type="text"
-                  value={assignment.meetinglink}
-                  onChange={(_, val) => handleChange(index, "meetinglink", val)}
-                  required
-                />
-              </div>
-              <TextArea
-                label="Description"
-                name="description"
-                value={assignment.description || ""}
-                onChange={(field, val) => handleChange(index, field, val)}
-                placeholder="Enter description..."
+          <div className="border rounded-xl p-4 shadow-sm bg-gray-50">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <SelectDropdown
+                label="Grade Subject"
+                name="gradeSubjectId"
+                value={assignment.gradeSubjectId.toString()}
+                onChange={(_, val) =>
+                  handleChange("gradeSubjectId", Number(val))
+                }
+                options={gradeSubjects}
+                searchable
+                required
               />
-
-              {assignments.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => handleRemoveAssignment(index)}
-                  className="absolute top-3 right-3 text-red-500 hover:text-red-700"
-                >
-                  <Trash2 className="w-5 h-5" />
-                </button>
-              )}
+              <InputField
+                label="Price"
+                name="price"
+                type="number"
+                value={assignment.price?.toString() || ""}
+                onChange={(_, val) => handleChange("price", Number(val))}
+                required
+              />
+              <InputField
+                label="Start Time"
+                name="startTime"
+                type="time"
+                value={assignment.startTime}
+                onChange={(_, val) => handleChange("startTime", val)}
+                required
+              />
+              <InputField
+                label="Duration (minutes)"
+                name="duration"
+                type="number"
+                value={assignment.duration.toString()}
+                onChange={(_, val) => handleChange("duration", Number(val))}
+                required
+              />
+              <InputField
+                label="Meeting Link"
+                name="meetingLink"
+                type="text"
+                value={assignment.meetingLink}
+                onChange={(_, val) => handleChange("meetingLink", val)}
+              />
             </div>
-          ))}
+            <TextArea
+              label="Description"
+              name="description"
+              value={assignment.description || ""}
+              onChange={(field, val) => handleChange(field, val)}
+              placeholder="Enter description..."
+            />
+          </div>
         </div>
 
-        {/* Footer */}
-        <div className="flex justify-between items-center p-4 border-t">
-          <button
-            type="button"
-            onClick={handleAddAssignment}
-            className="flex items-center px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
-          >
-            <PlusCircle className="w-5 h-5 mr-2" /> Add Assignment
-          </button>
+        <div className="flex justify-end items-center p-4 border-t">
           <button
             onClick={handleSubmit}
             disabled={isLoading}

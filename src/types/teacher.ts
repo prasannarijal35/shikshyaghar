@@ -1,12 +1,14 @@
 export interface TeacherSubjectData {
+  id: number;
   grade: string;
   subject: string;
-  price?: number; // add price
+  price?: number;
 }
 
 export interface Teacher {
   id: number;
-  slug: string; // added slug
+  teacherId?: number;
+  slug: string;
   fullName: string;
   email: string;
   phone?: string;
@@ -25,5 +27,5 @@ export interface Teacher {
   createdAt?: string;
   updatedAt?: string;
 
-  subjects?: TeacherSubjectData[]; // update type here
+  subjects?: TeacherSubjectData[];
 }
