@@ -16,7 +16,7 @@ const gradeService = {
     const response = await myAxios.get(`/grades/slug/${slug}`);
     return response.data.data;
   },
-
+    
   createGrade: async (name: string): Promise<Grade> => {
     const response = await myAxios.post("/grades", { name });
     return response.data.data;
