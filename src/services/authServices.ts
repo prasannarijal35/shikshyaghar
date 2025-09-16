@@ -7,8 +7,6 @@ import {
   LoginFormData,
   LoginResponse,
 } from "@/types/auth";
-
-// ---------------- Student Registration ---------------- //
 export const registerStudent = async (
   payload: RegisterFormData
 ): Promise<
@@ -35,8 +33,6 @@ export const registerStudent = async (
     };
   }
 };
-
-// ---------------- Teacher Registration ---------------- //
 export const registerTeacher = async (
   payload: FormData
 ): Promise<
@@ -52,7 +48,6 @@ export const registerTeacher = async (
         headers: { "Content-Type": "multipart/form-data" },
       }
     );
-
     return {
       success: true,
       message: response.data.message || "Registration successful",
@@ -66,8 +61,6 @@ export const registerTeacher = async (
     };
   }
 };
-
-// ---------------- Login ---------------- //
 export const login = async (
   payload: LoginFormData
 ): Promise<LoginResponse | { success: false; message: string }> => {

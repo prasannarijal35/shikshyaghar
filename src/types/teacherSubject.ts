@@ -1,19 +1,17 @@
-// User info
 export interface User {
   id: number;
   email: string;
   fullName: string;
-  role: string;
+  role: "teacher" | "student" | "admin";
   slug: string;
-  phone?: number;
-  gender?: string;
+  phone?: string;
+  gender?: "male" | "female" | "other";
   birthYear?: number;
   address?: string;
   createdAt: string;
   updatedAt: string;
 }
 
-// Teacher info
 export interface Teacher {
   id: number;
   userId: number;
@@ -23,22 +21,11 @@ export interface Teacher {
   qualification: string;
   documentUrl: string;
   profilePicture: string;
-  status: string;
+  status: "active" | "inactive" | "pending";
   createdAt: string;
   updatedAt: string;
   user: User;
 }
-
-// Grade info
-export interface Grade {
-  id: number;
-  name: string;
-  slug?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-// Subject info
 export interface Subject {
   id: number;
   name: string;
@@ -47,45 +34,66 @@ export interface Subject {
   updatedAt: string;
 }
 
-// GradeSubject info
+export interface Grade {
+  id: number;
+  name: string;
+  slug?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface GradeSubject {
   id: number;
   gradeId: number;
   subjectId: number;
-  price: number;
+  price?: number | null;
   createdAt: string;
   updatedAt: string;
   grade: Grade;
   subject: Subject;
 }
+
 export interface CreateClassForm {
+  id?: number;
   gradeSubjectId: number;
   startTime: string;
-  price: number;
+  price?: number;
   duration: number;
-  meetinglink: string;
+  meetingLink: string;
   description?: string;
+  teacherId?: number;
 }
 
-// TeacherSubjectAssignment (nested teacher + gradeSubject)
 export interface TeacherSubjectAssignment {
-  id: number; // id of teacher_subject
+  id: number;
   teacherId: number;
   gradeSubjectId: number;
   startTime: string;
   duration: number;
-  meetinglink: string;
+  meetingLink: string;
   description?: string;
-  price: number;
+  price?: number;
   createdAt: string;
   updatedAt: string;
   teacher: Teacher;
   gradeSubject: GradeSubject;
+  formattedStartTime: string;
+  formattedEndTime: string;
+  status: "upcoming" | "live" | "completed";
+}
+export interface Pagination {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
 
-// Full response type
 export interface TeacherSubjectsResponse {
-  success: boolean;
+  status: number;
   message: string;
-  data: TeacherSubjectAssignment[];
+  data: {
+    items: TeacherSubjectAssignment[];
+    pagination: Pagination;
+  };
+  errors?: string[];
 }

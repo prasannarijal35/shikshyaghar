@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import SingleTeacherCard from "@/components/teacher/SingleTeacherCard";
+import { SingleTeacherCard } from "@/components/studentpanel/teacher";
 import teacherService from "@/services/teacherServices";
 import gradeSubjectService, {
   GradeSubject,

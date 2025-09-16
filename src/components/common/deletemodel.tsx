@@ -1,48 +1,90 @@
 "use client";
+import React, { useEffect, useRef } from "react";
+import { IoMdCloseCircleOutline } from "react-icons/io";
 
-import React from "react";
-
-type Props = {
+interface DeleteModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
   title: string;
   description: string;
-  isLoading?: boolean;
-};
+  onConfirm: () => void;
+}
 
-export default function DeleteConfirmationModal({
+export default function DeleteModal({
   isOpen,
   onClose,
-  onConfirm,
   title,
   description,
-  isLoading = false,
-}: Props) {
+  onConfirm,
+}: DeleteModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        onClose();
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-        <h3 className="text-lg font-bold text-gray-900">{title}</h3>
-        <p className="mt-2 text-sm text-gray-600">{description}</p>
-        <div className="mt-6 flex justify-end gap-3">
-          <button
-            onClick={onClose}
-            disabled={isLoading}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 disabled:opacity-50"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            disabled={isLoading}
-            className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? "Deleting..." : "Delete"}
-          </button>
+    <>
+      {/* Backdrop - semi-transparent but doesn't handle click directly */}
+      <div className="fixed inset-0 z-40 bg-black/30 backdrop-brightness-95" />
+
+      {/* Modal Container */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div
+          ref={modalRef}
+          className="relative w-full max-w-lg bg-white rounded-lg shadow-lg"
+        >
+          {/* Header */}
+          <div className="flex justify-between items-center p-4 border-b">
+            <h3 className="text-lg font-bold">{title}</h3>
+            <button
+              onClick={onClose}
+              aria-label="Close modal"
+              className="focus:outline-none hover:scale-110 transition-transform"
+            >
+              <IoMdCloseCircleOutline className="text-2xl text-gray-600 hover:text-red-600" />
+            </button>
+          </div>
+
+          {/* Body */}
+          <div className="p-6">
+            <p className="mb-6 text-gray-700">{description}</p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={onClose}
+                className="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={onConfirm}
+                className="px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
+              >
+                Confirm Delete
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -2,19 +2,20 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
-import { FaTrashAlt, FaPlus, FaEdit } from "react-icons/fa";
-import DeleteModal from "@/components/adminPanel/subjects/DeleteModal";
-import EditModal from "@/components/adminPanel/subjects/EditModal";
-import AddSubjectModal from "@/components/adminPanel/subjects/AddModal";
+import { FaPlus } from "react-icons/fa";
+import { Trash2 } from "lucide-react";
+
 import subjectService, { Subject } from "@/services/subjectServices";
+import { DeleteConfirmationModal } from "@/components/common";
+import SubjectModal from "./AddModal";
 
 export default function SubjectTable() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
+  const [showSubjectModal, setShowSubjectModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState("Add Subject");
+  const [currentSubject, setCurrentSubject] = useState<Subject | null>(null);
 
   // Fetch subjects
   const fetchSubjects = async () => {
@@ -33,55 +34,65 @@ export default function SubjectTable() {
     fetchSubjects();
   }, []);
 
-  // Add subject
-  const handleAdd = async (name: string) => {
-    try {
-      const newSubject = await subjectService.createSubject(name);
-      setSubjects((prev) => [...prev, newSubject].sort((a, b) => a.id - b.id));
-      toast.success(`Added ${newSubject.name}`);
-      setShowAddModal(false);
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.errors?.[0]?.msg || // express-validator errors
-        error.response?.data?.message ||          // backend message
-        "Failed to add subject";                  // default fallback
-      toast.error(errorMessage);
-    }
+  // Add Subject
+  const handleAdd = () => {
+    setModalTitle("Add Subject");
+    setCurrentSubject(null);
+    setShowSubjectModal(true);
   };
 
-  // Delete subject
+  // Edit Subject
+  const handleEdit = (subject: Subject) => {
+    setModalTitle("Edit Subject");
+    setCurrentSubject(subject);
+    setShowSubjectModal(true);
+  };
+
+  // Save from Modal
+  const handleSave = async (name: string) => {
+    if (currentSubject) {
+      // Edit
+      try {
+        const updated = await subjectService.updateSubject(
+          currentSubject.id,
+          name
+        );
+        setSubjects((prev) =>
+          prev
+            .map((s) => (s.id === updated.id ? updated : s))
+            .sort((a, b) => a.id - b.id)
+        );
+        toast.success(`Updated subject to ${updated.name}`);
+      } catch (err: any) {
+        toast.error(err?.message || "Failed to update subject");
+      }
+    } else {
+      // Add
+      try {
+        const newSubject = await subjectService.createSubject(name);
+        setSubjects((prev) =>
+          [...prev, newSubject].sort((a, b) => a.id - b.id)
+        );
+        toast.success(`Added ${newSubject.name}`);
+      } catch (err: any) {
+        toast.error(err?.message || "Failed to add subject");
+      }
+    }
+    setShowSubjectModal(false);
+  };
+
+  // Delete Subject
   const handleDelete = async () => {
-    if (!selectedSubject) return;
+    if (!currentSubject) return;
     try {
-      await subjectService.deleteSubject(selectedSubject.id);
-      setSubjects((prev) => prev.filter((s) => s.id !== selectedSubject.id));
-      toast.success(`Deleted ${selectedSubject.name}`);
+      await subjectService.deleteSubject(currentSubject.id);
+      setSubjects((prev) => prev.filter((s) => s.id !== currentSubject.id));
+      toast.success(`Deleted ${currentSubject.name}`);
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to delete subject");
+    } finally {
       setShowDeleteModal(false);
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.errors?.[0]?.msg ||
-        error.response?.data?.message ||
-        "Failed to delete subject";
-      toast.error(errorMessage);
-    }
-  };
-
-  // Edit subject
-  const handleEditConfirm = async (updatedName: string) => {
-    if (!selectedSubject) return;
-    try {
-      const updated = await subjectService.updateSubject(selectedSubject.id, updatedName);
-      setSubjects((prev) =>
-        prev.map((s) => (s.id === updated.id ? updated : s)).sort((a, b) => a.id - b.id)
-      );
-      toast.success(`Updated subject to ${updated.name}`);
-      setShowEditModal(false);
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.errors?.[0]?.msg ||
-        error.response?.data?.message ||
-        "Failed to update subject";
-      toast.error(errorMessage);
+      setCurrentSubject(null);
     }
   };
 
@@ -92,50 +103,50 @@ export default function SubjectTable() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-primary">Subject Management</h1>
         <button
-          onClick={() => setShowAddModal(true)}
+          onClick={handleAdd}
           className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/80 transition-colors"
         >
           <FaPlus /> Add Subject
         </button>
       </div>
 
-      {/* Subject Table */}
+      {/* Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg overflow-hidden">
           <thead className="bg-gray-100">
             <tr>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">S.N</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Name</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Actions</th>
+              <th className="py-4 px-4 text-left text-[15px] font-medium">
+                S.N
+              </th>
+              <th className="py-4 px-4 text-center text-[15px] font-medium">
+                Name
+              </th>
+              <th className="py-4 px-4 text-right text-[15px] font-medium">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="text-base">
             {subjects.map((subject, index) => (
               <tr key={subject.id} className="border-t hover:bg-primary/10">
-                {/* Serial number */}
-                <td className="py-5 px-4">{index + 1}</td>
-                <td className="py-5 px-4">{subject.name}</td>
-                <td className="py-5 px-4">
-                  <div className="flex gap-3">
+                <td className="py-5 px-4 text-left">{index + 1}</td>
+                <td className="py-5 px-4 text-center">{subject.name}</td>
+                <td className="py-5 px-4 text-right">
+                  <div className="inline-flex gap-3">
                     <button
-                      onClick={() => {
-                        setSelectedSubject(subject);
-                        setShowEditModal(true);
-                      }}
-                      className="p-2 rounded-md text-yellow-600 hover:text-white hover:bg-yellow-600 transition-colors duration-200"
-                      title="Edit"
+                      onClick={() => handleEdit(subject)}
+                      className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
                     >
-                      <FaEdit size={16} />
+                      Edit
                     </button>
                     <button
                       onClick={() => {
-                        setSelectedSubject(subject);
+                        setCurrentSubject(subject);
                         setShowDeleteModal(true);
                       }}
-                      className="p-2 rounded-md text-red-600 hover:text-white hover:bg-red-600 transition-colors duration-200"
-                      title="Delete"
+                      className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
                     >
-                      <FaTrashAlt size={16} />
+                      <Trash2 size={16} />
                     </button>
                   </div>
                 </td>
@@ -146,27 +157,20 @@ export default function SubjectTable() {
       </div>
 
       {/* Modals */}
-      <DeleteModal
+      <SubjectModal
+        isOpen={showSubjectModal}
+        onClose={() => setShowSubjectModal(false)}
+        title={modalTitle}
+        initialName={currentSubject?.name}
+        onConfirm={handleSave}
+      />
+
+      <DeleteConfirmationModal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         title="Confirm Deletion"
-        description={`Are you sure you want to delete ${selectedSubject?.name}? This action cannot be undone.`}
+        description={`Are you sure you want to delete ${currentSubject?.name}? This action cannot be undone.`}
         onConfirm={handleDelete}
-      />
-
-      <EditModal
-        isOpen={showEditModal}
-        onClose={() => setShowEditModal(false)}
-        title="Edit Subject"
-        currentName={selectedSubject?.name || ""}
-        onConfirm={handleEditConfirm}
-      />
-
-      <AddSubjectModal
-        isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        title="Add New Subject"
-        onConfirm={handleAdd}
       />
     </main>
   );

@@ -1,11 +1,13 @@
 export interface TeacherSubjectData {
+  id: number;
   grade: string;
   subject: string;
-  price?: number; // add price
+  price?: number;
 }
 
 export interface Teacher {
   id: number;
+  teacherId?: number;
   slug: string;
   fullName: string;
   email: string;

@@ -17,7 +17,6 @@ import {
 } from "react-icons/fa";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
 import TeacherSubjectService from "@/services/teacherSubjectServices";
 import TeacherService from "@/services/teacherServices";
 import { TeacherSubjectAssignment } from "@/types/teacherSubject";
@@ -324,21 +323,12 @@ export default function TeacherDetails() {
                         )}
                       </div>
                     </div>
-
                     <button
-                      onClick={() => {
-                        const studentId = localStorage.getItem("studentId");
-                        if (!studentId) {
-                          toast.error(
-                            "Please login as a student to subscribe!"
-                          );
-                          router.push("/login");
-                          return;
-                        }
+                      onClick={() =>
                         router.push(
-                          `/student/subscription/create?teacherSubjectId=${s.id}`
-                        );
-                      }}
+                          `/student/teachers/subscription/create?teacherSubjectId=${s.id}`
+                        )
+                      }
                       className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                     >
                       Subscribe Now

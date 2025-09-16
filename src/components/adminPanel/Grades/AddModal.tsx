@@ -1,59 +1,85 @@
-// components/adminPanel/Grades/AddGradeModal.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-interface AddGradeModalProps {
+interface GradeModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  onConfirm: (gradeName: string) => void;
+  initialName?: string;
+  onConfirm: (name: string) => void;
 }
 
-export default function AddGradeModal({
+export default function GradeModal({
   isOpen,
   onClose,
   title,
+  initialName = "",
   onConfirm,
-}: AddGradeModalProps) {
-  const [gradeName, setGradeName] = useState("");
+}: GradeModalProps) {
+  const [name, setName] = useState(initialName);
+
+  useEffect(() => {
+    setName(initialName);
+  }, [initialName]);
 
   if (!isOpen) return null;
 
-  const handleAdd = () => {
-    if (!gradeName.trim()) return;
-    onConfirm(gradeName.trim());
-    setGradeName("");
+  const handleConfirm = () => {
+    if (!name.trim()) return;
+    onConfirm(name.trim());
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-semibold mb-4">{title}</h2>
+    <>
+      {/* Backdrop */}
+      <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm" />
 
-        <input
-          type="text"
-          value={gradeName}
-          onChange={(e) => setGradeName(e.target.value)}
-          placeholder="Enter grade name"
-          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary mb-4"
-        />
+      {/* Modal */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="relative w-full max-w-md bg-white rounded-lg shadow-lg">
+          {/* Header */}
+          <div className="flex justify-between items-center p-4 border-b">
+            <h3 className="text-lg font-bold">{title}</h3>
+            <button
+              onClick={onClose}
+              className="text-gray-600 hover:text-red-600 text-2xl"
+            >
+              ×
+            </button>
+          </div>
 
-        <div className="flex justify-end gap-3">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 border rounded-md hover:bg-gray-100"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleAdd}
-            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/80"
-          >
-            Add Grade
-          </button>
+          {/* Body */}
+          <div className="p-6">
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter grade name"
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={onClose}
+                className="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleConfirm}
+                className={`px-4 py-2 text-white rounded-md transition-colors ${
+                  title.includes("Edit")
+                    ? "bg-green-600 hover:bg-green-700"
+                    : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              >
+                {title.includes("Edit") ? "Save Changes" : "Add Grade"}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

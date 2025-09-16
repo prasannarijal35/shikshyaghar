@@ -146,7 +146,6 @@ export default function useTeacherRegister() {
         payload.append("profilePicture", formData.profilePicture);
       if (formData.document) payload.append("document", formData.document);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const response = await registerTeacher(payload as any);
 
       if (response.success) {

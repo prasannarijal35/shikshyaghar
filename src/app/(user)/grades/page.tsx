@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import gradeService, { Grade } from "@/services/gradeServices";
 import SingleGradeItem from "@/components/grades/SingleGradeItem";
 import Breadcrumb from "@/components/common/BreadCrumb";
+import { Grade } from "@/types/grade";
+import gradeService from "@/services/gradeServices";
 
 export default function GradesPage() {
   const [grades, setGrades] = useState<Grade[]>([]);

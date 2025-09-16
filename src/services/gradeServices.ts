@@ -7,6 +7,16 @@ const gradeService = {
     return response.data.data;
   },
 
+  getGradeById: async (id: number): Promise<Grade> => {
+    const response = await myAxios.get(`/grades/${id}`);
+    return response.data.data;
+  },
+
+  getGradeBySlug: async (slug: string): Promise<Grade> => {
+    const response = await myAxios.get(`/grades/slug/${slug}`);
+    return response.data.data;
+  },
+    
   createGrade: async (name: string): Promise<Grade> => {
     const response = await myAxios.post("/grades", { name });
     return response.data.data;
@@ -21,5 +31,4 @@ const gradeService = {
     await myAxios.delete(`/grades/${id}`);
   },
 };
-
 export default gradeService;

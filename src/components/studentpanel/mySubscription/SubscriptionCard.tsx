@@ -4,7 +4,6 @@ import { SubscriptionType, SubscriptionStatus } from "@/types/subscription";
 import {
   Calendar,
   Clock,
-  DollarSign,
   User,
   Mail,
   AlertCircle,
@@ -95,17 +94,21 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-2">
+        <div className="grid grid-cols-2 gap-6 mb-4">
+          {/* Price */}
           <div className="flex items-center gap-2">
-            <DollarSign className="w-4 h-4 text-gray-400" />
-            <span className="text-sm text-gray-600 font-medium">
-              Rs.{subscription.price || 0}
+            <span className="text-gray-600 font-semibold text-base">Rs.</span>
+            <span className="text-gray-900 font-bold text-lg">
+              {subscription.price?.toLocaleString() || 0}
             </span>
           </div>
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-gray-400" />
-            <span className="text-sm text-gray-600 font-medium">
-              {subscription.duration || 0} months
+
+          {/* Duration */}
+          <div className="flex items-center gap-2 justify-end">
+            <Clock className="w-5 h-5 text-gray-400" />
+            <span className="text-gray-900 font-medium text-base">
+              {subscription.duration || 0} month
+              {subscription.duration && subscription.duration > 1 ? "s" : ""}
             </span>
           </div>
         </div>

@@ -1,98 +1,146 @@
-// src/components/adminPanel/GradeSubjects/AddGradeSubjectModal.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { IoMdCloseCircleOutline } from "react-icons/io";
 import { Grade } from "@/services/gradeServices";
 import { Subject } from "@/services/subjectServices";
 
-interface AddGradeSubjectModalProps {
+interface GradeSubjectModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title: string;
+  title: string; // "Add Grade-Subject" or "Edit Grade-Subject"
   grades: Grade[];
   subjects: Subject[];
+  initialGradeId?: number;
+  initialSubjectId?: number;
+  initialPrice?: number;
   onConfirm: (gradeId: number, subjectId: number, price: number) => void;
 }
 
-export default function AddGradeSubjectModal({
+export default function GradeSubjectModal({
   isOpen,
   onClose,
   title,
   grades,
   subjects,
+  initialGradeId,
+  initialSubjectId,
+  initialPrice = 0,
   onConfirm,
-}: AddGradeSubjectModalProps) {
-  const [gradeId, setGradeId] = useState<number | null>(null);
-  const [subjectId, setSubjectId] = useState<number | null>(null);
-  const [price, setPrice] = useState<number>(0);
+}: GradeSubjectModalProps) {
+  const [gradeId, setGradeId] = useState<number | undefined>(initialGradeId);
+  const [subjectId, setSubjectId] = useState<number | undefined>(
+    initialSubjectId
+  );
+  const [price, setPrice] = useState<number>(initialPrice);
+
+  useEffect(() => {
+    setGradeId(initialGradeId);
+    setSubjectId(initialSubjectId);
+    setPrice(initialPrice);
+  }, [initialGradeId, initialSubjectId, initialPrice, isOpen]);
 
   if (!isOpen) return null;
 
   const handleConfirm = () => {
-    if (!gradeId || !subjectId) return;
+    if (!gradeId || !subjectId) {
+      alert("Please select both grade and subject");
+      return;
+    }
+
+    if (price < 0) {
+      alert("Price cannot be negative");
+      return;
+    }
+
     onConfirm(gradeId, subjectId, price);
-    setGradeId(null);
-    setSubjectId(null);
+
+    // Reset state
+    setGradeId(undefined);
+    setSubjectId(undefined);
     setPrice(0);
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-semibold mb-4">{title}</h2>
+    <>
+      {/* Backdrop */}
+      <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm" />
 
-        {/* Grade Select */}
-        <select
-          value={gradeId ?? ""}
-          onChange={(e) => setGradeId(Number(e.target.value))}
-          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary mb-3"
-        >
-          <option value="">Select Grade</option>
-          {grades.map((g) => (
-            <option key={g.id} value={g.id}>
-              {g.name}
-            </option>
-          ))}
-        </select>
+      {/* Modal */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="relative w-full max-w-md bg-white rounded-xl shadow-lg">
+          {/* Header */}
+          <div className="flex justify-between items-center p-4 border-b">
+            <h2 className="text-xl font-semibold">{title}</h2>
+            <button
+              onClick={onClose}
+              className="focus:outline-none hover:scale-110 transition-transform text-gray-600 hover:text-red-600 text-2xl"
+            >
+              <IoMdCloseCircleOutline />
+            </button>
+          </div>
 
-        {/* Subject Select */}
-        <select
-          value={subjectId ?? ""}
-          onChange={(e) => setSubjectId(Number(e.target.value))}
-          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary mb-3"
-        >
-          <option value="">Select Subject</option>
-          {subjects.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.name}
-            </option>
-          ))}
-        </select>
+          {/* Body */}
+          <div className="p-6 flex flex-col gap-4">
+            <label className="font-medium">Grade</label>
+            <select
+              value={gradeId ?? ""}
+              onChange={(e) => setGradeId(Number(e.target.value))}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              <option value="">Select Grade</option>
+              {grades.map((g) => (
+                <option key={g.id} value={g.id}>
+                  {g.name}
+                </option>
+              ))}
+            </select>
 
-        {/* Price Input */}
-        <input
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(Number(e.target.value))}
-          placeholder="Enter price"
-          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary mb-4"
-        />
+            <label className="font-medium">Subject</label>
+            <select
+              value={subjectId ?? ""}
+              onChange={(e) => setSubjectId(Number(e.target.value))}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              <option value="">Select Subject</option>
+              {subjects.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
 
-        <div className="flex justify-end gap-3">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 border rounded-md hover:bg-gray-100"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleConfirm}
-            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/80"
-          >
-            Add
-          </button>
+            <label className="font-medium">Price</label>
+            <input
+              type="number"
+              value={price}
+              min={0}
+              onChange={(e) => setPrice(Math.max(0, Number(e.target.value)))}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+
+            <div className="flex justify-end gap-3 mt-4">
+              <button
+                onClick={onClose}
+                className="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleConfirm}
+                className={`px-4 py-2 text-white rounded-md transition-colors ${
+                  title.includes("Edit")
+                    ? "bg-green-600 hover:bg-green-700"
+                    : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              >
+                {title.includes("Edit") ? "Save Changes" : "Add"}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -1,23 +1,29 @@
 import BlogDetails from "@/components/blogs/BlogDetails";
+import Breadcrumb from "@/components/common/BreadCrumb";
 import blogService from "@/services/blogServices";
 import { notFound } from "next/navigation";
 
-interface PageProps {
-  params: { slug: string | string[] };
+// Explicitly define PageProps
+interface BlogPageProps {
+  params: {
+    slug: string;
+  };
 }
 
-export default async function Page({ params }: PageProps) {
-  const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+export default async function Page({ params }: BlogPageProps) {
+  const { slug } = params;
 
-  let blog;
-  try {
-    blog = await blogService.getBlogBySlug(slug);
-  } catch (error) {
+  const blog = await blogService.getBlogBySlug(slug).catch((error) => {
     console.error("Error fetching blog:", error);
-    return notFound();
-  }
+    return null;
+  });
 
   if (!blog) return notFound();
 
-  return <BlogDetails blog={blog} />;
+  return (
+    <>
+      <Breadcrumb title="Blogs" subTitle="blogs" subTitleLink="/blogs" />
+      <BlogDetails blog={blog} />
+    </>
+  );
 }

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FiEye, FiTrash2 } from "react-icons/fi";
 import ViewStudentModal from "./ViewStudentModal";
-import DeleteConfirmModal from "./DeleteConfirmModal";
+import { DeleteConfirmationModal } from "@/components/common";
 
 export default function StudentManagementTable() {
   const [students, setStudents] = useState<any[]>([]);
@@ -118,11 +118,12 @@ export default function StudentManagementTable() {
       />
 
       {/* Delete Modal */}
-      <DeleteConfirmModal
+      <DeleteConfirmationModal
         isOpen={!!deleteStudentId}
         onClose={() => setDeleteStudentId(null)}
         onConfirm={handleDelete}
-        studentName={deleteStudentName}
+        title="Delete Student"
+        description={`Are you sure you want to delete ${deleteStudentName}?`}
       />
     </div>
   );
