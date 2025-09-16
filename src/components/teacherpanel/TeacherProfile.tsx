@@ -2,25 +2,30 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { FaEdit, FaSave } from "react-icons/fa";
+import { FaEdit, FaSave, FaDownload } from "react-icons/fa";
+import { MdEmail, MdPhone, MdLocationOn, MdHistory, MdCalendarToday, MdWc, MdSchool, MdPerson } from "react-icons/md";
 import Toast from "./Toast";
 import pic from "@/assets/extraimages/girlimage.png";
+import teacherService from "@/services/teacherServices";
+import { Teacher } from "@/types/teacher";
+import { getUser } from "@/utils/localStorage";
 
 export default function TeacherProfile() {
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [toast, setToast] = useState<{
-    message: string;
-    type: "success" | "error";
-  } | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-    subject: "",
+    gender: "",
+    birthYear: "",
     address: "",
     bio: "",
+    experience: "",
+    availability: "",
+    qualification: "",
     profilePicture: "",
     documentUrl: "",
     profileFile: null as File | null,
@@ -29,52 +34,38 @@ export default function TeacherProfile() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const token = localStorage.getItem("accessToken");
-      const user = localStorage.getItem("user");
-      const teacherId = user ? JSON.parse(user).id : null;
-
-      if (!token || !teacherId) {
-        setLoading(false);
-        return;
-      }
-
+      setLoading(true);
       try {
-        const res = await fetch(
-          `http://localhost:8080/api/v1/teachers/me/${teacherId}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const data = await res.json();
-
-        if (res.ok && data.data) {
-          const user = data.data;
-          setFormData({
-            name: user.fullName || "",
-            email: user.email || "",
-            phone: user.phone || "",
-            subject:
-              user.teacher?.teacherSubjects?.[0]?.gradeSubject?.subject?.name ||
-              "",
-            address: user.address || "",
-            bio: user.teacher?.bio || "",
-            profilePicture: user.teacher?.profilePicture || "",
-            documentUrl: user.teacher?.documentUrl || "",
-            profileFile: null,
-            documentFile: null,
-          });
-        } else {
-          setToast({
-            message: data.message || "Failed to fetch profile",
-            type: "error",
-          });
+        const user = getUser();
+        if (!user) {
+          setToast({ message: "User not logged in", type: "error" });
+          return;
         }
-      } catch (err) {
-        setToast({ message: "Error fetching profile", type: "error" });
+        if (user.role !== "teacher") {
+          setToast({ message: `Logged in user is not a teacher`, type: "error" });
+          return;
+        }
+
+        const data: Teacher = await teacherService.getTeacherProfileById();
+        setFormData({
+          name: data.fullName || "",
+          email: data.email || "",
+          phone: data.phone || "",
+          gender: data.gender || "",
+          birthYear: data.birthYear?.toString() || "",
+          address: data.address || "",
+          bio: data.bio || "",
+          experience: data.experience?.toString() || "",
+          availability: data.availability || "",
+          qualification: data.qualification || "",
+          profilePicture: data.profilePicture || "",
+          documentUrl: data.documentUrl || "",
+          profileFile: null,
+          documentFile: null,
+        });
+      } catch (err: any) {
+        console.error(err);
+        setToast({ message: err?.message || "Failed to fetch profile", type: "error" });
       } finally {
         setLoading(false);
       }
@@ -83,9 +74,7 @@ export default function TeacherProfile() {
     fetchProfile();
   }, []);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -93,219 +82,212 @@ export default function TeacherProfile() {
     const { name, files } = e.target;
     if (files && files[0]) {
       const url = URL.createObjectURL(files[0]);
-      if (name === "profilePicture") {
-        setFormData({
-          ...formData,
-          profilePicture: url,
-          profileFile: files[0],
-        });
-      } else if (name === "document") {
-        setFormData({ ...formData, documentUrl: url, documentFile: files[0] });
-      }
+      if (name === "profilePicture") setFormData({ ...formData, profilePicture: url, profileFile: files[0] });
+      if (name === "document") setFormData({ ...formData, documentUrl: url, documentFile: files[0] });
     }
   };
 
   const toggleEdit = () => setEditMode((prev) => !prev);
 
   const handleSave = async () => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) return;
-
     const form = new FormData();
     form.append("fullName", formData.name);
     form.append("phone", formData.phone);
+    form.append("gender", formData.gender);
+    form.append("birthYear", formData.birthYear);
     form.append("address", formData.address);
     form.append("bio", formData.bio);
-
-    if (formData.profileFile)
-      form.append("profilePicture", formData.profileFile);
+    form.append("experience", formData.experience);
+    form.append("availability", formData.availability);
+    form.append("qualification", formData.qualification);
+    if (formData.profileFile) form.append("profilePicture", formData.profileFile);
     if (formData.documentFile) form.append("document", formData.documentFile);
 
     try {
-      const res = await fetch(`http://localhost:8080/api/v1/teachers/me`, {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${token}` },
-        body: form,
+      const updated: Teacher = await teacherService.updateTeacherProfile(form);
+      setFormData({
+        ...formData,
+        profilePicture: updated.profilePicture || formData.profilePicture,
+        documentUrl: updated.documentUrl || formData.documentUrl,
       });
-      const data = await res.json();
-
-      if (res.ok) {
-        setToast({ message: "Profile updated successfully!", type: "success" });
-        if (data.data?.teacher?.profilePicture)
-          formData.profilePicture = data.data.teacher.profilePicture;
-        if (data.data?.teacher?.documentUrl)
-          formData.documentUrl = data.data.teacher.documentUrl;
-        setEditMode(false);
-      } else {
-        setToast({
-          message: data.message || "Failed to update profile",
-          type: "error",
-        });
-      }
-    } catch (err) {
-      setToast({ message: "Error updating profile", type: "error" });
+      setToast({ message: "Profile updated successfully!", type: "success" });
+      setEditMode(false);
+    } catch (err: any) {
+      console.error(err);
+      setToast({ message: err?.message || "Failed to update profile", type: "error" });
     }
   };
 
   const getImageUrl = (url: string | null) => (url ? url : pic);
 
-  if (loading)
-    return <p className="text-center mt-10 text-gray-500">Loading...</p>;
+  if (loading) return <p className="text-center mt-10 text-gray-500">Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-12">
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
-      <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl p-10 space-y-8">
-        {/* Header */}
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 py-12">
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+      <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-2xl p-10 space-y-8 border border-gray-200">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">My Profile</h1>
           <button
             onClick={editMode ? handleSave : toggleEdit}
-            className={`flex items-center gap-2 px-5 py-2 rounded-full transition font-semibold ${
-              editMode
-                ? "bg-green-500 hover:bg-green-600 text-white"
-                : "bg-blue-500 hover:bg-blue-600 text-white"
+            className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 font-semibold text-white shadow-lg transform hover:scale-105 ${
+              editMode ? "bg-green-500 hover:bg-green-600" : "bg-blue-600 hover:bg-blue-700"
             }`}
           >
             {editMode ? (
               <>
-                <FaSave /> Save
+                <FaSave className="text-lg" /> Save Profile
               </>
             ) : (
               <>
-                <FaEdit /> Edit
+                <FaEdit className="text-lg" /> Edit Profile
               </>
             )}
           </button>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-10">
-          {/* Left Column: Image + Document Upload */}
-          <div className="flex-shrink-0 flex flex-col items-center space-y-4">
-            <div className="relative w-36 h-36 rounded-full overflow-hidden border-4 border-gray-200 shadow-lg">
-              <Image
-                src={getImageUrl(formData.profilePicture)}
-                alt="Profile Picture"
-                fill
-                className="object-cover"
-              />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          {/* Profile Card Section */}
+          <div className="md:col-span-1 flex flex-col items-center bg-gray-50 rounded-2xl p-6 shadow-inner border border-gray-200">
+            <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-xl">
+              <Image src={getImageUrl(formData.profilePicture)} alt="Profile Picture" fill className="object-cover" />
             </div>
-            {editMode && (
-              <input
-                type="file"
-                name="profilePicture"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="text-sm mt-2"
-              />
-            )}
+            <h2 className="mt-6 text-3xl font-bold text-gray-900 text-center">{formData.name}</h2>
+            <p className="mt-1 text-md text-gray-600 font-medium text-center">{formData.qualification}</p>
 
             {editMode && (
-              <input
-                type="file"
-                name="document"
-                accept=".pdf,.doc,.docx"
-                onChange={handleFileChange}
-                className="text-sm mt-2"
-              />
+              <div className="mt-6 w-full space-y-4">
+                <div className="flex flex-col items-center">
+                  <label className="text-sm font-medium text-gray-700 mb-2">Change Profile Picture</label>
+                  <input
+                    type="file"
+                    name="profilePicture"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  />
+                </div>
+                <div className="flex flex-col items-center">
+                  <label className="text-sm font-medium text-gray-700 mb-2">Upload Documents</label>
+                  <input
+                    type="file"
+                    name="document"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleFileChange}
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  />
+                </div>
+              </div>
+            )}
+            {!editMode && formData.documentUrl && (
+              <a
+                href={formData.documentUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors duration-300 font-medium"
+              >
+                <FaDownload /> Download Document
+              </a>
             )}
           </div>
 
-          {/* Right Column: Form */}
-          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div>
-              <label className="text-gray-600 text-sm font-medium">
-                Full Name
-              </label>
-              {editMode ? (
-                <input
-                  type="text"
-                  name="name"
+          {/* Profile Details Section */}
+          <div className="md:col-span-2 space-y-8">
+            {/* Contact Information */}
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
+              <h3 className="text-2xl font-bold text-gray-800 mb-6">Contact & Basic Info</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <ProfileField
+                  label="Full Name"
                   value={formData.name}
-                  onChange={handleChange}
-                  className="w-full border px-3 py-2 rounded-lg mt-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  icon={<MdPerson />}
+                  editMode={editMode}
+                  name="name"
+                  handleChange={handleChange}
                 />
-              ) : (
-                <p className="mt-1 font-medium text-gray-800">
-                  {formData.name}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="text-gray-600 text-sm font-medium">Email</label>
-              <p className="mt-1 font-medium text-gray-800">{formData.email}</p>
-              {!editMode && (
-                <p className="text-[11px] text-gray-500 italic mt-0.5">
-                  Email cannot be changed
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="text-gray-600 text-sm font-medium">Phone</label>
-              {editMode ? (
-                <input
-                  type="text"
-                  name="phone"
+                <ProfileField
+                  label="Email"
+                  value={formData.email}
+                  icon={<MdEmail />}
+                  readOnly
+                />
+                <ProfileField
+                  label="Phone"
                   value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full border px-3 py-2 rounded-lg mt-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  icon={<MdPhone />}
+                  editMode={editMode}
+                  name="phone"
+                  handleChange={handleChange}
                 />
-              ) : (
-                <p className="mt-1 font-medium text-gray-800">
-                  {formData.phone}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="text-gray-600 text-sm font-medium">
-                Subject
-              </label>
-              <p className="mt-1 font-medium text-gray-800">
-                {formData.subject}
-              </p>
-            </div>
-
-            <div className="sm:col-span-2">
-              <label className="text-gray-600 text-sm font-medium">
-                Address
-              </label>
-              {editMode ? (
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  className="w-full border px-3 py-2 rounded-lg mt-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                <ProfileField
+                  label="Gender"
+                  value={formData.gender}
+                  icon={<MdWc />}
+                  editMode={editMode}
+                  name="gender"
+                  handleChange={handleChange}
                 />
-              ) : (
-                <p className="mt-1 font-medium text-gray-800">
-                  {formData.address}
-                </p>
-              )}
+                <ProfileField
+                  label="Birth Year"
+                  value={formData.birthYear}
+                  icon={<MdCalendarToday />}
+                  editMode={editMode}
+                  name="birthYear"
+                  handleChange={handleChange}
+                  type="number"
+                />
+                <div className="sm:col-span-2">
+                  <ProfileField
+                    label="Address"
+                    value={formData.address}
+                    icon={<MdLocationOn />}
+                    editMode={editMode}
+                    name="address"
+                    handleChange={handleChange}
+                  />
+                </div>
+              </div>
             </div>
 
-            <div className="sm:col-span-2">
-              <label className="text-gray-600 text-sm font-medium">Bio</label>
-              {editMode ? (
-                <textarea
-                  name="bio"
+            {/* Professional Details */}
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
+              <h3 className="text-2xl font-bold text-gray-800 mb-6">Professional Details</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <ProfileField
+                  label="Experience (years)"
+                  value={formData.experience}
+                  icon={<MdHistory />}
+                  editMode={editMode}
+                  name="experience"
+                  handleChange={handleChange}
+                  type="number"
+                />
+                <ProfileField
+                  label="Availability"
+                  value={formData.availability}
+                  icon={<MdCalendarToday />}
+                  editMode={editMode}
+                  name="availability"
+                  handleChange={handleChange}
+                />
+                <ProfileField
+                  label="Qualification"
+                  value={formData.qualification}
+                  icon={<MdSchool />}
+                  editMode={editMode}
+                  name="qualification"
+                  handleChange={handleChange}
+                />
+              </div>
+              <div className="mt-8">
+                <ProfileTextAreaField
+                  label="Bio"
                   value={formData.bio}
-                  onChange={handleChange}
-                  rows={5}
-                  className="w-full border px-3 py-2 rounded-lg mt-1 focus:ring-2 focus:ring-blue-500 resize-none focus:outline-none"
+                  editMode={editMode}
+                  name="bio"
+                  handleChange={handleChange}
                 />
-              ) : (
-                <p className="mt-1 text-gray-800">{formData.bio}</p>
-              )}
+              </div>
             </div>
           </div>
         </div>
@@ -313,3 +295,45 @@ export default function TeacherProfile() {
     </div>
   );
 }
+
+// Reusable component for form fields
+const ProfileField = ({ label, value, icon, editMode, name, handleChange, type = "text", readOnly = false }: any) => {
+  return (
+    <div>
+      <label className="text-gray-600 text-sm font-medium flex items-center gap-2 mb-1">
+        {icon} {label}
+      </label>
+      {editMode && !readOnly ? (
+        <input
+          type={type}
+          name={name}
+          value={value}
+          onChange={handleChange}
+          className="w-full border border-gray-300 px-4 py-2 rounded-lg mt-1 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-colors duration-200"
+        />
+      ) : (
+        <p className="mt-1 font-medium text-gray-800 bg-gray-50 py-2 px-4 rounded-lg border border-gray-200">{value || "N/A"}</p>
+      )}
+    </div>
+  );
+};
+
+// Reusable component for textarea fields
+const ProfileTextAreaField = ({ label, value, editMode, name, handleChange }: any) => {
+  return (
+    <div>
+      <label className="text-gray-600 text-sm font-medium block mb-1">{label}</label>
+      {editMode ? (
+        <textarea
+          name={name}
+          value={value}
+          onChange={handleChange}
+          rows={5}
+          className="w-full border border-gray-300 px-4 py-3 rounded-lg mt-1 focus:ring-2 focus:ring-blue-500 resize-none focus:outline-none transition-colors duration-200"
+        />
+      ) : (
+        <p className="mt-1 text-gray-800 bg-gray-50 py-3 px-4 rounded-lg border border-gray-200 whitespace-pre-wrap">{value || "N/A"}</p>
+      )}
+    </div>
+  );
+};
