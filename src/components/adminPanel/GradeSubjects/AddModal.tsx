@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { IoMdCloseCircleOutline } from "react-icons/io";
-import { Grade } from "@/services/gradeServices";
 import { Subject } from "@/services/subjectServices";
+import { Grade } from "@/types/grade";
 
 interface GradeSubjectModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title: string; // "Add Grade-Subject" or "Edit Grade-Subject"
+  title: string;
   grades: Grade[];
   subjects: Subject[];
   initialGradeId?: number;
@@ -25,19 +25,22 @@ export default function GradeSubjectModal({
   subjects,
   initialGradeId,
   initialSubjectId,
-  initialPrice = 0,
+  initialPrice,
   onConfirm,
 }: GradeSubjectModalProps) {
   const [gradeId, setGradeId] = useState<number | undefined>(initialGradeId);
   const [subjectId, setSubjectId] = useState<number | undefined>(
     initialSubjectId
   );
-  const [price, setPrice] = useState<number>(initialPrice);
+  const [price, setPrice] = useState<number | "">(
+    initialPrice !== undefined ? initialPrice : ""
+  );
 
+  // Reset state when modal opens or props change
   useEffect(() => {
     setGradeId(initialGradeId);
     setSubjectId(initialSubjectId);
-    setPrice(initialPrice);
+    setPrice(initialPrice !== undefined ? initialPrice : "");
   }, [initialGradeId, initialSubjectId, initialPrice, isOpen]);
 
   if (!isOpen) return null;
@@ -48,17 +51,19 @@ export default function GradeSubjectModal({
       return;
     }
 
-    if (price < 0) {
+    const finalPrice = price === "" ? 0 : price;
+
+    if (finalPrice < 0) {
       alert("Price cannot be negative");
       return;
     }
 
-    onConfirm(gradeId, subjectId, price);
+    onConfirm(gradeId, subjectId, finalPrice);
 
     // Reset state
     setGradeId(undefined);
     setSubjectId(undefined);
-    setPrice(0);
+    setPrice("");
   };
 
   return (
@@ -115,7 +120,14 @@ export default function GradeSubjectModal({
               type="number"
               value={price}
               min={0}
-              onChange={(e) => setPrice(Math.max(0, Number(e.target.value)))}
+              placeholder="Enter price"
+              onChange={(e) =>
+                setPrice(
+                  e.target.value === ""
+                    ? ""
+                    : Math.max(0, Number(e.target.value))
+                )
+              }
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
             />
 

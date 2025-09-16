@@ -3,7 +3,7 @@ import { useState, useEffect, ChangeEvent } from "react";
 import Image from "next/image";
 import { FaEdit, FaSave } from "react-icons/fa";
 import toast from "react-hot-toast";
-import { getUser } from "@/utils/localStorage";
+import { getUser, setUser } from "@/utils/localStorage";
 import studentService from "@/services/studentService";
 import { Student, Grade } from "@/types/students";
 import gradeService from "@/services/gradeServices";
@@ -124,6 +124,7 @@ export default function StudentProfile() {
       toast.success("Profile updated successfully");
       setFormData(res.data);
       setEditMode(false);
+      setUser(res.data);
       await fetchProfile();
       if (selectedFile) {
         URL.revokeObjectURL(formData.student?.profilePicture || "");

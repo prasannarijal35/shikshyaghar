@@ -4,5 +4,7 @@ export type Blog = {
   slug: string;
   category: string;
   description: string;
-  image: string; 
+  image: string;
+  createdAt: string;
+  updatedAt: string;
 };

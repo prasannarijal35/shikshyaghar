@@ -12,12 +12,14 @@ import {
 
 interface SubscriptionCardProps {
   subscription: SubscriptionType;
-  onClick: () => void;
+  onView?: () => void;
+  onDelete?: () => void;
 }
 
 const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
   subscription,
-  onClick,
+  onView,
+  onDelete,
 }) => {
   const formatDate = (dateString: string) =>
     new Date(dateString).toLocaleDateString("en-US", {
@@ -53,10 +55,7 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
     daysRemaining > 0;
 
   return (
-    <div
-      onClick={onClick}
-      className="cursor-pointer bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow overflow-hidden p-4"
-    >
+    <div className="cursor-pointer bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow overflow-hidden p-4">
       <div className="flex justify-between items-start mb-2">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -95,7 +94,6 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
         </div>
 
         <div className="grid grid-cols-2 gap-6 mb-4">
-          {/* Price */}
           <div className="flex items-center gap-2">
             <span className="text-gray-600 font-semibold text-base">Rs.</span>
             <span className="text-gray-900 font-bold text-lg">
@@ -103,7 +101,6 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
             </span>
           </div>
 
-          {/* Duration */}
           <div className="flex items-center gap-2 justify-end">
             <Clock className="w-5 h-5 text-gray-400" />
             <span className="text-gray-900 font-medium text-base">
@@ -127,6 +124,22 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
             Expires in {daysRemaining} days
           </div>
         )}
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex justify-end gap-3 border-t pt-3 mt-2">
+        <button
+          onClick={onView}
+          className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+        >
+          View
+        </button>
+        <button
+          onClick={onDelete}
+          className="px-3 py-1 text-sm bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+        >
+          Delete
+        </button>
       </div>
     </div>
   );

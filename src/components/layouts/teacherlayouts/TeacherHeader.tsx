@@ -1,19 +1,25 @@
 "use client";
+
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { IoNotifications } from "react-icons/io5";
-import logo from "@/assets/logo/Sg_logo.png";
 import { FaSignOutAlt, FaUser } from "react-icons/fa";
 import Link from "next/link";
+import { getUser, clearStorage } from "@/utils/localStorage";
+import logo from "@/assets/logo/Sg_logo.png";
+import { useRouter } from "next/navigation";
+import { TeacherDetails } from "@/types/teacher";
 
-export default function StudentHeader() {
+export default function TeacherHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [teacher, setTeacher] = useState<TeacherDetails | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
+
   function getCurrentDate() {
     const today = new Date();
-    // Format: Month Day, Year (e.g., Sep 4, 2025)
     return today.toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
@@ -21,38 +27,45 @@ export default function StudentHeader() {
     });
   }
 
-  // Close dropdown when clicked outside
+  useEffect(() => {
+    const u = getUser() as TeacherDetails | null;
+    if (u) {
+      setTeacher(u);
+    }
+  }, []);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setMenuOpen(false);
       }
     };
-
     if (menuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
     }
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [menuOpen]);
 
+  const handleLogout = () => {
+    clearStorage();
+    router.push("/login");
+  };
+
   return (
     <header className="sticky top-0 z-30 h-16 bg-white border-b border-gray-200 shadow-sm flex items-center justify-between px-6">
-      {/* Left: Welcome message and date */}
       <div className="flex flex-col">
         <h1 className="text-xl font-semibold text-gray-800 hidden md:block">
-          Welcome, Amanda
+          Welcome, {teacher?.fullName ?? "Teacher"}
         </h1>
         <p className="text-sm text-gray-500 hidden md:block">
           {getCurrentDate()}
         </p>
       </div>
 
-      {/* Right: Search + Notifications + Avatar */}
       <div className="flex items-center gap-4">
         {/* Search */}
         <div className="relative">
@@ -72,11 +85,9 @@ export default function StudentHeader() {
           <IoNotifications className="h-5 w-5 text-gray-600" />
           <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
         </button>
-
-        {/* Avatar with dropdown */}
         <div className="relative" ref={menuRef}>
           <Image
-            src={logo}
+            src={teacher?.teacher?.profilePicture ?? logo}
             alt="User Avatar"
             width={40}
             height={40}
@@ -91,7 +102,7 @@ export default function StudentHeader() {
                 <div className="h-16 w-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-t-lg"></div>
                 <div className="absolute top-8 left-1/2 transform -translate-x-1/2">
                   <Image
-                    src={logo}
+                    src={teacher?.teacher?.profilePicture ?? logo}
                     alt="Profile"
                     height={60}
                     width={60}
@@ -103,15 +114,17 @@ export default function StudentHeader() {
               {/* Name and Email */}
               <div className="mt-8 text-center border-b border-gray-200 px-4 pb-4">
                 <h3 className="text-sm font-semibold text-gray-800">
-                  Mr. Prasanna Rijal
+                  {teacher?.fullName ?? "Unknown Teacher"}
                 </h3>
-                <p className="text-xs text-gray-500 mt-1">admin@lamo.com</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {teacher?.email ?? "email@unknown.com"}
+                </p>
               </div>
 
               {/* Menu Items */}
               <div className="p-2">
                 <Link
-                  href="/student/profile"
+                  href="/teacher/profile"
                   className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
                   onClick={() => setMenuOpen(false)}
                 >
@@ -126,7 +139,10 @@ export default function StudentHeader() {
                   </div>
                 </Link>
 
-                <button className="w-full mt-2 flex items-center justify-center gap-2 p-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                <button
+                  onClick={handleLogout}
+                  className="w-full mt-2 flex items-center justify-center gap-2 p-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                >
                   <FaSignOutAlt className="w-4 h-4" />
                   Logout
                 </button>

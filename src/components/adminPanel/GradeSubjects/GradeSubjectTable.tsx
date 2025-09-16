@@ -1,17 +1,16 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { FaPlus } from "react-icons/fa";
 import { FiTrash2 } from "react-icons/fi";
-
 import GradeSubjectModal from "./AddModal";
-import gradeService, { Grade } from "@/services/gradeServices";
+import gradeService from "@/services/gradeServices";
 import subjectService, { Subject } from "@/services/subjectServices";
 import gradeSubjectService, {
   GradeSubject,
 } from "@/services/gradeSubjectServices";
 import { DeleteConfirmationModal } from "@/components/common";
+import { Grade } from "@/types/grade";
 
 export default function GradeSubjectTable() {
   const [gradeSubjects, setGradeSubjects] = useState<GradeSubject[]>([]);

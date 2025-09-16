@@ -87,10 +87,10 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </div>
         </div>
 
-        {/* Footer / Action (Optional) */}
+        {/* Footer / Payment */}
         <div className="mt-6 flex justify-end">
           <button
-            onClick={onClose}
+            onClick={() => alert("Payment functionality not implemented")}
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
           >
             Payment
