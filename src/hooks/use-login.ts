@@ -61,7 +61,7 @@ export default function useLogin() {
         if (response.user?.role === "admin") {
           router.push("/admin/dashboard");
         } else if (response.user?.role === "teacher") {
-          router.push("/teacher/profile");
+          router.push("/teacher/dashboard");
         } else {
           router.push("/student/dashboard");
         }

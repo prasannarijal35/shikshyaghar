@@ -1,12 +1,11 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 
 interface SubjectModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title: string; // "Add Subject" or "Edit Subject"
+  title: string;
   initialName?: string;
   onConfirm: (name: string) => Promise<void>;
 }
@@ -24,7 +23,7 @@ export default function SubjectModal({
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    setName(initialName); // reset when modal opens with new subject
+    setName(initialName);
     setErrorMessage(null);
   }, [initialName, isOpen]);
 

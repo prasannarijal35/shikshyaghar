@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { FaPlus } from "react-icons/fa";
 import { Trash2 } from "lucide-react";
-
-import gradeService, { Grade } from "@/services/gradeServices";
+import gradeService from "@/services/gradeServices";
 import { DeleteConfirmationModal } from "@/components/common";
 import GradeModal from "./AddModal";
+import { Grade } from "@/types/grade";
 
 export default function GradeTable() {
   const [grades, setGrades] = useState<Grade[]>([]);

@@ -4,11 +4,9 @@ import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { FaPlus } from "react-icons/fa";
 import { Trash2 } from "lucide-react";
-
 import subjectService, { Subject } from "@/services/subjectServices";
 import { DeleteConfirmationModal } from "@/components/common";
 import SubjectModal from "./AddModal";
-
 export default function SubjectTable() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);

@@ -29,3 +29,24 @@ export interface Teacher {
 
   subjects?: TeacherSubjectData[];
 }
+
+export interface TeacherDetails {
+  id: number;
+  fullName: string;
+  email: string;
+  role: string;
+  teacher: {
+    id: number;
+    userId: number;
+    bio?: string;
+    experience?: number;
+    availability?: string;
+    qualification?: string;
+    profilePicture?: string;
+    documentUrl?: string;
+    status?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    subjects?: TeacherSubjectData[];
+  };
+}

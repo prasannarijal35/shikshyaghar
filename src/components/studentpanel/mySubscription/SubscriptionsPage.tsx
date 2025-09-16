@@ -2,12 +2,14 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { RefreshCw, BookOpen, AlertCircle } from "lucide-react";
+import { toast } from "react-hot-toast";
 import { SubscriptionType, SubscriptionStatus } from "@/types/subscription";
 import SubscriptionFilter from "./SubscriptionFilter";
 import SearchBar from "./SearchBar";
 import SubscriptionsGrid from "./SubscriptionsGrid";
 import SubscriptionModal from "./SubscriptionModal";
 import useSubscriptionService from "@/services/subscriptionServices";
+import { DeleteConfirmationModal } from "@/components/common";
 
 const SubscriptionsPage: React.FC = () => {
   const [subscriptions, setSubscriptions] = useState<SubscriptionType[]>([]);
@@ -19,25 +21,20 @@ const SubscriptionsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedSubscription, setSelectedSubscription] =
     useState<SubscriptionType | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [currentSubscription, setCurrentSubscription] =
+    useState<SubscriptionType | null>(null);
 
   const subscriptionService = useSubscriptionService();
 
   const fetchSubscriptions = async (status?: string) => {
     try {
-      console.log("Fetching subscriptions... status:", status);
       setLoading(true);
       setError(null);
-
-      // Call API
       const data = await subscriptionService.getByStudentId(status);
-
-      if (!Array.isArray(data)) {
-        console.warn("API did not return an array:", data);
-      }
-
       setSubscriptions(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error("Fetch error:", err);
+      console.error(err);
       setError("Failed to fetch subscriptions");
       setSubscriptions([]);
     } finally {
@@ -45,18 +42,11 @@ const SubscriptionsPage: React.FC = () => {
     }
   };
 
-  // Log state whenever it changes
-  useEffect(() => {
-    console.log("Subscriptions state updated:", subscriptions);
-  }, [subscriptions]);
-
   useEffect(() => {
     fetchSubscriptions(filterStatus === "ALL" ? undefined : filterStatus);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterStatus]);
 
   const filteredSubscriptions = useMemo(() => {
-    if (!Array.isArray(subscriptions)) return [];
     return subscriptions.filter((sub) => {
       const matchesStatus =
         filterStatus === "ALL" || sub.status === filterStatus;
@@ -67,6 +57,24 @@ const SubscriptionsPage: React.FC = () => {
       return matchesStatus && matchesSearch;
     });
   }, [subscriptions, filterStatus, searchTerm]);
+
+  // Delete Subscription
+  const handleDelete = async () => {
+    if (!currentSubscription) return;
+    try {
+      await subscriptionService.remove(currentSubscription.id);
+      setSubscriptions(
+        subscriptions.filter((s) => s.id !== currentSubscription.id)
+      );
+      toast.success("Subscription deleted successfully");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to delete subscription");
+    } finally {
+      setCurrentSubscription(null);
+      setShowDeleteModal(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -135,17 +143,27 @@ const SubscriptionsPage: React.FC = () => {
         {filteredSubscriptions.length > 0 && (
           <SubscriptionsGrid
             subscriptions={filteredSubscriptions}
-            onClickSubscription={(id) => {
-              const sub = subscriptions.find((s) => s.id === id) ?? null;
-              setSelectedSubscription(sub);
+            onClickSubscription={(sub) => setSelectedSubscription(sub)}
+            onDeleteSubscription={(sub) => {
+              setCurrentSubscription(sub);
+              setShowDeleteModal(true);
             }}
           />
         )}
 
-        {/* Modal */}
+        {/* View Modal */}
         <SubscriptionModal
           subscription={selectedSubscription}
           onClose={() => setSelectedSubscription(null)}
+        />
+
+        {/* Delete Modal */}
+        <DeleteConfirmationModal
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          title="Confirm Deletion"
+          description={`Are you sure you want to delete subscription for ${currentSubscription?.subjectName}? This action cannot be undone.`}
+          onConfirm={handleDelete}
         />
       </div>
     </div>

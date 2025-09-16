@@ -5,15 +5,16 @@ import SubscriptionCard from "./SubscriptionCard";
 
 interface SubscriptionsGridProps {
   subscriptions: SubscriptionType[];
-  onClickSubscription: (id: number) => void;
+  onClickSubscription: (sub: SubscriptionType) => void;
+  onDeleteSubscription: (sub: SubscriptionType) => void;
 }
 
 const SubscriptionsGrid: React.FC<SubscriptionsGridProps> = ({
   subscriptions,
   onClickSubscription,
+  onDeleteSubscription,
 }) => {
   if (!subscriptions || subscriptions.length === 0) {
-    console.log("No subscriptions to display");
     return (
       <div className="text-center text-gray-500 py-8">
         No subscriptions available
@@ -23,15 +24,14 @@ const SubscriptionsGrid: React.FC<SubscriptionsGridProps> = ({
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {subscriptions.map((sub) => {
-        return (
-          <SubscriptionCard
-            key={sub.id}
-            subscription={sub}
-            onClick={() => onClickSubscription(sub.id)}
-          />
-        );
-      })}
+      {subscriptions.map((sub) => (
+        <SubscriptionCard
+          key={sub.id}
+          subscription={sub}
+          onView={() => onClickSubscription(sub)}
+          onDelete={() => onDeleteSubscription(sub)}
+        />
+      ))}
     </div>
   );
 };
