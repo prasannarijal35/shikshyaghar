@@ -6,7 +6,7 @@ export interface TeacherSubjectData {
 
 export interface Teacher {
   id: number;
-  slug: string; // added slug
+  slug: string;
   fullName: string;
   email: string;
   phone?: string;
@@ -25,5 +25,5 @@ export interface Teacher {
   createdAt?: string;
   updatedAt?: string;
 
-  subjects?: TeacherSubjectData[]; // update type here
+  subjects?: TeacherSubjectData[];
 }
