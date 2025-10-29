@@ -28,14 +28,16 @@ export default function GradeSubjectTable() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [gradesData, subjectsData, gradeSubjectsData] = await Promise.all([
-        gradeService.getAllGrades(),
-        subjectService.getAllSubjects(),
-        gradeSubjectService.getAllGradeSubjects(),
-      ]);
+
+      const [gradesData, subjectsResponse, gradeSubjectsData] =
+        await Promise.all([
+          gradeService.getAllGrades(),
+          subjectService.getAllSubjects(), // returns { items, pagination }
+          gradeSubjectService.getAllGradeSubjects(),
+        ]);
 
       setGrades(gradesData);
-      setSubjects(subjectsData);
+      setSubjects(subjectsResponse.items); // <-- extract items here
       setGradeSubjects(
         gradeSubjectsData.map((gs) => ({
           ...gs,
@@ -62,7 +64,6 @@ export default function GradeSubjectTable() {
     price: number
   ) => {
     if (isEdit && selectedGradeSubject) {
-      // Edit
       try {
         const updated = await gradeSubjectService.updateGradeSubject(
           selectedGradeSubject.id,
@@ -87,7 +88,6 @@ export default function GradeSubjectTable() {
         );
       }
     } else {
-      // Add
       try {
         const newRelation = await gradeSubjectService.assignGradeSubject({
           gradeId,
@@ -110,6 +110,7 @@ export default function GradeSubjectTable() {
         );
       }
     }
+
     setShowModal(false);
     setSelectedGradeSubject(null);
     setIsEdit(false);
@@ -150,7 +151,7 @@ export default function GradeSubjectTable() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
-      {/* Enhanced Header */}
+      {/* Header */}
       <div className="flex justify-between items-center mb-8 p-6 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20">
         <div className="flex items-center space-x-4">
           <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -182,15 +183,13 @@ export default function GradeSubjectTable() {
         </button>
       </div>
 
-      {/* Main Content */}
+      {/* Table or Empty State */}
       {gradeSubjects.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-[500px] px-6 py-12 relative">
-          {/* Animated Icon Container */}
           <div className="relative mb-8">
             <div className="w-32 h-32 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center animate-pulse shadow-lg">
               <GraduationCap className="w-16 h-16 text-blue-500" />
             </div>
-            {/* Floating decorative icons */}
             <div className="absolute -top-3 -right-3 w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center animate-bounce shadow-md">
               <BookOpen className="w-5 h-5 text-purple-500" />
             </div>
@@ -202,18 +201,14 @@ export default function GradeSubjectTable() {
             </div>
           </div>
 
-          {/* Main Content */}
           <div className="text-center space-y-6 max-w-lg">
             <h3 className="text-3xl font-bold text-gray-800 mb-2">
               No Grade-Subject Relations Yet
             </h3>
             <p className="text-gray-600 leading-relaxed text-lg">
               Start building your academic structure by creating grade-subject
-              relationships with pricing. This will help organize your
-              educational content effectively.
+              relationships with pricing.
             </p>
-
-            {/* Call to Action Button */}
             <button
               onClick={() => {
                 setShowModal(true);
@@ -224,19 +219,6 @@ export default function GradeSubjectTable() {
               <FaPlus className="w-5 h-5 mr-3" />
               Create First Relation
             </button>
-          </div>
-
-          {/* Background Decoration */}
-          <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute top-1/4 left-1/4 w-40 h-40 bg-blue-100 rounded-full opacity-30 animate-pulse"></div>
-            <div
-              className="absolute bottom-1/4 right-1/4 w-32 h-32 bg-purple-100 rounded-full opacity-30 animate-pulse"
-              style={{ animationDelay: "1s" }}
-            ></div>
-            <div
-              className="absolute top-1/2 right-1/3 w-24 h-24 bg-indigo-100 rounded-full opacity-30 animate-pulse"
-              style={{ animationDelay: "2s" }}
-            ></div>
           </div>
         </div>
       ) : (
