@@ -2,7 +2,9 @@
 import { useEffect, useState, useCallback } from "react";
 import SingleTeacherCard from "@/components/teacher/SingleTeacherCard";
 import teacherService from "@/services/teacherServices";
-import gradeSubjectService, { GradeSubject } from "@/services/gradeSubjectServices";
+import gradeSubjectService, {
+  GradeSubject,
+} from "@/services/gradeSubjectServices";
 import { FiRefreshCw } from "react-icons/fi";
 import { Teacher } from "@/types/teacher";
 
@@ -11,7 +13,8 @@ export default function TeachersPage() {
   const [loading, setLoading] = useState(true);
   const [gender, setGender] = useState<string>("");
   const [experience, setExperience] = useState<number | undefined>(undefined);
-  const [selectedGradeSubject, setSelectedGradeSubject] = useState<GradeSubject | null>(null);
+  const [selectedGradeSubject, setSelectedGradeSubject] =
+    useState<GradeSubject | null>(null);
   const [gradeSubjects, setGradeSubjects] = useState<GradeSubject[]>([]);
 
   const fetchData = useCallback(async () => {
@@ -49,9 +52,9 @@ export default function TeachersPage() {
   }, [fetchDropdownData]);
 
   const handleRefresh = () => {
-    setGender("");              
-    setExperience(undefined);    
-    setSelectedGradeSubject(null); 
+    setGender("");
+    setExperience(undefined);
+    setSelectedGradeSubject(null);
   };
 
   // Make experience behave like TeacherProfile: only non-negative numbers
@@ -73,7 +76,9 @@ export default function TeachersPage() {
     <section className="min-h-screen bg-white py-20 pb-36 w-full">
       <div className="container">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-          <h1 className="text-3xl font-bold text-start text-primary">Teachers</h1>
+          <h1 className="text-3xl font-bold text-start text-primary">
+            Teachers
+          </h1>
           <div className="flex flex-wrap items-center gap-4">
             <select
               value={gender}

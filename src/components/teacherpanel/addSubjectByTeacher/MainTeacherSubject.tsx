@@ -88,7 +88,7 @@ const TeacherDashboardPage: React.FC = () => {
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl text-primary font-semibold">Blog Manager</h1>
+        <h1 className="text-2xl text-primary font-semibold">Class Manager</h1>
         <button
           className="bg-primary text-white py-2 px-5 rounded-lg shadow-md hover:bg-white hover:text-primary hover:border-primary border border-transparent transition-all duration-300"
           onClick={handleAddNew}

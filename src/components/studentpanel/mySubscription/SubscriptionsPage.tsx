@@ -44,6 +44,7 @@ const SubscriptionsPage: React.FC = () => {
 
   useEffect(() => {
     fetchSubscriptions(filterStatus === "ALL" ? undefined : filterStatus);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterStatus]);
 
   const filteredSubscriptions = useMemo(() => {

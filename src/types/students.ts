@@ -24,7 +24,26 @@ export type Student = {
   phone?: string | null;
   gender?: string | null;
   birthYear?: number | null;
-  student?: StudentData | null; // nested student object
+  student?: StudentData | null;
   createdAt: string;
   updatedAt: string;
 };
+
+// types/student.ts
+
+export interface StudentDetails {
+  id: number;
+  fullName: string;
+  email: string;
+  role: string;
+  student: {
+    id: number;
+    userId: number;
+    educationLevel: string;
+    bio: string;
+    gradeId: number;
+    profilePicture: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+}

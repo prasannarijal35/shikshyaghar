@@ -47,7 +47,7 @@ const SingleTeacherCard = ({ teacher }: Props) => {
                 className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium"
               >
                 {s.subject} - Grade {s.grade}
-                {s.price !== undefined && ` • ₹${s.price}`}
+                {s.price !== undefined && ` • Rs ${s.price}`}
               </li>
             ))}
           </ul>

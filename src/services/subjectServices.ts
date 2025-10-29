@@ -6,45 +6,37 @@ const API_BASE_URL =
 
 const subjectService = {
   createSubject: async (name: string): Promise<Subject> => {
-    try {
-      const response = await myAxios.post(`${API_BASE_URL}/subjects`, { name });
-      return response.data.data;
-    } catch (error: any) {
-      throw error.response?.data || { message: "Failed to create subject" };
-    }
+    const response = await myAxios.post(`${API_BASE_URL}/subjects`, { name });
+    return response.data.data;
   },
-  getAllSubjects: async (): Promise<Subject[]> => {
-    try {
-      const response = await myAxios.get(`${API_BASE_URL}/subjects`);
-      return response.data.data;
-    } catch (error: any) {
-      throw error.response?.data || { message: "Failed to fetch subjects" };
-    }
+
+  getAllSubjects: async (
+    page?: number,
+    limit?: number,
+    search?: string
+  ): Promise<{
+    items: Subject[];
+    pagination: { total: number; page: number; limit: number; totalPages: number };
+  }> => {
+    const params: Record<string, any> = { page, limit, search };
+    Object.keys(params).forEach((key) => params[key] === undefined && delete params[key]);
+
+    const response = await myAxios.get(`${API_BASE_URL}/subjects`, { params });
+    return response.data.data;
   },
+
   getSubjectById: async (id: number): Promise<Subject> => {
-    try {
-      const response = await myAxios.get(`${API_BASE_URL}/subjects/${id}`);
-      return response.data.data;
-    } catch (error: any) {
-      throw error.response?.data || { message: "Failed to fetch subject" };
-    }
+    const response = await myAxios.get(`${API_BASE_URL}/subjects/${id}`);
+    return response.data.data;
   },
+
   updateSubject: async (id: number, name: string): Promise<Subject> => {
-    try {
-      const response = await myAxios.put(`${API_BASE_URL}/subjects/${id}`, {
-        name,
-      });
-      return response.data.data;
-    } catch (error: any) {
-      throw error.response?.data || { message: "Failed to update subject" };
-    }
+    const response = await myAxios.put(`${API_BASE_URL}/subjects/${id}`, { name });
+    return response.data.data;
   },
+
   deleteSubject: async (id: number): Promise<void> => {
-    try {
-      await myAxios.delete(`${API_BASE_URL}/subjects/${id}`);
-    } catch (error: any) {
-      throw error.response?.data || { message: "Failed to delete subject" };
-    }
+    await myAxios.delete(`${API_BASE_URL}/subjects/${id}`);
   },
 };
 

@@ -7,7 +7,14 @@ import {
   TeacherSubjectAssignment,
   TeacherSubjectsResponse,
 } from "@/types/teacherSubject";
-import { X, Trash2 } from "lucide-react";
+import {
+  X,
+  Trash2,
+  Search,
+  School,
+  SquareDashedKanban,
+  Eye,
+} from "lucide-react";
 import { DeleteConfirmationModal } from "@/components/common";
 
 const PAGE_SIZE = 10;
@@ -27,7 +34,6 @@ export default function TeacherSubjectTable() {
   const [deleteTarget, setDeleteTarget] =
     useState<TeacherSubjectAssignment | null>(null);
 
-  // Debounce search input
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchTerm);
@@ -36,7 +42,6 @@ export default function TeacherSubjectTable() {
     return () => clearTimeout(handler);
   }, [searchTerm]);
 
-  // Fetch teacher-subject assignments
   const fetchData = async (pageNumber = 1, search = "") => {
     setLoading(true);
     try {
@@ -60,11 +65,9 @@ export default function TeacherSubjectTable() {
     fetchData(page, debouncedSearch);
   }, [page, debouncedSearch]);
 
-  // Pagination handlers
   const handlePrev = () => setPage((prev) => Math.max(prev - 1, 1));
   const handleNext = () => setPage((prev) => Math.min(prev + 1, totalPages));
 
-  // Delete assignment
   const handleDelete = async () => {
     if (!deleteTarget) return;
     try {
@@ -78,7 +81,6 @@ export default function TeacherSubjectTable() {
     }
   };
 
-  // Compute status dynamically
   const getStatus = (ts: TeacherSubjectAssignment) => {
     if (!ts.startTime || !ts.duration) return "N/A";
     const [hours, minutes, seconds] = ts.startTime.split(":").map(Number);
@@ -96,104 +98,163 @@ export default function TeacherSubjectTable() {
   };
 
   return (
-    <main className="min-h-screen p-6 bg-gray-50">
-      <h1 className="text-3xl font-bold text-primary mb-4">
-        Teacher-Subject Overview
-      </h1>
-
-      {/* Search */}
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search by teacher, grade, or subject..."
-          className="w-full md:w-1/3 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
+      {/* Enhanced Header with Add Button and Search */}
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 p-6 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20">
+        <div className="flex items-center space-x-4 mb-4 md:mb-0">
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+            <School className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Teacher-Subject Overview
+            </h1>
+            <p className="text-gray-600 mt-1 text-sm">
+              View and manage all teacher assignments
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center space-x-4 w-full md:w-auto">
+          <div className="relative w-full md:w-auto">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <Search className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search..."
+              className="w-full md:w-[250px] bg-gray-100/70 backdrop-blur-sm border border-gray-200 text-gray-800 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
       </div>
 
       {/* Loading / Empty State */}
       {loading ? (
-        <p className="p-6 text-gray-500">Loading data...</p>
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg font-medium">
+            Loading assignments...
+          </p>
+        </div>
       ) : teacherSubjects.length === 0 ? (
-        <p className="p-6 text-gray-500">No teacher-subject data found.</p>
+        <div className="flex flex-col items-center justify-center min-h-[500px] px-6 py-12 relative">
+          <div className="relative mb-8">
+            <div className="w-32 h-32 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center animate-pulse shadow-lg">
+              <SquareDashedKanban className="w-16 h-16 text-blue-500" />
+            </div>
+          </div>
+          <div className="text-center space-y-6 max-w-lg">
+            <h3 className="text-3xl font-bold text-gray-800 mb-2">
+              No Assignments Found
+            </h3>
+            <p className="text-gray-600 leading-relaxed text-lg">
+              It looks like no subjects have been assigned to teachers yet. Use
+              the &quot;Add Assignment&quot; button to get started.
+            </p>
+          </div>
+          <div className="absolute inset-0 -z-10 overflow-hidden">
+            <div className="absolute top-1/4 left-1/4 w-40 h-40 bg-blue-100 rounded-full opacity-30 animate-pulse"></div>
+            <div
+              className="absolute bottom-1/4 right-1/4 w-32 h-32 bg-purple-100 rounded-full opacity-30 animate-pulse"
+              style={{ animationDelay: "1s" }}
+            ></div>
+            <div
+              className="absolute top-1/2 right-1/3 w-24 h-24 bg-indigo-100 rounded-full opacity-30 animate-pulse"
+              style={{ animationDelay: "2s" }}
+            ></div>
+          </div>
+        </div>
       ) : (
         <>
-          {/* Table */}
-          <div className="overflow-x-auto rounded-lg shadow-md bg-white">
-            <table className="min-w-full bg-white">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="py-4 px-4 text-left font-medium text-gray-700">
-                    S.N
-                  </th>
-                  <th className="py-4 px-4 text-center font-medium text-gray-700">
-                    Teacher Name
-                  </th>
-                  <th className="py-4 px-4 text-center font-medium text-gray-700">
-                    Grade-Subject
-                  </th>
-                  <th className="py-4 px-4 text-right font-medium text-gray-700">
-                    Price
-                  </th>
-                  <th className="py-4 px-4 text-right font-medium text-gray-700">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="text-gray-700">
-                {teacherSubjects.map((ts, index) => (
-                  <tr
-                    key={ts.id}
-                    className="border-t hover:bg-primary/10 transition-colors"
-                  >
-                    <td className="py-4 px-4 text-left">
-                      {(page - 1) * PAGE_SIZE + index + 1}
-                    </td>
-                    <td className="py-4 px-4 text-center">
-                      {ts.teacher?.user?.fullName || "N/A"}
-                    </td>
-                    <td className="py-4 px-4 text-center">
-                      Grade {ts.gradeSubject?.grade?.name || "N/A"} -{" "}
-                      {ts.gradeSubject?.subject?.name || "N/A"}
-                    </td>
-                    <td className="py-4 px-4 text-right">Rs {ts.price ?? 0}</td>
-                    <td className="py-4 px-4 text-right flex justify-end gap-2">
-                      <button
-                        onClick={() => setSelectedSubject(ts)}
-                        className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                      >
-                        View
-                      </button>
-                      <button
-                        onClick={() => setDeleteTarget(ts)}
-                        className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </td>
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-200">
+                  <tr>
+                    <th className="py-4 px-6 text-left font-semibold text-gray-700 text-sm uppercase tracking-wider">
+                      S.N
+                    </th>
+                    <th className="py-4 px-6 text-center font-semibold text-gray-700 text-sm uppercase tracking-wider">
+                      Teacher Name
+                    </th>
+                    <th className="py-4 px-6 text-center font-semibold text-gray-700 text-sm uppercase tracking-wider">
+                      Grade-Subject
+                    </th>
+                    <th className="py-4 px-6 text-right font-semibold text-gray-700 text-sm uppercase tracking-wider">
+                      Price
+                    </th>
+                    <th className="py-4 px-6 text-right font-semibold text-gray-700 text-sm uppercase tracking-wider">
+                      Actions
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {teacherSubjects.map((ts, index) => (
+                    <tr
+                      key={ts.id}
+                      className="hover:bg-blue-50/50 transition-all duration-200 group"
+                    >
+                      <td className="py-6 px-6 text-gray-900 font-medium">
+                        {(page - 1) * PAGE_SIZE + index + 1}
+                      </td>
+                      <td className="py-6 px-6 text-center">
+                        <span className="inline-flex px-4 py-2 rounded-full text-base font-medium bg-purple-100 text-purple-800">
+                          {ts.teacher?.user?.fullName || "N/A"}
+                        </span>
+                      </td>
+                      <td className="py-6 px-6 text-center">
+                        <span className="inline-flex px-4 py-2 rounded-full text-base font-medium bg-blue-100 text-blue-800">
+                          Grade {ts.gradeSubject?.grade?.name || "N/A"} -{" "}
+                          {ts.gradeSubject?.subject?.name || "N/A"}
+                        </span>
+                      </td>
+                      <td className="py-6 px-6 text-right">
+                        <span className="inline-flex px-4 py-2 rounded-full text-base font-medium bg-gray-100 text-gray-800">
+                          Rs {ts.price ?? 0}
+                        </span>
+                      </td>
+                      <td className="py-6 px-6">
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={() => setSelectedSubject(ts)}
+                            className="flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
+                          >
+                            <Eye className="w-4 h-4 mr-1" />
+                            View
+                          </button>
+                          <button
+                            onClick={() => setDeleteTarget(ts)}
+                            className="flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-lg hover:from-red-600 hover:to-rose-700 transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           {/* Pagination */}
-          <div className="flex justify-between items-center mt-4">
+          <div className="flex justify-between items-center mt-6 p-4 bg-white/70 backdrop-blur-sm rounded-xl shadow-lg border border-white/20">
             <button
               onClick={handlePrev}
               disabled={page === 1}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50"
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 transition-colors"
             >
               Previous
             </button>
-            <p className="text-gray-600">
+            <p className="text-gray-600 font-medium">
               Page {page} of {totalPages}
             </p>
             <button
               onClick={handleNext}
               disabled={page === totalPages}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50"
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 transition-colors"
             >
               Next
             </button>
@@ -203,48 +264,97 @@ export default function TeacherSubjectTable() {
 
       {/* Detail Modal */}
       {selectedSubject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-xl shadow-lg w-full max-w-xl p-6 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+          <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl w-full max-w-xl p-8 relative transform scale-95 opacity-0 animate-scaleIn">
             <button
               onClick={() => setSelectedSubject(null)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
             >
               <X size={24} />
             </button>
-            <h2 className="text-2xl font-bold mb-4">Assignment Details</h2>
-            <p>
-              <strong>Teacher:</strong>{" "}
-              {selectedSubject.teacher?.user?.fullName || "N/A"}
-            </p>
-            <p>
-              <strong>Grade:</strong>{" "}
-              {selectedSubject.gradeSubject?.grade?.name || "N/A"}
-            </p>
-            <p>
-              <strong>Subject:</strong>{" "}
-              {selectedSubject.gradeSubject?.subject?.name || "N/A"}
-            </p>
-            <p>
-              <strong>Price:</strong> Rs {selectedSubject.price ?? 0}
-            </p>
-            <p>
-              <strong>Duration:</strong> {selectedSubject.duration ?? "N/A"}{" "}
-              mins
-            </p>
-            <p>
-              <strong>Start Time:</strong> {selectedSubject.startTime || "N/A"}
-            </p>
-            <p>
-              <strong>Meeting Link:</strong>{" "}
-              {selectedSubject.meetingLink || "N/A"}
-            </p>
-            <p>
-              <strong>Description:</strong>{" "}
-              {selectedSubject.description || "N/A"}
-            </p>
-            <p>
-              <strong>Status:</strong> {getStatus(selectedSubject)}
-            </p>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+              Assignment Details
+            </h2>
+            <div className="space-y-4">
+              <p className="text-gray-800">
+                <strong className="font-semibold text-blue-700">
+                  Teacher:
+                </strong>{" "}
+                <span className="font-medium">
+                  {selectedSubject.teacher?.user?.fullName || "N/A"}
+                </span>
+              </p>
+              <p className="text-gray-800">
+                <strong className="font-semibold text-purple-700">
+                  Grade:
+                </strong>{" "}
+                <span className="font-medium">
+                  {selectedSubject.gradeSubject?.grade?.name || "N/A"}
+                </span>
+              </p>
+              <p className="text-gray-800">
+                <strong className="font-semibold text-blue-700">
+                  Subject:
+                </strong>{" "}
+                <span className="font-medium">
+                  {selectedSubject.gradeSubject?.subject?.name || "N/A"}
+                </span>
+              </p>
+              <p className="text-gray-800">
+                <strong className="font-semibold text-purple-700">
+                  Price:
+                </strong>{" "}
+                <span className="font-medium">
+                  Rs {selectedSubject.price ?? 0}
+                </span>
+              </p>
+              <p className="text-gray-800">
+                <strong className="font-semibold text-blue-700">
+                  Duration:
+                </strong>{" "}
+                <span className="font-medium">
+                  {selectedSubject.duration ?? "N/A"} mins
+                </span>
+              </p>
+              <p className="text-gray-800">
+                <strong className="font-semibold text-purple-700">
+                  Start Time:
+                </strong>{" "}
+                <span className="font-medium">
+                  {selectedSubject.startTime || "N/A"}
+                </span>
+              </p>
+              <p className="text-gray-800">
+                <strong className="font-semibold text-blue-700">
+                  Meeting Link:
+                </strong>{" "}
+                <span className="font-medium text-blue-500 hover:underline">
+                  {selectedSubject.meetingLink || "N/A"}
+                </span>
+              </p>
+              <p className="text-gray-800">
+                <strong className="font-semibold text-purple-700">
+                  Description:
+                </strong>{" "}
+                <span className="font-medium">
+                  {selectedSubject.description || "N/A"}
+                </span>
+              </p>
+              <p className="text-gray-800">
+                <strong className="font-semibold text-blue-700">Status:</strong>{" "}
+                <span
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
+                    getStatus(selectedSubject) === "Live"
+                      ? "bg-green-100 text-green-800"
+                      : getStatus(selectedSubject) === "Upcoming"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
+                >
+                  {getStatus(selectedSubject)}
+                </span>
+              </p>
+            </div>
           </div>
         </div>
       )}

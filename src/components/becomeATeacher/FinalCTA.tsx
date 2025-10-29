@@ -32,7 +32,9 @@ const FinalCTA = () => {
                   <TrendingUp className="text-yellow-300 w-8 h-8" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">High Earnings</h3>
-                <p className="opacity-80">Top teachers earn $5,000+ monthly</p>
+                <p className="opacity-80">
+                  Top teachers earn Rs.1,00,000+ monthly
+                </p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -46,7 +48,7 @@ const FinalCTA = () => {
               href="/teacherRegister"
               className="bg-white text-blue-600 px-12 py-4 rounded-full text-xl font-bold hover:bg-gray-100 transition-colors animate-[pulse_2s_ease-in-out_infinite] hover-lift"
             >
-              Join EduConnect Today
+              Join ShikshyaGhar Today
             </Link>
           </div>
         </div>
