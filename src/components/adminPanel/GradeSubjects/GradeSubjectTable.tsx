@@ -32,12 +32,12 @@ export default function GradeSubjectTable() {
       const [gradesData, subjectsResponse, gradeSubjectsData] =
         await Promise.all([
           gradeService.getAllGrades(),
-          subjectService.getAllSubjects(), // returns { items, pagination }
+          subjectService.getAllSubjects(),
           gradeSubjectService.getAllGradeSubjects(),
         ]);
 
       setGrades(gradesData);
-      setSubjects(subjectsResponse.items); // <-- extract items here
+      setSubjects(subjectsResponse);
       setGradeSubjects(
         gradeSubjectsData.map((gs) => ({
           ...gs,
