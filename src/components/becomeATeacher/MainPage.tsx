@@ -1,7 +1,7 @@
 import Hero from "./Hero";
 import WhyJoinUs from "./WhyJoinUs";
 import HowItWorks from "./HowItWorks";
-import SuccessStories from "./SuccessStories";
+// import SuccessStories from "./SuccessStories";
 import Subjects from "./Subjects";
 import FAQ from "./FAQ";
 import FinalCTA from "./FinalCTA";
@@ -12,7 +12,7 @@ export default function Home() {
       <Hero />
       <WhyJoinUs />
       <HowItWorks />
-      <SuccessStories />
+      {/* <SuccessStories /> */}
       <Subjects />
       <FAQ />
       <FinalCTA />

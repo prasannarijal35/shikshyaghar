@@ -11,6 +11,7 @@ import gradeSubjectService, {
 } from "@/services/gradeSubjectServices";
 import { DeleteConfirmationModal } from "@/components/common";
 import { Grade } from "@/types/grade";
+import { GraduationCap, BookOpen, Edit, Sparkles } from "lucide-react";
 
 export default function GradeSubjectTable() {
   const [gradeSubjects, setGradeSubjects] = useState<GradeSubject[]>([]);
@@ -132,82 +133,190 @@ export default function GradeSubjectTable() {
     }
   };
 
-  if (loading) return <p className="p-6">Loading data...</p>;
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600 text-lg font-medium">
+              Loading grade-subject data...
+            </p>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <main className="min-h-screen p-6 bg-gray-50">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-primary">
-          Grade-Subject Management
-        </h1>
+    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
+      {/* Enhanced Header */}
+      <div className="flex justify-between items-center mb-8 p-6 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20">
+        <div className="flex items-center space-x-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+            <GraduationCap className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Grade-Subject Management
+            </h1>
+            <p className="text-gray-600 mt-1 text-sm">
+              Manage grade and subject relationships with pricing
+            </p>
+          </div>
+        </div>
+
         <button
           onClick={() => {
             setShowModal(true);
             setIsEdit(false);
           }}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/80 transition-colors"
+          className="group relative bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 overflow-hidden"
         >
-          <FaPlus /> Add Relation
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="relative flex items-center space-x-2">
+            <FaPlus className="w-4 h-4" />
+            <span>Add Relation</span>
+            <Sparkles className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          </div>
         </button>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white rounded-lg overflow-hidden">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="py-4 px-4 text-left font-medium text-[15px]">
-                S.N
-              </th>
-              <th className="py-4 px-4 text-center font-medium text-[15px]">
-                Grade
-              </th>
-              <th className="py-4 px-4 text-center font-medium text-[15px]">
-                Subject
-              </th>
-              <th className="py-4 px-4 text-right font-medium text-[15px]">
-                Price
-              </th>
-              <th className="py-4 px-4 text-right font-medium text-[15px]">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="text-base">
-            {gradeSubjects.map((gs, index) => (
-              <tr key={gs.id} className="border-t hover:bg-primary/10">
-                <td className="py-5 px-4 text-left">{index + 1}</td>
-                <td className="py-5 px-4 text-center">{gs.grade?.name}</td>
-                <td className="py-5 px-4 text-center">{gs.subject?.name}</td>
-                <td className="py-5 px-4 text-right">{gs.price}</td>
-                <td className="py-5 px-4 text-right">
-                  <div className="flex justify-end gap-3">
-                    <button
-                      onClick={() => {
-                        setSelectedGradeSubject(gs);
-                        setShowModal(true);
-                        setIsEdit(true);
-                      }}
-                      className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => {
-                        setSelectedGradeSubject(gs);
-                        setShowDeleteModal(true);
-                      }}
-                      className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                    >
-                      <FiTrash2 size={18} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {/* Main Content */}
+      {gradeSubjects.length === 0 ? (
+        <div className="flex flex-col items-center justify-center min-h-[500px] px-6 py-12 relative">
+          {/* Animated Icon Container */}
+          <div className="relative mb-8">
+            <div className="w-32 h-32 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center animate-pulse shadow-lg">
+              <GraduationCap className="w-16 h-16 text-blue-500" />
+            </div>
+            {/* Floating decorative icons */}
+            <div className="absolute -top-3 -right-3 w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center animate-bounce shadow-md">
+              <BookOpen className="w-5 h-5 text-purple-500" />
+            </div>
+            <div
+              className="absolute -bottom-3 -left-3 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center animate-bounce shadow-md"
+              style={{ animationDelay: "0.5s" }}
+            >
+              <GraduationCap className="w-5 h-5 text-blue-500" />
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="text-center space-y-6 max-w-lg">
+            <h3 className="text-3xl font-bold text-gray-800 mb-2">
+              No Grade-Subject Relations Yet
+            </h3>
+            <p className="text-gray-600 leading-relaxed text-lg">
+              Start building your academic structure by creating grade-subject
+              relationships with pricing. This will help organize your
+              educational content effectively.
+            </p>
+
+            {/* Call to Action Button */}
+            <button
+              onClick={() => {
+                setShowModal(true);
+                setIsEdit(false);
+              }}
+              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              <FaPlus className="w-5 h-5 mr-3" />
+              Create First Relation
+            </button>
+          </div>
+
+          {/* Background Decoration */}
+          <div className="absolute inset-0 -z-10 overflow-hidden">
+            <div className="absolute top-1/4 left-1/4 w-40 h-40 bg-blue-100 rounded-full opacity-30 animate-pulse"></div>
+            <div
+              className="absolute bottom-1/4 right-1/4 w-32 h-32 bg-purple-100 rounded-full opacity-30 animate-pulse"
+              style={{ animationDelay: "1s" }}
+            ></div>
+            <div
+              className="absolute top-1/2 right-1/3 w-24 h-24 bg-indigo-100 rounded-full opacity-30 animate-pulse"
+              style={{ animationDelay: "2s" }}
+            ></div>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-200">
+                <tr>
+                  <th className="py-4 px-6 text-left font-semibold text-gray-700 text-sm uppercase tracking-wider">
+                    S.N
+                  </th>
+                  <th className="py-4 px-6 text-center font-semibold text-gray-700 text-sm uppercase tracking-wider">
+                    Grade
+                  </th>
+                  <th className="py-4 px-6 text-center font-semibold text-gray-700 text-sm uppercase tracking-wider">
+                    Subject
+                  </th>
+                  <th className="py-4 px-6 text-right font-semibold text-gray-700 text-sm uppercase tracking-wider">
+                    Price
+                  </th>
+                  <th className="py-4 px-6 text-right font-semibold text-gray-700 text-sm uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {gradeSubjects.map((gs, index) => (
+                  <tr
+                    key={gs.id}
+                    className="hover:bg-blue-50/50 transition-all duration-200 group"
+                  >
+                    <td className="py-6 px-6 text-gray-900 font-medium">
+                      {index + 1}
+                    </td>
+                    <td className="py-6 px-6 text-center">
+                      <span className="inline-flex px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800">
+                        {gs.grade?.name}
+                      </span>
+                    </td>
+                    <td className="py-6 px-6 text-center">
+                      <span className="inline-flex px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800">
+                        {gs.subject?.name}
+                      </span>
+                    </td>
+                    <td className="py-6 px-6 text-right">
+                      <span className="font-semibold text-green-600 text-lg">
+                        Rs.{gs.price}
+                      </span>
+                    </td>
+                    <td className="py-6 px-6">
+                      <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => {
+                            setSelectedGradeSubject(gs);
+                            setShowModal(true);
+                            setIsEdit(true);
+                          }}
+                          className="flex items-center px-3 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
+                        >
+                          <Edit className="w-4 h-4 mr-1" />
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSelectedGradeSubject(gs);
+                            setShowDeleteModal(true);
+                          }}
+                          className="flex items-center px-3 py-2 bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-lg hover:from-red-600 hover:to-rose-700 transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
+                        >
+                          <FiTrash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {/* Modals */}
       <GradeSubjectModal

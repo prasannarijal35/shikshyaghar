@@ -1,16 +1,16 @@
-'use client';
-import { useState } from 'react';
-import Image from 'next/image';
-import { FaEdit, FaSave } from 'react-icons/fa';
+"use client";
+import { useState } from "react";
+import Image from "next/image";
+import { FaEdit, FaSave } from "react-icons/fa";
 
 const mockAdmin = {
-  profilePic: '/admin-profile.jpg',
-  fullName: 'Alex Johnson',
-  email: 'alex.johnson@example.com',
-  role: 'Administrator',
-  phone: '+1 (555) 123-4567',
-  department: 'IT Management',
-  office: 'Building A, Room 301',
+  profilePic: "/admin-profile.jpg",
+  fullName: "Alex Johnson",
+  email: "alex.johnson@example.com",
+  role: "Administrator",
+  phone: "+1 (555) 123-4567",
+  department: "IT Management",
+  office: "Building A, Room 301",
   accessLevel: 75, // out of 100
 };
 
@@ -19,12 +19,14 @@ export default function AdminProfile() {
   const [formData, setFormData] = useState({ ...mockAdmin });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'accessLevel' ? Number(value) : value,
+      [name]: name === "accessLevel" ? Number(value) : value,
     }));
   };
 
@@ -45,8 +47,8 @@ export default function AdminProfile() {
             onClick={editMode ? handleSave : toggleEdit}
             className={`flex items-center gap-2 px-5 py-2 rounded-lg shadow-sm font-medium transition-all duration-200 ${
               editMode
-                ? 'bg-green-500 hover:bg-green-600 text-white'
-                : 'bg-primary hover:bg-blue-700 text-white'
+                ? "bg-green-500 hover:bg-green-600 text-white"
+                : "bg-primary hover:bg-blue-700 text-white"
             }`}
           >
             {editMode ? (
@@ -77,16 +79,20 @@ export default function AdminProfile() {
           {/* Info Form */}
           <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6">
             {[
-              ['Full Name', 'fullName', 'text'],
-              ['Email', 'email', 'email'],
-              ['Role', 'role', 'text', true], // disabled
-              ['Phone', 'phone', 'tel'],
-              ['Department', 'department', 'text'],
-              ['Office Location', 'office', 'text'],
+              ["Full Name", "fullName", "text"],
+              ["Email", "email", "email"],
+              ["Role", "role", "text", true], // disabled
+              ["Phone", "phone", "tel"],
+              ["Department", "department", "text"],
+              ["Office Location", "office", "text"],
             ].map(([label, name, type, disabled]) => (
               <div
                 key={name as string}
-                className={name === 'department' || name === 'office' ? 'sm:col-span-2' : ''}
+                className={
+                  name === "department" || name === "office"
+                    ? "sm:col-span-2"
+                    : ""
+                }
               >
                 <label className="text-sm text-gray-600">{label}</label>
                 {editMode && !disabled ? (

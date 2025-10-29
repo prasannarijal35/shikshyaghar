@@ -1,19 +1,24 @@
 "use client";
+
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { IoNotifications } from "react-icons/io5";
-import logo from "@/assets/logo/Sg_logo.png";
 import { FaSignOutAlt, FaUser } from "react-icons/fa";
 import Link from "next/link";
+import logo from "@/assets/logo/Sg_logo.png";
+import { useRouter } from "next/navigation";
+import { getUser, clearStorage } from "@/utils/localStorage";
 
-export default function StudentHeader() {
+export default function AdminHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [adminUser, setAdminUser] = useState<any>(null); // adjust type if you have a type
   const menuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
+
   function getCurrentDate() {
     const today = new Date();
-    // Format: Month Day, Year (e.g., Sep 4, 2025)
     return today.toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
@@ -21,40 +26,50 @@ export default function StudentHeader() {
     });
   }
 
-  // Close dropdown when clicked outside
+  // Safe profile picture getter
+  const getProfilePicture = () => {
+    const path = adminUser?.profilePicture;
+    if (!path || path.trim() === "") return logo; // fallback to local logo
+    if (path.startsWith("http")) return path; // full URL already
+    return `${process.env.NEXT_PUBLIC_API_URL}/${path}`; // prepend API URL
+  };
+
+  useEffect(() => {
+    const u = getUser(); // getUser should return admin data from localStorage
+    if (u) setAdminUser(u);
+  }, []);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setMenuOpen(false);
       }
     };
-
     if (menuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
     }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuOpen]);
+
+  const handleLogout = () => {
+    clearStorage();
+    router.push("/login");
+  };
 
   return (
     <header className="sticky top-0 z-30 h-16 bg-white border-b border-gray-200 shadow-sm flex items-center justify-between px-6">
-      {/* Left: Welcome message and date */}
       <div className="flex flex-col">
         <h1 className="text-xl font-semibold text-gray-800 hidden md:block">
-          Welcome, Amanda
+          Welcome, {adminUser?.fullName ?? "Admin"}
         </h1>
         <p className="text-sm text-gray-500 hidden md:block">
           {getCurrentDate()}
         </p>
       </div>
 
-      {/* Right: Search + Notifications + Avatar */}
       <div className="flex items-center gap-4">
-        {/* Search */}
         <div className="relative">
           <input
             type="search"
@@ -64,7 +79,6 @@ export default function StudentHeader() {
           />
         </div>
 
-        {/* Notifications */}
         <button
           aria-label="Notifications"
           className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 relative"
@@ -73,11 +87,10 @@ export default function StudentHeader() {
           <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
         </button>
 
-        {/* Avatar with dropdown */}
         <div className="relative" ref={menuRef}>
           <Image
-            src={logo}
-            alt="User Avatar"
+            src={getProfilePicture()}
+            alt="Admin Avatar"
             width={40}
             height={40}
             className="w-10 h-10 rounded-full border-2 border-gray-300 object-cover cursor-pointer hover:border-blue-400 transition-colors"
@@ -86,12 +99,11 @@ export default function StudentHeader() {
 
           {menuOpen && (
             <div className="absolute right-0 top-12 mt-2 bg-white rounded-lg border border-gray-200 shadow-lg w-60 z-50">
-              {/* Banner and Circular Image */}
               <div className="relative">
                 <div className="h-16 w-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-t-lg"></div>
                 <div className="absolute top-8 left-1/2 transform -translate-x-1/2">
                   <Image
-                    src={logo}
+                    src={getProfilePicture()}
                     alt="Profile"
                     height={60}
                     width={60}
@@ -100,18 +112,18 @@ export default function StudentHeader() {
                 </div>
               </div>
 
-              {/* Name and Email */}
               <div className="mt-8 text-center border-b border-gray-200 px-4 pb-4">
                 <h3 className="text-sm font-semibold text-gray-800">
-                  Mr. Prasanna Rijal
+                  {adminUser?.fullName ?? "Unknown Admin"}
                 </h3>
-                <p className="text-xs text-gray-500 mt-1">admin@lamo.com</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {adminUser?.email ?? "email@unknown.com"}
+                </p>
               </div>
 
-              {/* Menu Items */}
               <div className="p-2">
                 <Link
-                  href="/student/profile"
+                  href="/admin/profile"
                   className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
                   onClick={() => setMenuOpen(false)}
                 >
@@ -126,7 +138,10 @@ export default function StudentHeader() {
                   </div>
                 </Link>
 
-                <button className="w-full mt-2 flex items-center justify-center gap-2 p-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                <button
+                  onClick={handleLogout}
+                  className="w-full mt-2 flex items-center justify-center gap-2 p-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                >
                   <FaSignOutAlt className="w-4 h-4" />
                   Logout
                 </button>
