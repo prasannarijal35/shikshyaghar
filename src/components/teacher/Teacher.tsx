@@ -1,10 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import SingleTeacherCard from "@/components/teacher/SingleTeacherCard";
 import teacherService from "@/services/teacherServices";
-import gradeSubjectService, {
-  GradeSubject,
-} from "@/services/gradeSubjectServices";
+import gradeSubjectService, { GradeSubject } from "@/services/gradeSubjectServices";
 import { FiRefreshCw } from "react-icons/fi";
 import { Teacher } from "@/types/teacher";
 
@@ -13,12 +11,10 @@ export default function TeachersPage() {
   const [loading, setLoading] = useState(true);
   const [gender, setGender] = useState<string>("");
   const [experience, setExperience] = useState<number | undefined>(undefined);
-  const [selectedGradeSubject, setSelectedGradeSubject] =
-    useState<GradeSubject | null>(null);
-
+  const [selectedGradeSubject, setSelectedGradeSubject] = useState<GradeSubject | null>(null);
   const [gradeSubjects, setGradeSubjects] = useState<GradeSubject[]>([]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const teachersData = await teacherService.getAllTeachers({
@@ -29,37 +25,55 @@ export default function TeachersPage() {
       });
       setTeachers(teachersData);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching teachers:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [gender, experience, selectedGradeSubject]);
 
-  const fetchDropdownData = async () => {
+  const fetchDropdownData = useCallback(async () => {
     try {
       const gradeSubjectsData = await gradeSubjectService.getAllGradeSubjects();
       setGradeSubjects(gradeSubjectsData);
     } catch (error) {
       console.error("Error fetching gradeSubjects:", error);
     }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  useEffect(() => {
+    fetchDropdownData();
+  }, [fetchDropdownData]);
+
+  const handleRefresh = () => {
+    setGender("");              
+    setExperience(undefined);    
+    setSelectedGradeSubject(null); 
+  };
+
+  // Make experience behave like TeacherProfile: only non-negative numbers
+  const handleExperienceChange = (value: string) => {
+    if (!value) {
+      setExperience(undefined);
+      return;
+    }
+    const num = Number(value);
+    if (isNaN(num) || num < 0) return;
+    setExperience(num);
   };
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gender, experience, selectedGradeSubject]);
-  useEffect(() => {
-    console.log("Fetching dropdown data");
-    fetchDropdownData();
-  }, []);
+  }, [gender, experience, selectedGradeSubject, fetchData]);
 
   return (
     <section className="min-h-screen bg-white py-20 pb-36 w-full">
       <div className="container">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-          <h1 className="text-3xl font-bold text-start text-primary">
-            Teachers
-          </h1>
+          <h1 className="text-3xl font-bold text-start text-primary">Teachers</h1>
           <div className="flex flex-wrap items-center gap-4">
             <select
               value={gender}
@@ -75,12 +89,9 @@ export default function TeachersPage() {
               type="number"
               placeholder="Min Experience"
               value={experience ?? ""}
-              onChange={(e) =>
-                setExperience(
-                  e.target.value ? Number(e.target.value) : undefined
-                )
-              }
+              onChange={(e) => handleExperienceChange(e.target.value)}
               className="border px-3 py-2 rounded-lg w-40"
+              min={0}
             />
 
             <select
@@ -102,7 +113,7 @@ export default function TeachersPage() {
             </select>
 
             <button
-              onClick={fetchData}
+              onClick={handleRefresh}
               className="flex justify-between items-center gap-2 px-4 py-2 rounded-lg border border-primary text-primary hover:bg-primary hover:text-white transition duration-300"
             >
               <span>Refresh</span>

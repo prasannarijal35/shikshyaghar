@@ -82,10 +82,9 @@ export default function TeacherVerificationTable() {
     try {
       await myAxios.put(`/admin/teachers/${teacher.teacherId}/reject`);
       toast.success(`Rejected ${teacher.fullName}`);
+      // Remove rejected teacher from the list
       setTeachers((prev) =>
-        prev.map((t) =>
-          t.teacherId === teacher.teacherId ? { ...t, status: "REJECTED" } : t
-        )
+        prev.filter((t) => t.teacherId !== teacher.teacherId)
       );
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Failed to reject teacher");
@@ -103,7 +102,7 @@ export default function TeacherVerificationTable() {
       <table className="min-w-full bg-white rounded-lg overflow-hidden">
         <thead className="bg-gray-100">
           <tr>
-            <th className="py-4 px-4 text-left font-medium">ID</th>
+            <th className="py-4 px-4 text-left font-medium">S.N</th>
             <th className="py-4 px-4 text-left font-medium">Photo</th>
             <th className="py-4 px-4 text-left font-medium">Name</th>
             <th className="py-4 px-4 text-left font-medium">Email</th>
@@ -113,12 +112,13 @@ export default function TeacherVerificationTable() {
           </tr>
         </thead>
         <tbody className="text-base">
-          {teachers.map((teacher) => (
+          {teachers.map((teacher, index) => (
             <tr
               key={teacher.id}
               className="border-t hover:bg-primary/10 transition-colors"
             >
-              <td className="py-5 px-4">{teacher.id}</td>
+              {/* S.N column updated to auto index */}
+              <td className="py-5 px-4">{index + 1}</td>
               <td className="py-5 px-4">
                 <Image
                   src={teacher.profilePicture || "/default-avatar.png"}
