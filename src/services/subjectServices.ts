@@ -10,18 +10,27 @@ const subjectService = {
     return response.data.data;
   },
 
-  getAllSubjects: async (
-    page?: number,
-    limit?: number,
+  getAllSubjects: async (): Promise<Subject[]> => {
+    const response = await myAxios.get(`${API_BASE_URL}/subjects`);
+    return response.data.data;
+  },
+
+  getPaginatedSubjects: async (
+    page: number = 1,
+    limit: number = 10,
     search?: string
   ): Promise<{
     items: Subject[];
     pagination: { total: number; page: number; limit: number; totalPages: number };
   }> => {
     const params: Record<string, any> = { page, limit, search };
-    Object.keys(params).forEach((key) => params[key] === undefined && delete params[key]);
+    Object.keys(params).forEach(
+      (key) => params[key] === undefined && delete params[key]
+    );
 
-    const response = await myAxios.get(`${API_BASE_URL}/subjects`, { params });
+    const response = await myAxios.get(`${API_BASE_URL}/subjects/paginated`, {
+      params,
+    });
     return response.data.data;
   },
 

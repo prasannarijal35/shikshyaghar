@@ -23,10 +23,9 @@ const studentService = {
     });
     return res.data;
   },
-  getAllStudents: async (page: number = 1, limit: number = 100) => {
-    const res = await myAxios.get("/students", {
-      params: { page, limit },
-    });
+
+  getAllStudents: async () => {
+    const res = await myAxios.get("/students");
     return res.data;
   },
 };
