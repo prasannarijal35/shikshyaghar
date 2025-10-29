@@ -35,6 +35,39 @@ const useSubscriptionService = () => {
   const remove = async (id: number): Promise<void> => {
     await myAxios.delete(`/subscriptions/${id}`);
   };
-  return { getAll, getById, getByStudentId, create, update, remove };
+  const getByTeacherId = async (
+    page: number = 1,
+    limit: number = 10,
+    status?: string
+  ): Promise<{
+    subscriptions: SubscriptionType[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> => {
+    const response = await myAxios.get("/subscriptions/teacher", {
+      params: { page, limit, status },
+    });
+
+    return (
+      response.data.data ?? {
+        subscriptions: [],
+        total: 0,
+        page,
+        limit,
+        totalPages: 0,
+      }
+    );
+  };
+  return {
+    getAll,
+    getById,
+    getByStudentId,
+    create,
+    update,
+    remove,
+    getByTeacherId,
+  };
 };
 export default useSubscriptionService;

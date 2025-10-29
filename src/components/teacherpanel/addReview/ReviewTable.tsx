@@ -6,7 +6,7 @@ import { FaTrashAlt, FaPlus } from "react-icons/fa";
 import DeleteModal from "@/components/teacherpanel/addReview/DeleteModal";
 import AddReviewModal from "@/components/teacherpanel/addReview/AddReviewModal";
 import reviewService from "@/services/reviewServices";
-import { Review } from "@/types/review"; 
+import { Review } from "@/types/review";
 
 export default function ReviewTable() {
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -14,6 +14,13 @@ export default function ReviewTable() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
+
+  // Helper function to truncate review text to 30 words
+  const truncateWords = (text: string, wordLimit: number) => {
+    const words = text.split(" ");
+    if (words.length <= wordLimit) return text;
+    return words.slice(0, wordLimit).join(" ") + "...";
+  };
 
   const fetchReviews = async () => {
     try {
@@ -46,15 +53,15 @@ export default function ReviewTable() {
 
   // Add a new review
   const handleAddReview = async (reviewText: string) => {
-  try {
-    const newReview = await reviewService.createReview(reviewText); 
-    setReviews((prev) => [...prev, newReview]);
-    toast.success("Review added successfully");
-    setShowAddModal(false);
-  } catch (error: any) {
-    toast.error(error?.message || "Failed to add review");
-  }
-};
+    try {
+      const newReview = await reviewService.createReview(reviewText);
+      setReviews((prev) => [...prev, newReview]);
+      toast.success("Review added successfully");
+      setShowAddModal(false);
+    } catch (error: any) {
+      toast.error(error?.message || "Failed to add review");
+    }
+  };
 
   if (loading) return <p className="p-6">Loading reviews...</p>;
 
@@ -62,28 +69,39 @@ export default function ReviewTable() {
     <main className="min-h-screen p-6 bg-gray-50">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-primary">My Reviews</h1>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/80"
-        >
-          <FaPlus /> Add Review
-        </button>
+        {/* Only show add button if no review exists */}
+        {reviews.length === 0 && (
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/80"
+          >
+            <FaPlus /> Add Review
+          </button>
+        )}
       </div>
 
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg overflow-hidden">
           <thead className="bg-gray-100">
             <tr>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">S.N</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Review</th>
-              <th className="py-4 px-4 text-left text-[15px] font-medium">Actions</th>
+              <th className="py-4 px-4 text-left text-[15px] font-medium">
+                S.N
+              </th>
+              <th className="py-4 px-4 text-left text-[15px] font-medium">
+                Review
+              </th>
+              <th className="py-4 px-4 text-left text-[15px] font-medium">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="text-base">
             {reviews.map((review, index) => (
               <tr key={review.id} className="border-t hover:bg-primary/10">
                 <td className="py-5 px-4">{index + 1}</td>
-                <td className="py-5 px-4">{review.description}</td>
+                <td className="py-5 px-4">
+                  {truncateWords(review.description, 30)}
+                </td>
                 <td className="py-5 px-4">
                   <button
                     onClick={() => {

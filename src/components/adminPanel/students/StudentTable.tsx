@@ -28,8 +28,8 @@ export default function StudentManagementTable() {
       });
       setStudents(res.data.data.items || []);
       setTotalPages(res.data.data.pagination.totalPages || 1);
-    } catch (error) {
-      toast.error("Failed to fetch students");
+    } catch (error: any) {
+      toast.error(`Failed to fetch students: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -47,8 +47,10 @@ export default function StudentManagementTable() {
       toast.success("Student deleted successfully");
       setDeleteStudentId(null);
       fetchStudents(page);
-    } catch (error) {
-      toast.error("Failed to delete student");
+    } catch (error: any) {
+      toast.error(
+        `Failed to delete student: ${error?.message || "Unknown error"}`
+      );
     }
   };
 
@@ -90,7 +92,9 @@ export default function StudentManagementTable() {
       {loading ? (
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg font-medium">Loading students...</p>
+          <p className="text-gray-600 text-lg font-medium">
+            Loading students...
+          </p>
         </div>
       ) : students.length === 0 ? (
         // Empty State
@@ -101,7 +105,9 @@ export default function StudentManagementTable() {
             </div>
           </div>
           <div className="text-center space-y-6 max-w-lg">
-            <h3 className="text-3xl font-bold text-gray-800 mb-2">No students found</h3>
+            <h3 className="text-3xl font-bold text-gray-800 mb-2">
+              No students found
+            </h3>
             <p className="text-gray-600 leading-relaxed text-lg">
               Students will appear here once they are added to the system.
             </p>
@@ -121,18 +127,35 @@ export default function StudentManagementTable() {
             <table className="w-full min-w-[700px]">
               <thead className="bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-200">
                 <tr>
-                  <th className="py-4 px-6 text-left font-semibold text-gray-700 text-sm uppercase tracking-wider">Name</th>
-                  <th className="py-4 px-6 text-left font-semibold text-gray-700 text-sm uppercase tracking-wider">Email</th>
-                  <th className="py-4 px-6 text-left font-semibold text-gray-700 text-sm uppercase tracking-wider">Grade</th>
-                  <th className="py-4 px-6 text-left font-semibold text-gray-700 text-sm uppercase tracking-wider">Gender</th>
-                  <th className="py-4 px-6 text-left font-semibold text-gray-700 text-sm uppercase tracking-wider">Birth Year</th>
-                  <th className="py-4 px-6 text-center font-semibold text-gray-700 text-sm uppercase tracking-wider">Actions</th>
+                  <th className="py-4 px-6 text-left font-semibold text-gray-700 text-sm uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="py-4 px-6 text-left font-semibold text-gray-700 text-sm uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th className="py-4 px-6 text-left font-semibold text-gray-700 text-sm uppercase tracking-wider">
+                    Grade
+                  </th>
+                  <th className="py-4 px-6 text-left font-semibold text-gray-700 text-sm uppercase tracking-wider">
+                    Gender
+                  </th>
+                  <th className="py-4 px-6 text-left font-semibold text-gray-700 text-sm uppercase tracking-wider">
+                    Birth Year
+                  </th>
+                  <th className="py-4 px-6 text-center font-semibold text-gray-700 text-sm uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {students.map((student: any) => (
-                  <tr key={student.id} className="hover:bg-blue-50/50 transition-all duration-200 group">
-                    <td className="py-4 px-6 font-medium text-gray-900">{student.fullName}</td>
+                  <tr
+                    key={student.id}
+                    className="hover:bg-blue-50/50 transition-all duration-200 group"
+                  >
+                    <td className="py-4 px-6 font-medium text-gray-900">
+                      {student.fullName}
+                    </td>
                     <td className="py-4 px-6">{student.email}</td>
                     <td className="py-4 px-6">{student.grade || "-"}</td>
                     <td className="py-4 px-6">{student.gender || "-"}</td>
@@ -184,7 +207,11 @@ export default function StudentManagementTable() {
       )}
 
       {/* Modals */}
-      <ViewStudentModal isOpen={!!viewStudent} onClose={() => setViewStudent(null)} student={viewStudent} />
+      <ViewStudentModal
+        isOpen={!!viewStudent}
+        onClose={() => setViewStudent(null)}
+        student={viewStudent}
+      />
       <DeleteConfirmationModal
         isOpen={!!deleteStudentId}
         onClose={() => setDeleteStudentId(null)}

@@ -7,4 +7,5 @@ export type Blog = {
   image: string;
   createdAt: string;
   updatedAt: string;
+  views?: number;
 };

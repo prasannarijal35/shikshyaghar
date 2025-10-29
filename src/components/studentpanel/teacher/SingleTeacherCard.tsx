@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { Teacher } from "@/types/teacher";
@@ -7,7 +6,6 @@ import { Teacher } from "@/types/teacher";
 interface Props {
   teacher: Teacher;
 }
-
 const SingleTeacherCard = ({ teacher }: Props) => {
   const profilePicture = teacher.profilePicture
     ? teacher.profilePicture
