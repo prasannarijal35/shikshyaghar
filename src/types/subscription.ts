@@ -47,6 +47,8 @@ export interface TeacherSubjectType {
 export interface SubscriptionType {
   id: number;
   studentId: number;
+  studentName?: string; // Add this
+  studentEmail?: string; // Add this
   teacherSubjectId: number;
   teacherSubject?: TeacherSubjectType;
   teacherId?: number;

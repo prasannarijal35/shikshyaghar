@@ -19,7 +19,7 @@ export const navItems = [
   { name: "Dashboard", href: "/teacher/dashboard", icon: MdDashboard },
   { name: "My Profile", href: "/teacher/profile", icon: MdPerson },
   { name: "My Classes", href: "/teacher/teacherSubject", icon: MdClass },
-  { name: "Requests", href: "/teacher/requests", icon: MdAssignment },
+  { name: "Subscriber", href: "/teacher/subscriber", icon: MdAssignment },
   { name: "Messages", href: "/teacher/messages", icon: MdMessage },
   { name: "Students", href: "/teacher/students", icon: MdGroup },
   { name: "Post Reviews", href: "/teacher/review", icon: MdGroup },
