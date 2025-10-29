@@ -8,36 +8,21 @@ import subjectService, { Subject } from "@/services/subjectServices";
 import { DeleteConfirmationModal } from "@/components/common";
 import SubjectModal from "./AddModal";
 
-const PAGE_SIZE = 10;
-const DEBOUNCE_DELAY = 500;
-
 export default function SubjectTable() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSubjectModal, setShowSubjectModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("Add Subject");
   const [currentSubject, setCurrentSubject] = useState<Subject | null>(null);
 
-  // Debounce search
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearch(searchTerm);
-      setPage(1);
-    }, DEBOUNCE_DELAY);
-    return () => clearTimeout(handler);
-  }, [searchTerm]);
-
-  const fetchSubjects = async (pageNumber = 1, search = "") => {
+  // Fetch all subjects
+  const fetchSubjects = async () => {
     setLoading(true);
     try {
-      const res = await subjectService.getAllSubjects(pageNumber, PAGE_SIZE, search);
-      setSubjects(res.items);
-      setTotalPages(res.pagination.totalPages);
+      const res = await subjectService.getAllSubjects();
+      setSubjects(res);
     } catch (err) {
       console.error(err);
       toast.error("Failed to fetch subjects");
@@ -47,11 +32,8 @@ export default function SubjectTable() {
   };
 
   useEffect(() => {
-    fetchSubjects(page, debouncedSearch);
-  }, [page, debouncedSearch]);
-
-  const handlePrev = () => setPage((prev) => Math.max(prev - 1, 1));
-  const handleNext = () => setPage((prev) => Math.min(prev + 1, totalPages));
+    fetchSubjects();
+  }, []);
 
   const handleAdd = () => {
     setModalTitle("Add Subject");
@@ -101,6 +83,11 @@ export default function SubjectTable() {
       setCurrentSubject(null);
     }
   };
+
+  // Filter subjects by search term (client-side)
+  const filteredSubjects = subjects.filter((subject) =>
+    subject.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (loading) {
     return (
@@ -154,7 +141,7 @@ export default function SubjectTable() {
       </div>
 
       {/* Table */}
-      {subjects.length === 0 ? (
+      {filteredSubjects.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-[400px]">
           <p className="text-gray-600 text-lg">No subjects found.</p>
         </div>
@@ -176,11 +163,9 @@ export default function SubjectTable() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {subjects.map((subject, index) => (
+                {filteredSubjects.map((subject, index) => (
                   <tr key={subject.id} className="hover:bg-purple-50/50 transition-all duration-200">
-                    <td className="py-6 px-6 text-gray-900 font-medium">
-                      {(page - 1) * PAGE_SIZE + index + 1}
-                    </td>
+                    <td className="py-6 px-6 text-gray-900 font-medium">{index + 1}</td>
                     <td className="py-6 px-6 text-center">{subject.name}</td>
                     <td className="py-6 px-6 text-right">
                       <div className="flex justify-end gap-2">
@@ -205,27 +190,6 @@ export default function SubjectTable() {
                 ))}
               </tbody>
             </table>
-          </div>
-
-          {/* Pagination */}
-          <div className="flex justify-between items-center mt-4 p-4 bg-white/70 backdrop-blur-sm rounded-xl shadow-lg border border-white/20">
-            <button
-              onClick={handlePrev}
-              disabled={page === 1}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg disabled:opacity-50"
-            >
-              Previous
-            </button>
-            <p className="text-gray-600 font-medium">
-              Page {page} of {totalPages}
-            </p>
-            <button
-              onClick={handleNext}
-              disabled={page === totalPages}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg disabled:opacity-50"
-            >
-              Next
-            </button>
           </div>
         </div>
       )}
