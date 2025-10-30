@@ -24,17 +24,27 @@ const useSubscriptionService = () => {
     const { data } = await myAxios.post("/subscriptions", payload);
     return data.subscription;
   };
+  // Teacher updates their student's subscription
+  const updateByTeacher = async (
+    id: number,
+    payload: Partial<SubscriptionType>
+  ): Promise<SubscriptionType> => {
+    const { data } = await myAxios.put(`/subscriptions/teacher/${id}`, payload);
+    return data;
+  };
+
+  const remove = async (id: number): Promise<void> => {
+    await myAxios.delete(`/subscriptions/${id}`);
+  };
 
   const update = async (
     id: number,
     payload: Partial<SubscriptionType>
   ): Promise<SubscriptionType> => {
-    const { data } = await myAxios.put(`/subscriptions/${id}`, payload);
+    const { data } = await myAxios.put(`/subscriptions/student/${id}`, payload);
     return data;
   };
-  const remove = async (id: number): Promise<void> => {
-    await myAxios.delete(`/subscriptions/${id}`);
-  };
+
   const getByTeacherId = async (
     page: number = 1,
     limit: number = 10,
@@ -49,6 +59,8 @@ const useSubscriptionService = () => {
     const response = await myAxios.get("/subscriptions/teacher", {
       params: { page, limit, status },
     });
+
+    
 
     return (
       response.data.data ?? {
@@ -68,6 +80,7 @@ const useSubscriptionService = () => {
     update,
     remove,
     getByTeacherId,
+    updateByTeacher,
   };
 };
 export default useSubscriptionService;
