@@ -1,62 +1,51 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import {
-  Calendar,
-  Clock,
-  User,
-  Mail,
-  AlertCircle,
-  BookOpen,
-  Loader,
-} from "lucide-react";
+import React, { useState, useEffect, useCallback } from "react";
+import { Calendar, Clock, User, Mail, BookOpen, Loader } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { SubscriptionType, SubscriptionStatus } from "@/types/subscription";
+import { SubscriptionType } from "@/types/subscription";
 
 interface SubscriptionCardProps {
   subscription: SubscriptionType;
-  onEdit?: () => void;
+  onClick?: () => void; // to open modal when card area clicked
 }
 
 const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
   subscription,
-  onEdit,
+  onClick,
 }) => {
   const [status, setStatus] = useState<"Upcoming" | "Live" | "Completed">(
     "Upcoming"
   );
 
-  /** 📅 Calculate session status from start time and duration */
-  const calculateStatus = () => {
-    if (!subscription.price || !subscription.duration) return "Upcoming";
+  // calculate live/upcoming/completed
+  const calculateStatus = useCallback(() => {
+    if (!subscription.startDate || !subscription.duration) return "Upcoming";
 
-    const [hours, minutes, seconds] = subscription.startDate
-      .split(":")
-      .map(Number);
-    const start = new Date();
-    start.setHours(hours, minutes, seconds || 0);
-    const end = new Date(start.getTime() + subscription.duration * 60000);
+    const start = new Date(subscription.startDate);
+    const end = new Date(
+      start.getTime() + (subscription.duration || 0) * 30 * 24 * 60 * 60 * 1000
+    );
 
     if (new Date() < start) return "Upcoming";
     if (new Date() > end) return "Completed";
     return "Live";
-  };
+  }, [subscription.startDate, subscription.duration]);
 
   useEffect(() => {
     setStatus(calculateStatus());
     const interval = setInterval(() => setStatus(calculateStatus()), 60000);
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subscription.startDate, subscription.duration]);
+  }, [calculateStatus]);
 
-  /** 🎬 Handle Start Click */
-  const handleStart = () => {
-    if (!subscription.teacherSubject?.meetingLink)
+  const handleStart = (e: React.MouseEvent) => {
+    e.stopPropagation(); // ✅ Prevents modal opening
+    if (!subscription.teacherSubject?.meetingLink) {
       return toast.error("No meeting link available");
-    window.open(subscription.teacherSubject?.meetingLink, "_blank");
+    }
+    window.open(subscription.teacherSubject.meetingLink, "_blank");
   };
 
-  /** 🧮 Utilities */
   const formatDate = (dateString: string) =>
     new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -64,21 +53,13 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
       day: "numeric",
     });
 
-  const getDaysRemaining = (endDate: string) => {
-    const end = new Date(endDate);
-    const today = new Date();
-    return Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-  };
-
-  const daysRemaining = getDaysRemaining(subscription.endDate);
-  const isExpiringSoon =
-    subscription.status === SubscriptionStatus.ACTIVE &&
-    daysRemaining <= 30 &&
-    daysRemaining > 0;
+  const isActive = status === "Live";
 
   return (
-    <div className="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow overflow-hidden p-4">
-      {/* Header */}
+    <div
+      onClick={onClick}
+      className="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow overflow-hidden p-4 cursor-pointer"
+    >
       <div className="flex justify-between items-start mb-2">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -95,10 +76,10 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
         </div>
         <span
           className={`px-3 py-1 rounded-full text-xs font-medium ${
-            status === "Live"
+            isActive
               ? "bg-green-100 text-green-700"
               : status === "Upcoming"
-              ? "bg-blue-100 text-blue-700"
+              ? "bg-yellow-100 text-yellow-700"
               : "bg-gray-200 text-gray-600"
           }`}
         >
@@ -106,7 +87,6 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
         </span>
       </div>
 
-      {/* Teacher Info */}
       <div className="flex items-center gap-3 mb-4">
         <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
           <User className="w-4 h-4 text-gray-600" />
@@ -122,7 +102,6 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
         </div>
       </div>
 
-      {/* Details */}
       <div className="grid grid-cols-2 gap-6 mb-4">
         <div className="flex items-center gap-2">
           <span className="text-gray-600 font-semibold text-base">Rs.</span>
@@ -147,32 +126,26 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
         </span>
       </div>
 
-      {isExpiringSoon && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-md p-2 flex items-center gap-2 text-sm text-yellow-800">
-          <AlertCircle className="w-4 h-4 text-yellow-600" />
-          Expires in {daysRemaining} days
-        </div>
-      )}
-
-      {/* Actions */}
       <div className="flex justify-end gap-3 border-t pt-3 mt-3">
         <button
-          onClick={handleStart}
-          disabled={!subscription.teacherSubject?.meetingLink}
-          className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+          onClick={(e) => e.stopPropagation()} // disable "View" if active
+          disabled={isActive}
+          className={`px-3 py-1 text-sm rounded-md transition-colors ${
+            isActive
+              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+              : "bg-blue-600 text-white hover:bg-blue-700"
+          }`}
         >
-          {status === "Live" ? (
-            <Loader className="w-4 h-4 animate-spin" />
-          ) : null}
-          Start
+          View
         </button>
 
-        {onEdit && (
+        {isActive && (
           <button
-            onClick={onEdit}
-            className="px-3 py-1 text-sm bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+            onClick={handleStart}
+            className="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center gap-2"
           >
-            Edit
+            <Loader className="w-4 h-4 animate-spin" />
+            Start
           </button>
         )}
       </div>

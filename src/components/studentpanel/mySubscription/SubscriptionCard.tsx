@@ -54,8 +54,11 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
     daysRemaining <= 30 &&
     daysRemaining > 0;
 
+  const isActive = subscription.status === SubscriptionStatus.ACTIVE;
+
   return (
     <div className="cursor-pointer bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow overflow-hidden p-4">
+      {/* Header */}
       <div className="flex justify-between items-start mb-2">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -77,6 +80,7 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
         </div>
       </div>
 
+      {/* Teacher info */}
       <div className="mb-4">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
@@ -93,6 +97,7 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
           </div>
         </div>
 
+        {/* Price + Duration */}
         <div className="grid grid-cols-2 gap-6 mb-4">
           <div className="flex items-center gap-2">
             <span className="text-gray-600 font-semibold text-base">Rs.</span>
@@ -100,7 +105,6 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
               {subscription.price?.toLocaleString() || 0}
             </span>
           </div>
-
           <div className="flex items-center gap-2 justify-end">
             <Clock className="w-5 h-5 text-gray-400" />
             <span className="text-gray-900 font-medium text-base">
@@ -110,6 +114,7 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
           </div>
         </div>
 
+        {/* Dates */}
         <div className="flex items-center gap-2 mb-2">
           <Calendar className="w-4 h-4 text-gray-400" />
           <span className="text-sm text-gray-600">
@@ -118,6 +123,7 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
           </span>
         </div>
 
+        {/* Expiring soon */}
         {isExpiringSoon && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-md p-2 flex items-center gap-2 text-sm text-yellow-800">
             <AlertCircle className="w-4 h-4 text-yellow-600" />
@@ -128,12 +134,19 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
 
       {/* Action Buttons */}
       <div className="flex justify-end gap-3 border-t pt-3 mt-2">
+        {/* Disable view if ACTIVE */}
         <button
-          onClick={onView}
-          className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          onClick={!isActive ? onView : undefined}
+          disabled={isActive}
+          className={`px-3 py-1 text-sm rounded-md transition-colors ${
+            isActive
+              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+              : "bg-blue-600 text-white hover:bg-blue-700"
+          }`}
         >
           View
         </button>
+
         <button
           onClick={onDelete}
           className="px-3 py-1 text-sm bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"

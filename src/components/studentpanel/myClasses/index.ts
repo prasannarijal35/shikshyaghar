@@ -1,4 +1,4 @@
-export { default as SubscriptionsPage } from "./SubscriptionsPage";
+export { default as MyclassSubscriptionsPage } from "./SubscriptionsPage";
 export { default as SubscriptionCard } from "./SubscriptionCard";
 export { default as SubscriptionFilter } from "./SubscriptionFilter";
 export { default as SearchBar } from "./SearchBar";
