@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { IoNotifications } from "react-icons/io5";
 import { FaSignOutAlt, FaUser } from "react-icons/fa";
 import Link from "next/link";
 import { getUser, clearStorage } from "@/utils/localStorage";
@@ -71,22 +70,6 @@ export default function StudentHeader() {
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="relative">
-          <input
-            type="search"
-            placeholder="Search"
-            className="w-64 px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-
-        <button
-          aria-label="Notifications"
-          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 relative"
-        >
-          <IoNotifications className="h-5 w-5 text-gray-600" />
-          <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
-        </button>
-
         <div className="relative" ref={menuRef}>
           <Image
             src={getProfilePicture()}
@@ -96,7 +79,6 @@ export default function StudentHeader() {
             className="w-10 h-10 rounded-full border-2 border-gray-300 object-cover cursor-pointer hover:border-blue-400 transition-colors"
             onClick={toggleMenu}
           />
-
           {menuOpen && (
             <div className="absolute right-0 top-12 mt-2 bg-white rounded-lg border border-gray-200 shadow-lg w-60 z-50">
               <div className="relative">
