@@ -1,7 +1,11 @@
 "use client";
 
-import { SubscriptionType, SubscriptionStatus } from "@/types/subscription";
+import { useState } from "react";
 import { X } from "lucide-react";
+import { toast } from "react-hot-toast";
+import paymentService from "@/services/paymentServices";
+import { SubscriptionType, SubscriptionStatus } from "@/types/subscription";
+// import { useAuth } from "@/context/AuthContext"; // if you have user context
 
 interface SubscriptionModalProps {
   subscription: SubscriptionType | null;
@@ -12,6 +16,9 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   subscription,
   onClose,
 }) => {
+  const [loading, setLoading] = useState(false);
+  // const { user } = useAuth(); // optional if using context
+
   if (!subscription) return null;
 
   const getStatusColor = (status: SubscriptionStatus) => {
@@ -27,6 +34,39 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
         return "bg-gray-100 text-gray-800";
     }
   };
+
+  // 🧾 Payment handler
+ const handlePayment = async () => {
+  if (!subscription) return;
+  setLoading(true);
+  try {
+    const payload = {
+      userId: 1, // replace with actual logged-in user ID
+      subscriptionId: subscription.id,
+      amount: subscription.price ?? 0,
+    };
+
+    const res = await paymentService.createSubscriptionPayment(payload);
+
+    toast.success("Redirecting to Khalti...");
+
+    // ✅ extract the correct payment URL from your backend response
+    const redirectUrl = res?.data?.paymentUrl?.payment_url;
+
+    if (redirectUrl) {
+      window.location.href = redirectUrl;
+    } else {
+      toast.error("Payment URL not found in response!");
+      console.error("Unexpected response:", res);
+    }
+  } catch (err: any) {
+    console.error(err);
+    toast.error(err?.message || "Payment failed!");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
@@ -53,7 +93,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </span>
         </div>
 
-        {/* Details Grid */}
+        {/* Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
           <div>
             <p className="font-semibold">Teacher</p>
@@ -90,10 +130,15 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
         {/* Footer / Payment */}
         <div className="mt-6 flex justify-end">
           <button
-            onClick={() => alert("Payment functionality not implemented")}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            onClick={handlePayment}
+            disabled={loading}
+            className={`px-6 py-2 rounded-lg transition ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 text-white"
+            }`}
           >
-            Payment
+            {loading ? "Processing..." : "Payment"}
           </button>
         </div>
       </div>
