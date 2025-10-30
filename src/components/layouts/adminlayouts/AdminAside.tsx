@@ -31,7 +31,7 @@ export const navItems = [
     icon: MdGroup,
   },
   {
-    name: " Teacher-Subject Management",
+    name: "Teacher-Subject Management",
     href: "/admin/teacherSubjects",
     icon: MdGroup,
   },
@@ -48,7 +48,10 @@ export default function AdminAside() {
     <aside className="w-16 hover:w-64 bg-white/95 backdrop-blur-sm border-r border-gray-200/60 h-screen fixed left-0 top-0 z-50 flex flex-col transition-all duration-300 ease-in-out group shadow-xl hover:shadow-2xl">
       {/* Logo Section */}
       <div className="h-16 flex items-center justify-center px-4 border-b border-gray-200/60 bg-gradient-to-r from-gray-50/80 to-white/80 group">
-        <div className="flex items-center gap-3 min-w-0">
+        <Link
+          href="/"
+          className="flex items-center gap-3 min-w-0 group"
+        >
           {/* Logo - always visible */}
           <Image
             src={logo}
@@ -60,11 +63,12 @@ export default function AdminAside() {
 
           {/* Text - hidden until sidebar expands (hover) */}
           <span className="font-bold text-lg text-gray-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
-            ShikshaGhar
+            ShikshyaGhar
           </span>
-        </div>
+        </Link>
       </div>
 
+      {/* Navigation */}
       <nav className="flex-1 py-6 overflow-y-auto hide-scrollbar bg-gradient-to-b from-transparent to-gray-50/30">
         <ul className="space-y-2 px-2">
           {navItems.map(({ name, href, icon: Icon }) => {

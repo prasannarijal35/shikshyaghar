@@ -157,7 +157,7 @@ export default function HeroSlider() {
                       </Link>
                       {/* Secondary Button */}
                       <Link
-                        href="/about"
+                        href="/about-us"
                         className="bg-secondary hover:bg-secondary/90 text-white font-semibold py-3 px-6 rounded-md shadow-lg transition duration-300 w-max"
                       >
                         Learn More

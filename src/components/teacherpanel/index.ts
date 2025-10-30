@@ -5,3 +5,4 @@ export { default as Students } from "./Students";
 export { default as Requests } from "./Requests";
 export { default as Toast } from "./Toast";
 export { default as SelectDropdown } from "./SelectDropdown";
+export {default as StudentProfileModal} from "./StudentProfileModal";

@@ -1,90 +1,90 @@
 "use client";
 
-import Image from "next/image";
-import React from "react";
-import logo from "@/assets/logo/Sg_logo.png";
-
-const students = [
-  {
-    id: 1,
-    name: "Rahul Sharma",
-    email: "rahul@studentmail.com",
-    course: "Mathematics",
-    status: "Active",
-    image: logo,
-  },
-  {
-    id: 2,
-    name: "Priya Karki",
-    email: "priya@studentmail.com",
-    course: "Physics",
-    status: "Active",
-    image: logo,
-  },
-  {
-    id: 3,
-    name: "Ankit Thapa",
-    email: "ankit@studentmail.com",
-    course: "Chemistry",
-    status: "Inactive",
-    image: logo,
-  },
-  {
-    id: 4,
-    name: "Ankit Thapa",
-    email: "ankit@studentmail.com",
-    course: "Chemistry",
-    status: "Inactive",
-    image: logo,
-  },
-  {
-    id: 5,
-    name: "Ankit Thapa",
-    email: "ankit@studentmail.com",
-    course: "Chemistry",
-    status: "Inactive",
-    image: logo,
-  },
-];
+import { useEffect, useState } from "react";
+import { SubscriptionType } from "@/types/subscription";
+import useSubscriptionService from "@/services/subscriptionServices";
+import StudentProfileModal from "./StudentProfileModal";
 
 export default function MyStudentsPage() {
+  const [activeStudents, setActiveStudents] = useState<SubscriptionType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<SubscriptionType | null>(null);
+
+  const subscriptionService = useSubscriptionService();
+
+  const fetchActiveStudents = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const res = await subscriptionService.getByTeacherId();
+      const allSubscriptions: SubscriptionType[] = res.subscriptions || [];
+      const active = allSubscriptions.filter(
+        (sub) => sub.status === "ACTIVE"
+      );
+
+      setActiveStudents(active);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch active students");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchActiveStudents();
+  }, []);
+
   return (
     <main className="p-6">
-      <h1 className="text-2xl font-semibold mb-6 text-gray-800">My Students</h1>
+      <h1 className="text-3xl font-bold text-primary">My Students</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {students.map((student) => (
-          <div
-            key={student.id}
-            className="bg-white rounded-xl shadow-md p-4 flex flex-col items-center text-center hover:shadow-lg transition"
-          >
-            <Image
-              src={student.image}
-              alt={student.name}
-              width={80}
-              height={80}
-              className="rounded-full object-cover h-20 w-20 border-2 border-primary mb-4"
-            />
-            <h2 className="text-lg font-semibold text-gray-800">
-              {student.name}
-            </h2>
-            <p className="text-sm text-gray-500">{student.email}</p>
-            <p className="text-sm text-gray-600 mt-2">
-              Course: <span className="font-medium">{student.course}</span>
-            </p>
-            <p
-              className={`mt-1 text-sm font-medium ${
-                student.status === "Active" ? "text-green-600" : "text-red-500"
-              }`}
+      {loading && <p className="text-gray-500 text-center">Loading students...</p>}
+      {error && <p className="text-red-500 text-center">{error}</p>}
+      {!loading && !error && activeStudents.length === 0 && (
+        <p className="text-gray-500 text-center">No active students found.</p>
+      )}
+
+      {!loading && activeStudents.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {activeStudents.map((student) => (
+            <div
+              key={student.id}
+              className="bg-white rounded-xl shadow-md p-4 flex flex-col items-center text-center hover:shadow-lg transition"
             >
-              {student.status}
-            </p>
-            <button className="mt-4 bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
-              View Profile
-            </button>
-          </div>
-        ))}
-      </div>
+              <h2 className="text-lg font-semibold text-gray-800">
+                {student.studentName}
+              </h2>
+              <p className="text-sm text-gray-500">{student.studentEmail}</p>
+              <p className="text-sm text-gray-600 mt-2">
+                Subject:{" "}
+                <span className="font-medium">
+                  {student.subjectName || "N/A"}
+                </span>
+              </p>
+              <p className="mt-1 text-sm font-medium text-green-600">
+                Active
+              </p>
+              <button
+                onClick={() => setSelectedStudent(student)}
+                className="mt-4 bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition"
+              >
+                View Profile
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Student Profile Modal */}
+      {selectedStudent && (
+        <StudentProfileModal
+          student={selectedStudent}
+          onClose={() => setSelectedStudent(null)}
+        />
+      )}
     </main>
   );
 }

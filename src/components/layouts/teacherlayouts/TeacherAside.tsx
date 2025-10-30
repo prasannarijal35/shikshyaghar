@@ -9,7 +9,6 @@ import {
   MdClass,
   MdDashboard,
   MdGroup,
-  MdMessage,
   MdPerson,
 } from "react-icons/md";
 import { FaSignOutAlt } from "react-icons/fa";
@@ -19,17 +18,9 @@ export const navItems = [
   { name: "Dashboard", href: "/teacher/dashboard", icon: MdDashboard },
   { name: "My Profile", href: "/teacher/profile", icon: MdPerson },
   { name: "My Classes", href: "/teacher/teacherSubject", icon: MdClass },
-  { name: "Subscriber", href: "/teacher/subscriber", icon: MdAssignment },
-  { name: "Messages", href: "/teacher/messages", icon: MdMessage },
+  { name: "Subscribers", href: "/teacher/subscriber", icon: MdAssignment },
   { name: "Students", href: "/teacher/students", icon: MdGroup },
   { name: "Post Reviews", href: "/teacher/review", icon: MdGroup },
-
-  // {
-  //   name: "Notifications",
-  //   href: "/teacher/notifications",
-  //   icon: MdNotifications,
-  // },
-  // { name: "Help & Support", href: "/teacher/support", icon: MdHelp },
 ];
 
 export default function AdminAside() {
@@ -38,10 +29,11 @@ export default function AdminAside() {
 
   return (
     <aside className="w-16 hover:w-64 bg-white/95 backdrop-blur-sm border-r border-gray-200/60 h-screen fixed left-0 top-0 z-50 flex flex-col transition-all duration-300 ease-in-out group shadow-xl hover:shadow-2xl">
-      {/* Logo Section */}
       <div className="h-16 flex items-center justify-center px-4 border-b border-gray-200/60 bg-gradient-to-r from-gray-50/80 to-white/80 group">
-        <div className="flex items-center gap-3 min-w-0">
-          {/* Logo - always visible */}
+        <Link
+          href="/"
+          className="flex items-center gap-3 min-w-0 group"
+        >
           <Image
             src={logo}
             alt="SG Coaching Logo"
@@ -50,11 +42,10 @@ export default function AdminAside() {
             className="w-8 h-8 flex-shrink-0 rounded-lg shadow-sm"
           />
 
-          {/* Text - hidden until sidebar expands (hover) */}
           <span className="font-bold text-lg text-gray-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
-            ShikshaGhar
+            ShikshyaGhar
           </span>
-        </div>
+        </Link>
       </div>
 
       <nav className="flex-1 py-6 overflow-y-auto hide-scrollbar bg-gradient-to-b from-transparent to-gray-50/30">
@@ -72,12 +63,10 @@ export default function AdminAside() {
                         : "text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100/60 hover:text-gray-900 hover:shadow-md"
                     }`}
                   >
-                    {/* Background overlay for active state */}
                     {isActive && (
                       <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-blue-600/10 rounded-xl"></div>
                     )}
 
-                    {/* Active indicator */}
                     {isActive && (
                       <div className="absolute left-0 top-2 bottom-2 w-1 bg-gradient-to-b from-blue-500 to-blue-600 rounded-r-full shadow-sm"></div>
                     )}
@@ -106,7 +95,6 @@ export default function AdminAside() {
                       {name}
                     </span>
 
-                    {/* Hover glow effect */}
                     <div
                       className={`absolute inset-0 rounded-xl opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 pointer-events-none ${
                         isActive
@@ -122,13 +110,11 @@ export default function AdminAside() {
         </ul>
       </nav>
 
-      {/* Bottom section - Logout */}
       <div className="p-4 border-t border-gray-200/60 mt-auto bg-gradient-to-r from-gray-50/60 to-white/80">
         <button
           onClick={handleLogout}
           className="relative flex items-center gap-3 px-3 py-3 w-full rounded-xl group/logout hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100/80 transition-all duration-300 hover:shadow-lg overflow-hidden"
         >
-          {/* Background overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-red-600/10 rounded-xl opacity-0 group-hover/logout:opacity-100 transition-opacity duration-300"></div>
 
           <div className="relative bg-gradient-to-br from-red-100 to-red-200/80 text-red-600 w-8 h-8 flex items-center justify-center rounded-xl flex-shrink-0 shadow-sm group-hover/logout:shadow-md group-hover/logout:scale-110 transition-all duration-300">
@@ -139,7 +125,6 @@ export default function AdminAside() {
             Logout
           </span>
 
-          {/* Subtle glow effect on hover */}
           <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-red-600/10 rounded-xl opacity-0 group-hover/logout:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
         </button>
       </div>

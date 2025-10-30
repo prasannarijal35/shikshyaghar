@@ -32,7 +32,10 @@ export default function StudentAside() {
     <aside className="w-16 hover:w-64 bg-white/95 backdrop-blur-sm border-r border-gray-200/60 h-screen fixed left-0 top-0 z-50 flex flex-col transition-all duration-300 ease-in-out group shadow-xl hover:shadow-2xl">
       {/* Logo Section */}
       <div className="h-16 flex items-center justify-center px-4 border-b border-gray-200/60 bg-gradient-to-r from-gray-50/80 to-white/80 group">
-        <div className="flex items-center gap-3 min-w-0">
+        <Link
+          href="/"
+          className="flex items-center gap-3 min-w-0 group"
+        >
           <div className="relative">
             <div className="absolute inset-0 bg-blue-500 rounded-xl blur-sm opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
             <Image
@@ -44,9 +47,9 @@ export default function StudentAside() {
             />
           </div>
           <span className="font-bold text-lg text-gray-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text">
-            ShikshaGhar
+            ShikshyaGhar
           </span>
-        </div>
+        </Link>
       </div>
 
       {/* Navigation */}
