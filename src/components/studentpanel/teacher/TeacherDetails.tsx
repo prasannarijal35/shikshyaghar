@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Teacher } from "@/types/teacher";
 import {
   FaBriefcase,
-  FaStar,
+  // FaStar,
   FaGraduationCap,
   FaClock,
   FaCheckCircle,
