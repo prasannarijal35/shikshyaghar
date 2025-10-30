@@ -75,17 +75,6 @@ export default function StudentManagementTable() {
             </p>
           </div>
         </div>
-        {/* Add Student Button */}
-        <button
-          onClick={() => toast("Add student functionality not implemented")}
-          className="group relative bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 overflow-hidden"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          <div className="relative flex items-center space-x-2">
-            <UserPlus className="w-4 h-4" />
-            <span>Add Student</span>
-          </div>
-        </button>
       </div>
 
       {/* Loading */}
