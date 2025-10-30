@@ -42,6 +42,7 @@ export interface TeacherSubjectType {
   gradeSubject: GradeSubjectType;
   price: number;
   duration: number;
+  meetingLink: string;
 }
 
 export interface SubscriptionType {
