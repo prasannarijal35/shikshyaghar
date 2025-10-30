@@ -68,23 +68,23 @@ export default function TeacherHeader() {
 
       <div className="flex items-center gap-4">
         {/* Search */}
-        <div className="relative">
+        {/* <div className="relative">
           <input
             type="search"
             placeholder="Search"
             className="w-64 px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             aria-label="Search"
           />
-        </div>
+        </div> */}
 
         {/* Notifications */}
-        <button
+        {/* <button
           aria-label="Notifications"
           className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 relative"
         >
           <IoNotifications className="h-5 w-5 text-gray-600" />
           <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
-        </button>
+        </button> */}
         <div className="relative" ref={menuRef}>
           <Image
             src={teacher?.teacher?.profilePicture ?? logo}

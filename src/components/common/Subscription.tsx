@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { Teacher } from "@/types/teacher";
 import { TeacherSubjectAssignment } from "@/types/teacherSubject";
@@ -54,6 +55,10 @@ export default function TeacherSubscriptionPage({
         `Subscription created successfully! Total: Rs.${totalPrice.toLocaleString()}`
       );
       console.log("Subscription:", subscription);
+
+      // Redirect after successful subscription
+      window.location.href = "/student/subscription";
+
     } catch (err: any) {
       if (err.response?.status === 409) {
         toast.error(

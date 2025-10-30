@@ -33,10 +33,12 @@ export default function GradesPage() {
   return (
     <div className="p-6">
       <Breadcrumb title="All Grades" />
-      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-4">
+      <div className="container py-28">
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-20">
         {grades.map((grade) => (
           <SingleGradeItem key={grade.id} grade={grade} />
         ))}
+      </div>
       </div>
     </div>
   );

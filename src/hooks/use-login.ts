@@ -63,7 +63,7 @@ export default function useLogin() {
         } else if (response.user?.role === "teacher") {
           router.push("/teacher/dashboard");
         } else {
-          router.push("/student/profile");
+          router.push("/student/dashboard");
         }
       } else {
         toast.error(response.message);

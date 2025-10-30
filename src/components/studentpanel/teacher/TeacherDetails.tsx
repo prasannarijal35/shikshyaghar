@@ -105,15 +105,6 @@ export default function TeacherDetails() {
                       {teacher.role || "Professional Teacher"}
                     </div>
                   </div>
-
-                  <div className="flex justify-center lg:justify-start items-center gap-1 mb-6">
-                    {[...Array(5)].map((_, i) => (
-                      <FaStar key={i} className="text-yellow-400 text-xl" />
-                    ))}
-                    <span className="ml-2 text-gray-600 font-medium">
-                      5.0 (Premium Instructor)
-                    </span>
-                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
