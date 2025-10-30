@@ -8,7 +8,6 @@ import {
   MdBarChart,
   MdGroup,
   MdVerified,
-  MdCampaign,
   MdEditNote,
   MdSettings,
 } from "react-icons/md";
@@ -36,10 +35,9 @@ export const navItems = [
     href: "/admin/teacherSubjects",
     icon: MdGroup,
   },
-  { name: "Announcements", href: "/admin/announcements", icon: MdCampaign },
+
   { name: "Review Management", href: "/admin/reviews", icon: MdSettings },
   { name: "Blog Manager", href: "/admin/blogs", icon: MdEditNote },
-  { name: "Settings", href: "/admin/settings", icon: MdSettings },
 ];
 
 export default function AdminAside() {

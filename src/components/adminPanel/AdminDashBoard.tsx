@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import {
@@ -18,7 +17,7 @@ import gradeService from "@/services/gradeServices";
 import subjectService from "@/services/subjectServices";
 import blogService from "@/services/blogServices";
 import reviewService from "@/services/reviewServices";
-import myAxios from "@/services/apiServices";
+import studentService from "@/services/studentService";
 
 interface DashboardStats {
   totalStudents: number;
@@ -85,9 +84,9 @@ export default function AdminDashboard() {
       try {
         setLoading(true);
 
-        const [studentsRes, teachers, grades, subjects, blogs, reviews] =
+        const [students, teachers, grades, subjects, blogs, reviews] =
           await Promise.all([
-            myAxios.get("/admin/students"),
+            studentService.getAllStudents(),
             teacherService.getAllTeachers(),
             gradeService.getAllGrades(),
             subjectService.getAllSubjects(),
@@ -95,36 +94,21 @@ export default function AdminDashboard() {
             reviewService.getAllReviews(),
           ]);
 
-        // Ensure students is always an array
-        const students = Array.isArray(studentsRes.data?.data)
-          ? studentsRes.data.data
-          : [];
+        // --- STUDENTS ---
 
+        // --- DASHBOARD STATS ---
         const dashboardData: DashboardStats = {
-          totalStudents: students.length,
-          totalTeachers: teachers.length,
-          totalGrades: grades.length,
-          totalSubjects: (subjects as any).items?.length ?? 0,
-          totalBlogs: blogs.length,
-          pendingReviews: reviews.length,
+          totalStudents: students.data.length,
+          totalTeachers: Array.isArray(teachers) ? teachers.length : 0,
+          totalGrades: Array.isArray(grades) ? grades.length : 0,
+          totalSubjects: Array.isArray(subjects) ? subjects.length : 0,
+          totalBlogs: Array.isArray(blogs) ? blogs.length : 0,
+          pendingReviews: Array.isArray(reviews) ? reviews.length : 0,
         };
-
         setStats(dashboardData);
 
-        // Sort recent teachers
-        setRecentTeachers(
-          teachers
-            .slice() // copy array to avoid mutation
-            .sort(
-              (a, b) =>
-                new Date(b.createdAt || 0).getTime() -
-                new Date(a.createdAt || 0).getTime()
-            )
-            .slice(0, 5)
-        );
-
-        // ✅ Improved: Safely sort and map student data
-        const sortedStudents = students
+        // --- Recent Students ---
+        const sortedStudents = students.data
           .slice()
           .sort(
             (a: any, b: any) =>
@@ -132,16 +116,29 @@ export default function AdminDashboard() {
               new Date(a.createdAt || 0).getTime()
           )
           .slice(0, 5);
-
         setRecentStudents(sortedStudents);
 
-        // Sort top blogs
-        setTopBlogs(
-          blogs
-            .slice()
-            .sort((a, b) => (b.views || 0) - (a.views || 0))
-            .slice(0, 5)
-        );
+        // --- Recent Teachers ---
+        const sortedTeachers = Array.isArray(teachers)
+          ? teachers
+              .slice()
+              .sort(
+                (a, b) =>
+                  new Date(b.createdAt || 0).getTime() -
+                  new Date(a.createdAt || 0).getTime()
+              )
+              .slice(0, 5)
+          : [];
+        setRecentTeachers(sortedTeachers);
+
+        // --- Top Blogs ---
+        const topBlogsArr = Array.isArray(blogs)
+          ? blogs
+              .slice()
+              .sort((a, b) => (b.views || 0) - (a.views || 0))
+              .slice(0, 5)
+          : [];
+        setTopBlogs(topBlogsArr);
       } catch (err) {
         console.error("Dashboard load error:", err);
         toast.error("Failed to load dashboard data");
@@ -153,6 +150,9 @@ export default function AdminDashboard() {
           totalBlogs: 0,
           pendingReviews: 0,
         });
+        setRecentStudents([]);
+        setRecentTeachers([]);
+        setTopBlogs([]);
       } finally {
         setLoading(false);
       }
@@ -271,7 +271,7 @@ export default function AdminDashboard() {
           )}
         </div>
 
-        {/* ✅ RECENT STUDENTS (Improved) */}
+        {/* RECENT STUDENTS */}
         <div className="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20">
           <h3 className="text-xl font-semibold text-gray-800 mb-4">
             Recent Student Registrations

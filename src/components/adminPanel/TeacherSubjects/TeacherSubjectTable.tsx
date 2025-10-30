@@ -263,85 +263,118 @@ export default function TeacherSubjectTable() {
       )}
 
       {/* Detail Modal */}
+
       {selectedSubject && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-          <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl w-full max-w-xl p-8 relative transform scale-95 opacity-0 animate-scaleIn">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl p-8 relative transform scale-100 opacity-100 transition-all duration-300">
+            {/* Close Button */}
             <button
               onClick={() => setSelectedSubject(null)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
+              className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800 transition"
             >
-              <X size={24} />
+              <X size={20} />
             </button>
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
-              Assignment Details
-            </h2>
-            <div className="space-y-4">
-              <p className="text-gray-800">
-                <strong className="font-semibold text-blue-700">
-                  Teacher:
-                </strong>{" "}
-                <span className="font-medium">
+
+            {/* Modal Header */}
+            <div className="flex items-center mb-6 space-x-4">
+              <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                <School className="w-6 h-6 text-white" />
+              </div>
+              <h2 className="text-3xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Assignment Details
+              </h2>
+            </div>
+
+            {/* Modal Content */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Teacher */}
+              <div className="p-4 border rounded-xl shadow-sm bg-gray-50">
+                <h3 className="text-sm font-semibold text-blue-700 mb-1">
+                  Teacher
+                </h3>
+                <p className="font-medium text-gray-800">
                   {selectedSubject.teacher?.user?.fullName || "N/A"}
-                </span>
-              </p>
-              <p className="text-gray-800">
-                <strong className="font-semibold text-purple-700">
-                  Grade:
-                </strong>{" "}
-                <span className="font-medium">
+                </p>
+              </div>
+
+              {/* Grade */}
+              <div className="p-4 border rounded-xl shadow-sm bg-gray-50">
+                <h3 className="text-sm font-semibold text-purple-700 mb-1">
+                  Grade
+                </h3>
+                <p className="font-medium text-gray-800">
                   {selectedSubject.gradeSubject?.grade?.name || "N/A"}
-                </span>
-              </p>
-              <p className="text-gray-800">
-                <strong className="font-semibold text-blue-700">
-                  Subject:
-                </strong>{" "}
-                <span className="font-medium">
+                </p>
+              </div>
+
+              {/* Subject */}
+              <div className="p-4 border rounded-xl shadow-sm bg-gray-50">
+                <h3 className="text-sm font-semibold text-blue-700 mb-1">
+                  Subject
+                </h3>
+                <p className="font-medium text-gray-800">
                   {selectedSubject.gradeSubject?.subject?.name || "N/A"}
-                </span>
-              </p>
-              <p className="text-gray-800">
-                <strong className="font-semibold text-purple-700">
-                  Price:
-                </strong>{" "}
-                <span className="font-medium">
+                </p>
+              </div>
+
+              {/* Price */}
+              <div className="p-4 border rounded-xl shadow-sm bg-gray-50">
+                <h3 className="text-sm font-semibold text-purple-700 mb-1">
+                  Price
+                </h3>
+                <p className="font-medium text-gray-800">
                   Rs {selectedSubject.price ?? 0}
-                </span>
-              </p>
-              <p className="text-gray-800">
-                <strong className="font-semibold text-blue-700">
-                  Duration:
-                </strong>{" "}
-                <span className="font-medium">
+                </p>
+              </div>
+
+              {/* Duration */}
+              <div className="p-4 border rounded-xl shadow-sm bg-gray-50">
+                <h3 className="text-sm font-semibold text-blue-700 mb-1">
+                  Duration
+                </h3>
+                <p className="font-medium text-gray-800">
                   {selectedSubject.duration ?? "N/A"} mins
-                </span>
-              </p>
-              <p className="text-gray-800">
-                <strong className="font-semibold text-purple-700">
-                  Start Time:
-                </strong>{" "}
-                <span className="font-medium">
+                </p>
+              </div>
+
+              {/* Start Time */}
+              <div className="p-4 border rounded-xl shadow-sm bg-gray-50">
+                <h3 className="text-sm font-semibold text-purple-700 mb-1">
+                  Start Time
+                </h3>
+                <p className="font-medium text-gray-800">
                   {selectedSubject.startTime || "N/A"}
-                </span>
-              </p>
-              <p className="text-gray-800">
-                <strong className="font-semibold text-blue-700">
-                  Meeting Link:
-                </strong>{" "}
-                <span className="font-medium text-blue-500 hover:underline">
+                </p>
+              </div>
+
+              {/* Meeting Link */}
+              <div className="p-4 border rounded-xl shadow-sm bg-gray-50 col-span-1 md:col-span-2">
+                <h3 className="text-sm font-semibold text-blue-700 mb-1">
+                  Meeting Link
+                </h3>
+                <a
+                  href={selectedSubject.meetingLink || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-blue-500 hover:underline"
+                >
                   {selectedSubject.meetingLink || "N/A"}
-                </span>
-              </p>
-              <p className="text-gray-800">
-                <strong className="font-semibold text-purple-700">
-                  Description:
-                </strong>{" "}
-                <span className="font-medium">
+                </a>
+              </div>
+
+              {/* Description */}
+              <div className="p-4 border rounded-xl shadow-sm bg-gray-50 col-span-1 md:col-span-2">
+                <h3 className="text-sm font-semibold text-purple-700 mb-1">
+                  Description
+                </h3>
+                <p className="font-medium text-gray-800">
                   {selectedSubject.description || "N/A"}
-                </span>
-              </p>
-              <p className="text-gray-800">
-                <strong className="font-semibold text-blue-700">Status:</strong>{" "}
+                </p>
+              </div>
+
+              {/* Status */}
+              <div className="p-4 border rounded-xl shadow-sm bg-gray-50 col-span-1 md:col-span-2 flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-blue-700">Status</h3>
                 <span
                   className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
                     getStatus(selectedSubject) === "Live"
@@ -353,7 +386,7 @@ export default function TeacherSubjectTable() {
                 >
                   {getStatus(selectedSubject)}
                 </span>
-              </p>
+              </div>
             </div>
           </div>
         </div>
