@@ -3,13 +3,14 @@ import Breadcrumb from "@/components/common/BreadCrumb";
 import blogService from "@/services/blogServices";
 import { notFound } from "next/navigation";
 
-// Explicitly define PageProps
+// ✅ DO NOT use PageProps from Next.js — define your own plain interface
 interface BlogPageProps {
   params: {
     slug: string;
   };
 }
 
+// ✅ Keep the function async, but params is just an object
 export default async function Page({ params }: BlogPageProps) {
   const { slug } = params;
 
@@ -26,4 +27,10 @@ export default async function Page({ params }: BlogPageProps) {
       <BlogDetails blog={blog} />
     </>
   );
+}
+
+// ✅ Add this: helps Next.js correctly infer the type of params at build time
+export async function generateStaticParams() {
+  // Returning empty list or prebuilt slugs prevents Promise confusion
+  return [];
 }

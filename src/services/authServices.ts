@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import myAxios from "./apiServices";
 import {
   RegisterFormData,

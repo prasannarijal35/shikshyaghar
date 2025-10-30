@@ -24,7 +24,6 @@ interface SubscriptionCardProps {
 
 const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
   subscription,
-  onUpdated,
 }) => {
   const { updateByTeacher } = useSubscriptionService();
 
@@ -181,7 +180,8 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
             <p className="text-2xl font-bold text-blue-900">
               {subscription.duration || 0}{" "}
               <span className="text-base font-medium">
-                month{subscription.duration && subscription.duration > 1 ? "s" : ""}
+                month
+                {subscription.duration && subscription.duration > 1 ? "s" : ""}
               </span>
             </p>
           </div>
@@ -195,7 +195,8 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
               Subscription Period
             </p>
             <p className="text-sm font-semibold text-slate-700">
-              {formatDate(subscription.startDate)} → {formatDate(subscription.endDate)}
+              {formatDate(subscription.startDate)} →{" "}
+              {formatDate(subscription.endDate)}
             </p>
           </div>
         </div>
@@ -261,9 +262,7 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
                 <input
                   type="date"
                   value={
-                    editedData.endDate
-                      ? editedData.endDate.split("T")[0]
-                      : ""
+                    editedData.endDate ? editedData.endDate.split("T")[0] : ""
                   }
                   onChange={(e) =>
                     setEditedData({ ...editedData, endDate: e.target.value })

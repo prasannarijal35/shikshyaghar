@@ -18,7 +18,7 @@ export default function MainPage() {
       setLoading(true);
       const data = await reviewService.getAllReviews(); // <-- backend call
       setReviews(data);
-    } catch (error) {
+    } catch {
       toast.error("Failed to load reviews");
     } finally {
       setLoading(false);
