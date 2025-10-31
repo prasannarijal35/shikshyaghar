@@ -5,9 +5,10 @@ import Image from "next/image";
 import { FaSignOutAlt, FaUser } from "react-icons/fa";
 import Link from "next/link";
 import { getUser, clearStorage } from "@/utils/localStorage";
-import logo from "@/assets/logo/Sg_logo.png";
+// import logo from "@/assets/logo/Sg_logo.png";
 import { useRouter } from "next/navigation";
 import { StudentDetails } from "@/types/students";
+import image from "@/assets/logo/Sg_logo.png";
 
 export default function StudentHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,12 +28,12 @@ export default function StudentHeader() {
   }
 
   // Safe profile picture getter
-  const getProfilePicture = () => {
-    const path = studentUser?.student?.profilePicture;
-    if (!path || path.trim() === "") return logo; // fallback to local logo
-    if (path.startsWith("http")) return path; // already full URL
-    return `${process.env.NEXT_PUBLIC_API_URL}/${path}`; // prepend API URL
-  };
+  // const getProfilePicture = () => {
+  //   const path = studentUser?.student?.profilePicture;
+  //   if (!path || path.trim() === "") return logo; // fallback to local logo
+  //   if (path.startsWith("http")) return path; // already full URL
+  //   return `${process.env.NEXT_PUBLIC_API_URL}/${path}`; // prepend API URL
+  // };
 
   useEffect(() => {
     const u = getUser() as StudentDetails | null;
@@ -72,7 +73,7 @@ export default function StudentHeader() {
       <div className="flex items-center gap-4">
         <div className="relative" ref={menuRef}>
           <Image
-            src={getProfilePicture()}
+            src={image}
             alt="User Avatar"
             width={40}
             height={40}
@@ -85,7 +86,7 @@ export default function StudentHeader() {
                 <div className="h-16 w-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-t-lg"></div>
                 <div className="absolute top-8 left-1/2 transform -translate-x-1/2">
                   <Image
-                    src={getProfilePicture()}
+                    src={image}
                     alt="Profile"
                     height={60}
                     width={60}

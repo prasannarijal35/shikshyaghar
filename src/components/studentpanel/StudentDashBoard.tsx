@@ -6,7 +6,6 @@ import {
   ClipboardList,
   BookOpen,
   Bell,
-  MessageCircle,
   FileText,
   User,
   LifeBuoy,
@@ -18,6 +17,7 @@ import useSubscriptionService from "@/services/subscriptionServices";
 import teacherService from "@/services/teacherServices";
 import { SubscriptionType } from "@/types/subscription";
 import { Teacher } from "@/types/teacher";
+import { FaChampagneGlasses } from "react-icons/fa6";
 
 export default function StudentDashboard() {
   const [subscriptions, setSubscriptions] = useState<SubscriptionType[]>([]);
@@ -161,7 +161,7 @@ export default function StudentDashboard() {
           {/* Bottom Navigation */}
           <nav className="bg-white rounded-2xl shadow p-5 flex flex-wrap justify-around gap-4 text-primary font-medium text-sm sm:text-base">
             <button className="flex items-center gap-1 hover:text-blue-800 transition">
-              <MessageCircle size={18} /> Messages
+              <FaChampagneGlasses size={18} /> Myclasses
             </button>
             <button className="flex items-center gap-1 hover:text-blue-800 transition">
               <FileText size={18} /> Resources
