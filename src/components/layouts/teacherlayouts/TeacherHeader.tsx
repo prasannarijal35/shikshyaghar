@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { IoNotifications } from "react-icons/io5";
+// import { IoNotifications } from "react-icons/io5";
 import { FaSignOutAlt, FaUser } from "react-icons/fa";
 import Link from "next/link";
 import { getUser, clearStorage } from "@/utils/localStorage";
