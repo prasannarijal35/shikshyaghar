@@ -1,9 +1,10 @@
-// app/layout.tsx (this stays a server component)
+// app/layout.tsx
 
 import { TeacherLayout } from "@/components/layouts/teacherlayouts";
 import { AuthProvider } from "@/context/AuthContext";
 import "@/styles/globals.css";
 import { Poppins } from "next/font/google";
+import { Toaster } from "react-hot-toast"; // <-- import Toaster
 
 export const metadata = {
   title: "Create Next App",
@@ -26,7 +27,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${poppins.className} antialiased`}>
         <AuthProvider>
-          <TeacherLayout>{children}</TeacherLayout>
+          <TeacherLayout>
+            {/* Toaster added here */}
+            <Toaster position="top-right" />
+            {children}
+          </TeacherLayout>
         </AuthProvider>
       </body>
     </html>
