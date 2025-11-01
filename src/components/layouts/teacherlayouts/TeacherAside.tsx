@@ -13,7 +13,7 @@ import {
 } from "react-icons/md";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useLogout } from "@/utils/logout";
-import { MessageCircle, MessageSquare } from "lucide-react";
+import { MessageCircle, MessageSquare, ClipboardCheck } from "lucide-react";
 
 export const navItems = [
   { name: "Dashboard", href: "/teacher/dashboard", icon: MdDashboard },
@@ -21,6 +21,7 @@ export const navItems = [
   { name: "My Classes", href: "/teacher/teacherSubject", icon: MdClass },
   { name: "Subscribers", href: "/teacher/subscriber", icon: MdAssignment },
   { name: "Students", href: "/teacher/students", icon: MdGroup },
+  { name: "Attendance", href: "/teacher/attendance", icon: ClipboardCheck },
   { name: "Post Reviews", href: "/teacher/review", icon: MdGroup },
   { name: "Community", href: "/teacher/community", icon: MessageCircle },
   { name: "Messages", href: "/teacher/messages", icon: MessageSquare },

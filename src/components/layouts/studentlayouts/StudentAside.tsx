@@ -7,13 +7,19 @@ import { usePathname } from "next/navigation";
 import { MdDashboard, MdPerson, MdClass, MdFindReplace } from "react-icons/md";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useLogout } from "@/utils/logout";
-import { SubscriptIcon, MessageCircle, MessageSquare } from "lucide-react";
+import {
+  SubscriptIcon,
+  MessageCircle,
+  MessageSquare,
+  ClipboardCheck,
+} from "lucide-react";
 
 export const navItems = [
   { name: "Dashboard", href: "/student/dashboard", icon: MdDashboard },
   { name: "My Profile", href: "/student/profile", icon: MdPerson },
   { name: "Subscription", href: "/student/subscription", icon: SubscriptIcon },
   { name: "My Classes", href: "/student/myclasses", icon: MdClass },
+  { name: "My Attendance", href: "/student/attendance", icon: ClipboardCheck },
   { name: "Find Teachers", href: "/student/findteacher", icon: MdFindReplace },
   { name: "Community", href: "/student/community", icon: MessageCircle },
   { name: "Messages", href: "/student/messages", icon: MessageSquare },
