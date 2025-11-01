@@ -6,6 +6,7 @@ import {
   TeacherFooter,
   TeacherHeader,
 } from "@/components/layouts/teacherlayouts";
+import Chatbot from "@/components/common/Chatbot";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
@@ -14,7 +15,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <TeacherAside />
 
       {/* Main Content Area */}
-      <div className="ml-16 transition-all duration-300 flex flex-col min-h-screen">
+      <div className="ml-20 transition-all duration-300 flex flex-col min-h-screen">
         {/* Header */}
         <TeacherHeader />
 
@@ -27,6 +28,9 @@ export default function Layout({ children }: { children: ReactNode }) {
           <TeacherFooter />
         </div>
       </div>
+
+      {/* Chatbot */}
+      <Chatbot userRole="teacher" />
     </div>
   );
 }

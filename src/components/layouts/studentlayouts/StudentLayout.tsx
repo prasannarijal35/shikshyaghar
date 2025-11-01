@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import StudentHeader from "@/components/layouts/studentlayouts/StudentHeader";
 import StudentSidebar from "@/components/layouts/studentlayouts/StudentAside";
 import StudentFooter from "@/components/layouts/studentlayouts/StudentFooter";
+import Chatbot from "@/components/common/Chatbot";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
@@ -12,7 +13,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <StudentSidebar />
 
       {/* Main Content Area */}
-      <div className="ml-16 transition-all duration-300 flex flex-col min-h-screen">
+      <div className="ml-20 transition-all duration-300 flex flex-col min-h-screen">
         {/* Header */}
         <StudentHeader />
 
@@ -25,6 +26,9 @@ export default function Layout({ children }: { children: ReactNode }) {
           <StudentFooter />
         </div>
       </div>
+
+      {/* Chatbot */}
+      <Chatbot userRole="student" />
     </div>
   );
 }

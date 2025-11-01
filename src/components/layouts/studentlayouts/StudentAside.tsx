@@ -24,29 +24,39 @@ export default function StudentAside() {
   const handleLogout = useLogout();
 
   return (
-    <aside className="w-16 hover:w-64 bg-white/95 backdrop-blur-sm border-r border-gray-200/60 h-screen fixed left-0 top-0 z-50 flex flex-col transition-all duration-300 ease-in-out group shadow-xl hover:shadow-2xl">
+    <aside className="w-20 hover:w-72 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 h-screen fixed left-0 top-0 z-50 flex flex-col transition-all duration-300 ease-in-out group shadow-2xl overflow-hidden">
       {/* Logo Section */}
-      <div className="h-16 flex items-center justify-center px-4 border-b border-gray-200/60 bg-gradient-to-r from-gray-50/80 to-white/80 group">
-        <Link href="/" className="flex items-center gap-3 min-w-0 group">
-          <div className="relative">
-            <div className="absolute inset-0 bg-blue-500 rounded-xl blur-sm opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
-            <Image
-              src={logo}
-              alt="SG Coaching Logo"
-              width={32}
-              height={32}
-              className="w-8 h-8 flex-shrink-0 rounded-lg shadow-sm"
-            />
+      <div className="h-20 flex items-center justify-center px-4 border-b border-white/10">
+        <Link
+          href="/"
+          className="flex items-center gap-3 min-w-0 overflow-hidden"
+        >
+          <div className="relative flex-shrink-0">
+            <div className="absolute inset-0 bg-blue-500 rounded-2xl blur-md opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+            <div className="relative bg-gradient-to-br from-blue-500 to-purple-600 p-2 rounded-2xl shadow-lg">
+              <Image
+                src={logo}
+                alt="SG Logo"
+                width={32}
+                height={32}
+                className="w-8 h-8 flex-shrink-0"
+              />
+            </div>
           </div>
-          <span className="font-bold text-lg text-gray-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text">
-            ShikshyaGhar
-          </span>
+          <div className="hidden group-hover:block transition-all duration-300 overflow-hidden">
+            <h1 className="font-bold text-xl text-white whitespace-nowrap">
+              ShikshyaGhar
+            </h1>
+            <p className="text-xs text-blue-300 whitespace-nowrap">
+              Student Portal
+            </p>
+          </div>
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 py-6 overflow-y-auto hide-scrollbar bg-gradient-to-b from-transparent to-gray-50/30">
-        <ul className="space-y-2 px-2">
+      <nav className="flex-1 py-6 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+        <ul className="space-y-1 px-3">
           {navItems.map(({ name, href, icon: Icon }) => {
             const isActive = pathname === href;
 
@@ -54,49 +64,39 @@ export default function StudentAside() {
               <li key={name}>
                 <Link href={href}>
                   <div
-                    className={`relative flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 cursor-pointer min-w-0 group/item overflow-hidden ${
+                    className={`relative flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-300 cursor-pointer overflow-hidden group/item ${
                       isActive
-                        ? "bg-gradient-to-r from-blue-50 to-blue-100/80 text-blue-600 shadow-lg border border-blue-200/60 hover:shadow-xl"
-                        : "text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100/60 hover:text-gray-900 hover:shadow-md"
+                        ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/50"
+                        : "text-slate-300 hover:bg-white/5 hover:text-white"
                     }`}
                   >
                     {/* Active indicator */}
                     {isActive && (
-                      <div className="absolute left-0 top-2 bottom-2 w-1 bg-gradient-to-b from-blue-500 to-blue-600 rounded-r-full shadow-sm"></div>
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-r-full"></div>
                     )}
 
-                    <div
-                      className={`relative p-1 rounded-lg transition-all duration-300 ${
-                        isActive
-                          ? "bg-blue-500/10 group-hover/item:bg-blue-500/20"
-                          : "group-hover/item:bg-gray-200/60"
-                      }`}
-                    >
+                    <div className="relative flex-shrink-0">
                       <Icon
-                        className={`w-6 h-6 flex-shrink-0 transition-all duration-300 ${
+                        className={`w-6 h-6 transition-all duration-300 ${
                           isActive
-                            ? "text-blue-600"
-                            : "text-gray-500 group-hover/item:text-gray-700"
+                            ? "text-white scale-110"
+                            : "text-slate-400 group-hover/item:text-white group-hover/item:scale-110"
                         }`}
                       />
                     </div>
 
                     <span
-                      className={`font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap overflow-hidden ${
-                        isActive ? "text-blue-600" : "text-gray-700"
+                      className={`font-medium text-sm whitespace-nowrap hidden group-hover:block ${
+                        isActive ? "" : ""
                       }`}
                     >
                       {name}
                     </span>
 
-                    {/* Hover glow */}
-                    <div
-                      className={`absolute inset-0 rounded-xl opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 pointer-events-none ${
-                        isActive
-                          ? "bg-gradient-to-r from-blue-500/5 to-blue-600/10"
-                          : "bg-gradient-to-r from-gray-500/5 to-gray-600/10"
-                      }`}
-                    ></div>
+                    {/* Glow effect */}
+                    {isActive && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-xl blur-sm -z-10"></div>
+                    )}
                   </div>
                 </Link>
               </li>
@@ -106,20 +106,21 @@ export default function StudentAside() {
       </nav>
 
       {/* Logout */}
-      <div className="p-4 border-t border-gray-200/60 mt-auto bg-gradient-to-r from-gray-50/60 to-white/80">
+      <div className="p-4 border-t border-white/10 mt-auto">
         <button
           onClick={handleLogout}
-          className="relative flex items-center gap-3 px-3 py-3 w-full rounded-xl group/logout hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100/80 transition-all duration-300 hover:shadow-lg overflow-hidden"
+          className="relative flex items-center gap-4 px-4 py-3.5 w-full rounded-xl text-slate-300 hover:bg-red-500/10 hover:text-red-400 transition-all duration-300 group/logout overflow-hidden"
         >
-          <div className="relative bg-gradient-to-br from-red-100 to-red-200/80 text-red-600 w-8 h-8 flex items-center justify-center rounded-xl flex-shrink-0 shadow-sm group-hover/logout:shadow-md group-hover/logout:scale-110 transition-all duration-300">
-            <FaSignOutAlt className="w-4 h-4" />
+          <div className="relative flex-shrink-0">
+            <FaSignOutAlt className="w-5 h-5 transition-all duration-300 group-hover/logout:scale-110" />
           </div>
 
-          <span className="relative text-sm text-red-600 font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap overflow-hidden">
+          <span className="text-sm font-medium whitespace-nowrap hidden group-hover:block">
             Logout
           </span>
 
-          <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-red-600/10 rounded-xl opacity-0 group-hover/logout:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+          {/* Hover effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-red-500/0 to-red-500/10 rounded-xl opacity-0 group-hover/logout:opacity-100 transition-opacity duration-300"></div>
         </button>
       </div>
     </aside>

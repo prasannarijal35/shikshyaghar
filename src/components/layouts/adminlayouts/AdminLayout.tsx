@@ -16,7 +16,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <AdminSidebar />
 
         {/* Main Content Area */}
-        <div className="ml-16 transition-all duration-300 flex flex-col min-h-screen">
+        <div className="ml-20 transition-all duration-300 flex flex-col min-h-screen">
           {/* Header */}
           <AdminHeader />
 
