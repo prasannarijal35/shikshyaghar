@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { MdDashboard, MdPerson, MdClass, MdFindReplace } from "react-icons/md";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useLogout } from "@/utils/logout";
-import { SubscriptIcon } from "lucide-react";
+import { SubscriptIcon, MessageCircle } from "lucide-react";
 
 export const navItems = [
   { name: "Dashboard", href: "/student/dashboard", icon: MdDashboard },
@@ -15,6 +15,7 @@ export const navItems = [
   { name: "Subscription", href: "/student/subscription", icon: SubscriptIcon },
   { name: "My Classes", href: "/student/myclasses", icon: MdClass },
   { name: "Find Teachers", href: "/student/findteacher", icon: MdFindReplace },
+  { name: "Community", href: "/student/community", icon: MessageCircle },
 ];
 
 export default function StudentAside() {
@@ -25,10 +26,7 @@ export default function StudentAside() {
     <aside className="w-16 hover:w-64 bg-white/95 backdrop-blur-sm border-r border-gray-200/60 h-screen fixed left-0 top-0 z-50 flex flex-col transition-all duration-300 ease-in-out group shadow-xl hover:shadow-2xl">
       {/* Logo Section */}
       <div className="h-16 flex items-center justify-center px-4 border-b border-gray-200/60 bg-gradient-to-r from-gray-50/80 to-white/80 group">
-        <Link
-          href="/"
-          className="flex items-center gap-3 min-w-0 group"
-        >
+        <Link href="/" className="flex items-center gap-3 min-w-0 group">
           <div className="relative">
             <div className="absolute inset-0 bg-blue-500 rounded-xl blur-sm opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
             <Image

@@ -13,6 +13,7 @@ import {
 } from "react-icons/md";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useLogout } from "@/utils/logout";
+import { MessageCircle } from "lucide-react";
 
 export const navItems = [
   { name: "Dashboard", href: "/teacher/dashboard", icon: MdDashboard },
@@ -21,6 +22,7 @@ export const navItems = [
   { name: "Subscribers", href: "/teacher/subscriber", icon: MdAssignment },
   { name: "Students", href: "/teacher/students", icon: MdGroup },
   { name: "Post Reviews", href: "/teacher/review", icon: MdGroup },
+  { name: "Community", href: "/teacher/community", icon: MessageCircle },
 ];
 
 export default function AdminAside() {
@@ -30,10 +32,7 @@ export default function AdminAside() {
   return (
     <aside className="w-16 hover:w-64 bg-white/95 backdrop-blur-sm border-r border-gray-200/60 h-screen fixed left-0 top-0 z-50 flex flex-col transition-all duration-300 ease-in-out group shadow-xl hover:shadow-2xl">
       <div className="h-16 flex items-center justify-center px-4 border-b border-gray-200/60 bg-gradient-to-r from-gray-50/80 to-white/80 group">
-        <Link
-          href="/"
-          className="flex items-center gap-3 min-w-0 group"
-        >
+        <Link href="/" className="flex items-center gap-3 min-w-0 group">
           <Image
             src={logo}
             alt="SG Coaching Logo"
