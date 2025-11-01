@@ -13,7 +13,7 @@ import {
 } from "react-icons/md";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useLogout } from "@/utils/logout";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, MessageSquare } from "lucide-react";
 
 export const navItems = [
   { name: "Dashboard", href: "/teacher/dashboard", icon: MdDashboard },
@@ -23,6 +23,7 @@ export const navItems = [
   { name: "Students", href: "/teacher/students", icon: MdGroup },
   { name: "Post Reviews", href: "/teacher/review", icon: MdGroup },
   { name: "Community", href: "/teacher/community", icon: MessageCircle },
+  { name: "Messages", href: "/teacher/messages", icon: MessageSquare },
 ];
 
 export default function AdminAside() {

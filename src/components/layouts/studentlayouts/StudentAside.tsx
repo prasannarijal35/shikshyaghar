@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { MdDashboard, MdPerson, MdClass, MdFindReplace } from "react-icons/md";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useLogout } from "@/utils/logout";
-import { SubscriptIcon, MessageCircle } from "lucide-react";
+import { SubscriptIcon, MessageCircle, MessageSquare } from "lucide-react";
 
 export const navItems = [
   { name: "Dashboard", href: "/student/dashboard", icon: MdDashboard },
@@ -16,6 +16,7 @@ export const navItems = [
   { name: "My Classes", href: "/student/myclasses", icon: MdClass },
   { name: "Find Teachers", href: "/student/findteacher", icon: MdFindReplace },
   { name: "Community", href: "/student/community", icon: MessageCircle },
+  { name: "Messages", href: "/student/messages", icon: MessageSquare },
 ];
 
 export default function StudentAside() {
